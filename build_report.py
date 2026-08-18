@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Báo cáo tiến độ Website TimViec123 cho BGD — đồng bộ live qua IMPORTRANGE.
-Nguồn lỗi: 05_Lỗi_Tester. Database: file 'Hồ sơ'. Tháng & Tuần dùng chung layout."""
+Nguồn lỗi: 05_Lỗi_Tester. Database: file 'Hồ sơ'. Tháng & Tuần dùng chung layout.
+Mục tiêu lưu theo từng kỳ ở sheet 04_Mục_tiêu."""
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.worksheet.datavalidation import DataValidation
@@ -45,16 +46,15 @@ wb=openpyxl.Workbook()
 def UW(): return "'z_Config'!$B$1"
 def UD(): return "'z_Config'!$B$3"
 zc=wb.active; zc.title="z_Config"
-zc["A1"]="URL file làm việc"; zc["B1"]=WORK_URL; zc["A2"]="Năm"; zc["B2"]=2026
-zc["A3"]="URL file Database"; zc["B3"]=DB_URL
+zc["A1"]="URL file làm việc"; zc["B1"]=WORK_URL; zc["A2"]="Năm"; zc["B2"]=2026; zc["A3"]="URL file Database"; zc["B3"]=DB_URL
 for rr in (1,2,3): zc[f"A{rr}"].font=F(bold=True)
 zc.column_dimensions["A"].width=20; zc.column_dimensions["B"].width=70
 def src(name,u,rng):
     ws=wb.create_sheet(name); ws["A1"]=f'=IMPORTRANGE({u},"{rng}")'; ws.sheet_state="hidden"; return ws
 src("z_Trang",UW(),"02_UI_UX!A3:N3")
 src("z_TinhNang",UW(),"03_Tính_năng!A3:N3")
-src("z_TrangFull",UW(),"02_UI_UX!A4:R68")       # header row1 -> QUERY: B tên, E trạng thái, I tổng lỗi, P ngày test
-src("z_TNFull",UW(),"03_Tính_năng!A4:T92")      # QUERY: B tên, J trạng thái, K tổng lỗi, R ngày test
+src("z_TrangFull",UW(),"02_UI_UX!A4:R68")
+src("z_TNFull",UW(),"03_Tính_năng!A4:T92")
 src("z_Loi",UW(),"05_Lỗi_Tester!A4:V606")
 src("z_CV",UW(),"01_Cong_viec_ngay!A4:P1004")
 src("z_DB_DN",UD(),"'HS DN'!D4:N970")
@@ -74,37 +74,45 @@ CH_OPEN=(f'=(COUNTIFS({U},"Open",{L},"Critical")+COUNTIFS({U},"Open",{L},"High")
          f'+COUNTIFS({U},"Chưa gửi Dev",{L},"Critical")+COUNTIFS({U},"Chưa gửi Dev",{L},"High"))')
 DBDN="'z_DB_DN'!$A:$A"; DBDN_D="'z_DB_DN'!$K:$K"; DBHR="'z_DB_HR'!$A:$A"; DBHR_D="'z_DB_HR'!$B:$B"
 DBUV="'z_DB_UV'!$A:$A"; DBTIN="'z_DB_Tin'!$A:$A"; DBTIN_D="'z_DB_Tin'!$B:$B"
-# period-filtered (dùng ô $N$4/$O$4 CỦA CHÍNH SHEET)
 LN="$N$4"; LO="$O$4"
 def foundp(): return f'=COUNTIFS({Q},">="&{LN},{Q},"<="&{LO})'
 def sevp(x):  return f'=COUNTIFS({Q},">="&{LN},{Q},"<="&{LO},{L},"{x}")'
 def devp(x):  return f'=COUNTIFS({Q},">="&{LN},{Q},"<="&{LO},{M},"*{x}*")'
 def cvdone(): return f'=COUNTIFS(\'z_CV\'!$B:$B,">="&{LN},\'z_CV\'!$B:$B,"<="&{LO},\'z_CV\'!$O:$O,"Hoàn thành")'
 def dbp(d):   return f'=COUNTIFS({d},">="&{LN},{d},"<="&{LO})'
-def detail_query(rng,namec,bugc,datec,statc,fb):
-    S1=f'select {namec}, {bugc}, {datec} where {datec} >= date \''
+
+def detail_query(rng,namec,bugc,datec,thirdc,statc,order_col,third_is_date,fb):
+    fmt=f"{bugc} '#,##0'"+(f", {thirdc} 'dd/mm/yyyy'" if third_is_date else "")
+    S1=f'select {namec}, {bugc}, {thirdc} where {datec} >= date \''
     S2=f'\' and {datec} <= date \''
-    S3=(f'\' and ({statc} = \'Hoàn thành\' or {statc} = \'Kiểm tra lại\') order by {datec} desc '
-        f"label {namec} '', {bugc} '', {datec} '' format {datec} 'dd/mm/yyyy', {bugc} '#,##0'")
+    S3=(f'\' and ({statc} = \'Hoàn thành\' or {statc} = \'Kiểm tra lại\') order by {order_col} desc '
+        f"label {namec} '', {bugc} '', {thirdc} '' format {fmt}")
     return ('=IFERROR(QUERY('+rng+',"'+S1+'"&TEXT($N$4,"yyyy-mm-dd")&"'+S2+
             '"&TEXT($O$4,"yyyy-mm-dd")&"'+S3+'",1),"'+fb+'")')
 
-# ================= build_period (Tháng / Tuần dùng chung) =================
+KPI_NAMES=["Trang hoàn thành","Tính năng hoàn thành","Công việc HT trong kỳ","Lỗi phát hiện trong kỳ",
+           "Lỗi đã xử lý (lũy kế)","Số Trang đã xử lý","Số Tính năng đã xử lý",
+           "DB Doanh nghiệp","DB HR","DB Ứng viên","Tin tuyển dụng"]
+
+# ================= build_period =================
 def build_period(sheetname, mode):
     s=wb.create_sheet(sheetname)
-    for col,wd in {"A":34,"B":14,"C":13,"D":12,"E":12,"F":30}.items(): s.column_dimensions[col].width=wd
+    for col,wd in {"A":32,"B":12,"C":15,"D":11,"E":11,"F":28,"G":12,"H":15}.items(): s.column_dimensions[col].width=wd
     s.column_dimensions["N"].hidden=True; s.column_dimensions["O"].hidden=True
-    P = "tháng" if mode=="month" else "tuần"
+    P="tháng" if mode=="month" else "tuần"
+    def tref(k):
+        if mode=="month":
+            return f'=IFERROR(INDEX(\'04_Mục_tiêu\'!$B$5:$L$16,MATCH($B$4,\'04_Mục_tiêu\'!$A$5:$A$16,0),{k}),"")'
+        return f'=IFERROR(INDEX(\'04_Mục_tiêu\'!$D$20:$N$79,MATCH($B$4*10+$D$4,\'04_Mục_tiêu\'!$C$20:$C$79,0),{k}),"")'
     band(s,"A1:F1",f"BÁO CÁO TIẾN ĐỘ THEO {P.upper()}",big=True)
-    merge(s,"A2:F2","Ô nền vàng là mục tiêu nhập tay theo kỳ. Số tổng quan là thời điểm hiện tại; chỉ số \""+("trong "+P)+"\" lọc theo kỳ đã chọn.",
+    merge(s,"A2:F2",f"Chỉ số \"trong {P}\" lọc theo kỳ đã chọn; số Tổng quan là thời điểm hiện tại. Mục tiêu nhập tại sheet 04_Mục_tiêu (mỗi kỳ một dòng).",
           font=F(10,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left"))
     if mode=="month":
         cell(s,"A4","Tháng báo cáo",F(11,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(s,"B4",8,F(12,True,NAVY),Fill(INPUT),Al("center"),border=box)
         cell(s,"C4","Năm",F(11,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(s,"D4",2026,F(12,True,NAVY),Fill(INPUT),Al("center"),border=box)
         cell(s,"E4","Ngày chốt",F(11,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(s,"F4","=TODAY()",F(11,True),Fill(INPUT),Al("center"),border=box); s["F4"].number_format="dd/mm/yyyy"
         s["N4"]="=DATE(D4,B4,1)"; s["O4"]="=EOMONTH(N4,0)"
-        dv=DataValidation(type="list",formula1='"1,2,3,4,5,6,7,8,9,10,11,12"'); s.add_data_validation(dv); dv.add(s["B4"])
-        selrow=5
+        dv=DataValidation(type="list",formula1='"1,2,3,4,5,6,7,8,9,10,11,12"'); s.add_data_validation(dv); dv.add(s["B4"]); selrow=5
     else:
         cell(s,"A4","Tháng",F(11,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(s,"B4",8,F(12,True,NAVY),Fill(INPUT),Al("center"),border=box)
         cell(s,"C4","Tuần",F(11,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(s,"D4",2,F(12,True,NAVY),Fill(INPUT),Al("center"),border=box)
@@ -114,39 +122,36 @@ def build_period(sheetname, mode):
         d2=DataValidation(type="list",formula1='"1,2,3,4,5"'); s.add_data_validation(d2); d2.add(s["D4"])
         cell(s,"A5","Từ ngày",F(10.5,True),Fill(LBLUE),Al("center"),border=box); cell(s,"B5","=N4",F(10.5,True),Fill(WHITE),Al("center"),border=box); s["B5"].number_format="dd/mm/yyyy"
         cell(s,"C5","Đến ngày",F(10.5,True),Fill(LBLUE),Al("center"),border=box); merge(s,"D5:E5","=O4",font=F(10.5,True),fill=Fill(WHITE),al=Al("center")); s["D5"].number_format="dd/mm/yyyy"
-        cell(s,"F5",f'=IF(ISERROR({T_TOT}),"⚠ Chưa kết nối","✔ Đã kết nối")',F(10,True,GREEN),Fill(WHITE),Al("center"),border=box)
-        selrow=6
-    # ---- KPI table ----
+        cell(s,"F5",f'=IF(ISERROR({T_TOT}),"⚠ Chưa kết nối","✔ Đã kết nối")',F(10,True,GREEN),Fill(WHITE),Al("center"),border=box); selrow=6
     def kpih(r):
         for i,h in enumerate(["KPI / CHỈ SỐ","Mục tiêu kỳ","Kết quả","Tỷ lệ đạt","Đạt KPI?","Ghi chú"]):
             c=get_column_letter(1+i); cell(s,f"{c}{r}",h,F(10.5,True,WHITE),Fill(NAVY),Al("center" if i else "left"),border=box)
         s.row_dimensions[r].height=22
     def sect(r,txt): merge(s,f"A{r}:F{r}",txt,font=F(11,True,NAVY),fill=Fill(LBLUE),al=Al("left"),border=True); s.row_dimensions[r].height=19
-    def kpi(r,name,result,note,zebra=False):
+    def kpi(r,k,name,result,note,zebra=False):
         bg=Fill(ZEBRA) if zebra else Fill(WHITE)
         cell(s,f"A{r}",name,F(10.5),bg,Al("left",wrap=True),border=box)
-        cell(s,f"B{r}",None,F(10.5,True,NAVY),Fill(INPUT),Al("center"),border=box)   # mục tiêu nhập tay
+        cell(s,f"B{r}",tref(k),F(10.5,True,NAVY),bg,Al("center"),border=box,nfmt=INT)
         cell(s,f"C{r}",result,F(11,True),bg,Al("center"),border=box,nfmt=INT)
         cell(s,f"D{r}",f'=IFERROR(C{r}/B{r},"")',F(10.5),bg,Al("center"),border=box,nfmt=PCT)
         cell(s,f"E{r}",f'=IF(ISNUMBER(B{r}),IF(C{r}>=B{r},"Đạt","Chưa đạt"),"Theo dõi")',F(10.5,True),bg,Al("center"),border=box)
         cell(s,f"F{r}",note,F(9.5,color=GREY),bg,Al("left",wrap=True),border=box)
     r=selrow+1; kpih(r); r+=1
     sect(r,"I. KIỂM TRA WEBSITE"); r+=1
-    kpi(r,"1. Trang hoàn thành",f"={T_DONE}",f"Hoàn thành / tổng {'{}'.format('')}trang"); r+=1
-    kpi(r,"2. Tính năng hoàn thành",f"={F_DONE}","Hoàn thành / 88 tính năng",zebra=True); r+=1
-    kpi(r,f"3. Công việc hoàn thành trong {P}",cvdone(),"Nhật ký công việc theo ngày"); r+=1
-    kpi(r,f"4. Lỗi phát hiện trong {P}",foundp(),"Theo Ngày phát hiện (05_Lỗi_Tester)",zebra=True); r+=1
+    kpi(r,1,"1. Trang hoàn thành",f"={T_DONE}","Hoàn thành / tổng số trang"); r+=1
+    kpi(r,2,"2. Tính năng hoàn thành",f"={F_DONE}","Hoàn thành / 88 tính năng",zebra=True); r+=1
+    kpi(r,3,f"3. Công việc hoàn thành trong {P}",cvdone(),"Nhật ký công việc theo ngày"); r+=1
+    kpi(r,4,f"4. Lỗi phát hiện trong {P}",foundp(),"Theo Ngày phát hiện (05_Lỗi_Tester)",zebra=True); r+=1
     sect(r,"II. HOÀN THIỆN WEBSITE"); r+=1
-    kpi(r,"1. Lỗi đã xử lý (lũy kế)",RESOLVED,"Fixed + Verified + Closed"); r+=1
-    kpi(r,"2. Số Trang đã xử lý",f"={T_TOT}-{T_UN}","Đã kiểm thử = Tổng − Chưa kiểm tra",zebra=True); r+=1
-    kpi(r,"3. Số Tính năng đã xử lý",f"={F_TOT}-{F_UN}","Đã kiểm thử = Tổng − Chưa kiểm tra"); r+=1
+    kpi(r,5,"1. Lỗi đã xử lý (lũy kế)",RESOLVED,"Fixed + Verified + Closed"); r+=1
+    kpi(r,6,"2. Số Trang đã xử lý",f"={T_TOT}-{T_UN}","Đã kiểm thử = Tổng − Chưa kiểm tra",zebra=True); r+=1
+    kpi(r,7,"3. Số Tính năng đã xử lý",f"={F_TOT}-{F_UN}","Đã kiểm thử = Tổng − Chưa kiểm tra"); r+=1
     sect(r,f"III. DATABASE (trong {P})"); r+=1
-    kpi(r,"1. DB Doanh nghiệp đã thêm",dbp(DBDN_D),"Theo Ngày Đăng/Tạo"); r+=1
-    kpi(r,"2. DB HR đã thêm",dbp(DBHR_D),"Theo Ngày Đăng/Tạo",zebra=True); r+=1
-    kpi(r,"3. DB Ứng viên đã thêm",f"=COUNTA({DBUV})","Theo tổng (chưa có cột ngày nhập)"); r+=1
-    kpi(r,"4. Tin tuyển dụng đã đăng",dbp(DBTIN_D),"Theo Ngày viết",zebra=True); r+=1
+    kpi(r,8,"1. DB Doanh nghiệp đã thêm",dbp(DBDN_D),"Theo Ngày Đăng/Tạo"); r+=1
+    kpi(r,9,"2. DB HR đã thêm",dbp(DBHR_D),"Theo Ngày Đăng/Tạo",zebra=True); r+=1
+    kpi(r,10,"3. DB Ứng viên đã thêm",f"=COUNTA({DBUV})","Theo tổng (chưa có cột ngày nhập)"); r+=1
+    kpi(r,11,"4. Tin tuyển dụng đã đăng",dbp(DBTIN_D),"Theo Ngày viết",zebra=True); r+=1
     r+=1
-    # ---- TỔNG QUAN HIỆN TẠI ----
     band(s,f"A{r}:F{r}","TỔNG QUAN HIỆN TẠI (thời điểm xem)"); r+=1
     for i,h in enumerate(["Chỉ số","Số lượng","Tổng","Tỷ lệ"]):
         c=get_column_letter(1+i); cell(s,f"{c}{r}",h,F(10.5,True,WHITE),Fill(BLUE),Al("center" if i else "left"),border=box)
@@ -175,7 +180,6 @@ def build_period(sheetname, mode):
     stat(r,"DB Ứng viên",f"=COUNTA({DBUV})",None,None); r+=1
     stat(r,"Tin tuyển dụng đã đăng",f"=COUNTA({DBTIN})",None,None,zebra=True); r+=1
     r+=1
-    # ---- TÌNH TRẠNG XỬ LÝ LỖI ----
     band(s,f"A{r}:F{r}","TÌNH TRẠNG XỬ LÝ LỖI (toàn bộ)"); r+=1
     cell(s,f"A{r}","Trạng thái",F(10.5,True,WHITE),Fill(BLUE),Al("left"),border=box); cell(s,f"B{r}","Số lỗi",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
     merge(s,f"C{r}:F{r}","Ý nghĩa",font=F(10.5,True,WHITE),fill=Fill(BLUE),al=Al("left"))
@@ -191,7 +195,6 @@ def build_period(sheetname, mode):
         for cc in "CDEF": s[f"{cc}{r}"].border=box
         r+=1
     r+=1
-    # ---- PHÂN BỐ LỖI TRONG KỲ ----
     band(s,f"A{r}:F{r}",f"PHÂN BỐ LỖI PHÁT HIỆN TRONG {P.upper()}"); r+=1
     cell(s,f"A{r}","Theo mức độ",F(10.5,True,WHITE),Fill(BLUE),Al("left"),border=box); cell(s,f"B{r}","Số lỗi",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
     cell(s,f"D{r}","Theo thiết bị",F(10.5,True,WHITE),Fill(BLUE),Al("left"),border=box); cell(s,f"E{r}","Số lỗi",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
@@ -204,7 +207,6 @@ def build_period(sheetname, mode):
         bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
         cell(s,f"D{rr}",nm,F(10.5),bg,Al("left"),border=box); cell(s,f"E{rr}",devp(nm),F(11,True),bg,Al("center"),border=box,nfmt=INT); rr+=1
     r=r0+5; r+=1
-    # ---- THANH TIẾN ĐỘ ----
     merge(s,f"A{r}:F{r}","THANH TIẾN ĐỘ HOÀN THÀNH",font=F(11,True,WHITE),fill=Fill(BLUE),al=Al("left"),border=True); r+=1
     cell(s,f"A{r}","Trang",F(10.5,True),Fill(WHITE),Al("left"),border=box)
     merge(s,f"B{r}:F{r}",f'=REPT("█",ROUND({T_PROG}*30,0))&" "&TEXT({T_PROG},"0.0%")',font=F(11,True,BLUE),fill=Fill(WHITE),al=Al("left"))
@@ -214,28 +216,71 @@ def build_period(sheetname, mode):
     merge(s,f"B{r}:F{r}",f'=REPT("█",ROUND({F_PROG}*30,0))&" "&TEXT({F_PROG},"0.0%")',font=F(11,True,GREEN),fill=Fill(ZEBRA),al=Al("left"))
     for cc in "BCDEF": s[f"{cc}{r}"].border=box
     r+=2
-    # ---- CHI TIẾT theo Trang / Tính năng (test trong kỳ) ----
-    band(s,f"A{r}:F{r}",f"CHI TIẾT: TRANG & TÍNH NĂNG ĐÃ TEST TRONG {P.upper()}"); r+=1
-    merge(s,f"A{r}:F{r}","Liệt kê các trang/tính năng có Ngày test gần nhất trong kỳ (trạng thái Hoàn thành hoặc Kiểm tra lại).",
+    # ---- CHI TIẾT: Trang (A:C) và Tính năng (F:H) cạnh nhau ----
+    band(s,f"A{r}:H{r}",f"CHI TIẾT: TRANG & TÍNH NĂNG ĐÃ TEST TRONG {P.upper()}"); r+=1
+    merge(s,f"A{r}:H{r}","Trang/tính năng có Ngày test gần nhất trong kỳ (trạng thái Hoàn thành hoặc Kiểm tra lại).",
           font=F(9.5,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left")); r+=1
-    # Trang block
+    third_hdr="Trạng thái" if mode=="month" else "Ngày test/retest"
     cell(s,f"A{r}","TRANG đã test trong kỳ",F(10.5,True,WHITE),Fill(BLUE),Al("left"),border=box)
     cell(s,f"B{r}","Số lỗi",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
-    cell(s,f"C{r}","Ngày test/retest",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); r+=1
-    cell(s,f"A{r}",detail_query("'z_TrangFull'!$A$1:$R$65","B","I","P","E","(không có trang test trong kỳ)"),F(10),Fill(WHITE),Al("left"))
-    for rr2 in range(r,r+64):
+    cell(s,f"C{r}",third_hdr,F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
+    cell(s,f"F{r}","TÍNH NĂNG đã test trong kỳ",F(10.5,True,WHITE),Fill(BLUE),Al("left"),border=box)
+    cell(s,f"G{r}","Số lỗi",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
+    cell(s,f"H{r}",third_hdr,F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
+    r+=1
+    isd = (mode=="week")
+    if mode=="month":
+        qp=detail_query("'z_TrangFull'!$A$1:$R$65","B","I","P","E","E","I",False,"(không có trang test trong kỳ)")
+        qf=detail_query("'z_TNFull'!$A$1:$T$89","B","K","R","J","J","K",False,"(không có tính năng test trong kỳ)")
+    else:
+        qp=detail_query("'z_TrangFull'!$A$1:$R$65","B","I","P","P","E","P",True,"(không có trang test trong kỳ)")
+        qf=detail_query("'z_TNFull'!$A$1:$T$89","B","K","R","R","J","R",True,"(không có tính năng test trong kỳ)")
+    cell(s,f"A{r}",qp,F(10),Fill(WHITE),Al("left"))
+    cell(s,f"F{r}",qf,F(10),Fill(WHITE),Al("left"))
+    for rr2 in range(r,r+66):
         for cc in "ABC": s[f"{cc}{rr2}"].border=box
-        s[f"C{rr2}"].number_format="dd/mm/yyyy"; s[f"B{rr2}"].number_format=INT
-    r+=65
-    cell(s,f"A{r}","TÍNH NĂNG đã test trong kỳ",F(10.5,True,WHITE),Fill(BLUE),Al("left"),border=box)
-    cell(s,f"B{r}","Số lỗi",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box)
-    cell(s,f"C{r}","Ngày test/retest",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); r+=1
-    cell(s,f"A{r}",detail_query("'z_TNFull'!$A$1:$T$89","B","K","R","J","(không có tính năng test trong kỳ)"),F(10),Fill(WHITE),Al("left"))
-    for rr2 in range(r,r+90):
-        for cc in "ABC": s[f"{cc}{rr2}"].border=box
-        s[f"C{rr2}"].number_format="dd/mm/yyyy"; s[f"B{rr2}"].number_format=INT
+        for cc in "FGH": s[f"{cc}{rr2}"].border=box
+        if isd:
+            s[f"C{rr2}"].number_format="dd/mm/yyyy"; s[f"H{rr2}"].number_format="dd/mm/yyyy"
+        s[f"B{rr2}"].number_format=INT; s[f"G{rr2}"].number_format=INT
     s.sheet_view.showGridLines=False
     return s
+
+# ============ 04_Mục_tiêu ============
+def build_targets():
+    t=wb.create_sheet("04_Mục_tiêu")
+    for col,wd in {"A":10,"B":10,"C":8}.items(): t.column_dimensions[col].width=wd
+    band(t,"A1:N1","MỤC TIÊU KPI THEO KỲ — nhập tay (ô nền vàng)",big=True)
+    # ---- Monthly grid: A5:A16 = tháng 1..12 ; B..L = 11 KPI ----
+    band(t,"A3:N3","MỤC TIÊU THEO THÁNG")
+    cell(t,"A4","Tháng",F(10,True,WHITE),Fill(NAVY),Al("center"),border=box)
+    for i,nm in enumerate(KPI_NAMES):
+        c=get_column_letter(2+i); cell(t,f"{c}4",nm,F(9,True,WHITE),Fill(NAVY),Al("center",wrap=True),border=box); t.column_dimensions[c].width=13
+    t.row_dimensions[4].height=40
+    for mth in range(1,13):
+        rr=4+mth
+        cell(t,f"A{rr}",mth,F(10,True),Fill(LBLUE),Al("center"),border=box)
+        for i in range(11):
+            c=get_column_letter(2+i); cell(t,f"{c}{rr}",None,F(10),Fill(INPUT),Al("center"),border=box,nfmt=INT)
+    # ---- Weekly grid: A20:A79 tháng, B week, C key ; D..N = 11 KPI ----
+    band(t,"A18:N18","MỤC TIÊU THEO TUẦN")
+    cell(t,"A19","Tháng",F(10,True,WHITE),Fill(NAVY),Al("center"),border=box)
+    cell(t,"B19","Tuần",F(10,True,WHITE),Fill(NAVY),Al("center"),border=box)
+    cell(t,"C19","Key",F(9,True,WHITE),Fill(GREY),Al("center"),border=box)
+    for i,nm in enumerate(KPI_NAMES):
+        c=get_column_letter(4+i); cell(t,f"{c}19",nm,F(9,True,WHITE),Fill(NAVY),Al("center",wrap=True),border=box); t.column_dimensions[c].width=13
+    t.row_dimensions[19].height=40
+    rr=20
+    for mth in range(1,13):
+        for wk in range(1,6):
+            cell(t,f"A{rr}",mth,F(10),Fill(LBLUE),Al("center"),border=box)
+            cell(t,f"B{rr}",wk,F(10),Fill(LBLUE),Al("center"),border=box)
+            cell(t,f"C{rr}",f"=A{rr}*10+B{rr}",F(9,color=GREY),Fill(WHITE),Al("center"),border=box)
+            for i in range(11):
+                c=get_column_letter(4+i); cell(t,f"{c}{rr}",None,F(10),Fill(INPUT),Al("center"),border=box,nfmt=INT)
+            rr+=1
+    t.sheet_view.showGridLines=False; t.sheet_properties.tabColor="7A5AA6"
+    return t
 
 # ============ 00_Hướng_dẫn ============
 g=wb.create_sheet("00_Hướng_dẫn")
@@ -246,14 +291,14 @@ merge(g,"A2:F2","Số liệu đồng bộ live từ file làm việc QA và file
 merge(g,"A4:B4","NGƯỜI DÙNG",font=F(11,True,WHITE),fill=Fill(BLUE)); merge(g,"C4:F4","CÁCH SỬ DỤNG",font=F(11,True,WHITE),fill=Fill(BLUE))
 r=5
 for who,how in [("Ban Giám đốc","Xem tiến độ trang/tính năng, tình trạng lỗi, database và nghiệm thu. Chọn Tháng/Tuần để lọc kỳ."),
-                ("Tester","Cập nhật dữ liệu tại file làm việc; nhập Mục tiêu kỳ; báo cáo tự đồng bộ."),
+                ("Tester","Cập nhật dữ liệu tại file làm việc; nhập Mục tiêu tại sheet 04_Mục_tiêu."),
                 ("Dev","Cập nhật xử lý lỗi tại 06_RTM_Dev_Test của file làm việc.")]:
     merge(g,f"A{r}:B{r}",who,font=F(11,True),fill=Fill(LBLUE),al=Al("left")); merge(g,f"C{r}:F{r}",how,font=F(10.5),al=Al("left",wrap=True)); g.row_dimensions[r].height=30; r+=1
 r+=1; band(g,f"A{r}:F{r}","NGUYÊN TẮC TÍNH SỐ"); r+=1
 for i,p in enumerate([
  "Tiến độ trang = số trang Hoàn thành / tổng số trang (hiện 63). Tính năng / 88.",
  "Số lỗi lấy toàn bộ từ 05_Lỗi_Tester. \"Đang mở\" = Open + Chưa gửi Dev; \"Đã xử lý\" = Fixed + Verified + Closed.",
- "Mục tiêu kỳ do BGD/Tester tự nhập (ô nền vàng), không cố định.",
+ "Mục tiêu nhập tại sheet 04_Mục_tiêu theo từng tháng/tuần (không cố định, không dùng chung).",
  "Chi tiết theo Trang/Tính năng = mục có Ngày test gần nhất trong kỳ, trạng thái Hoàn thành/Kiểm tra lại.",
  "Chỉ số Database lấy từ file Hồ sơ, đếm theo ngày đăng/tạo của kỳ."],1):
     cell(g,f"A{r}",i,F(11,True,BLUE),Fill(ZEBRA),Al("center"),border=box); merge(g,f"B{r}:F{r}",p,font=F(10.5),al=Al("left",wrap=True))
@@ -282,7 +327,6 @@ for lbl,url in [("File làm việc (QA)",WORK_URL),("File Database (Hồ sơ)",D
     r+=1
 g.sheet_view.showGridLines=False
 
-# build month & week (identical layout)
 m=build_period("01_Báo_cáo_Tháng","month")
 w=build_period("02_Báo_cáo_Tuần","week")
 
@@ -320,6 +364,7 @@ merge(n,f"A{r}:H{r}","Điều kiện khuyến nghị: không còn Critical/High 
       font=F(9.5,color=GREY),fill=Fill(ZEBRA),al=Al("left",wrap=True)); n.row_dimensions[r].height=34
 n.sheet_view.showGridLines=False
 
+t=build_targets()
 for ws,clr in [(g,NAVY),(m,BLUE),(w,"2E7D32"),(n,"8B5E00")]: ws.sheet_properties.tabColor=clr
 wb.active=wb.sheetnames.index("01_Báo_cáo_Tháng")
 out="/tmp/BaoCao_BGD_TimViec123.xlsx"; wb.save(out); print("SAVED",out); print(wb.sheetnames)
