@@ -12,15 +12,20 @@ File `BaoCao_BGD_TimViec123.xlsx` là báo cáo tiến độ website, **đồng 
    hoặc **② File Database** báo `#REF!`, bấm vào ô đó → **Cho phép truy cập / Allow access**.
    Làm 1 lần cho mỗi ô. Sau đó toàn bộ báo cáo có số.
 
-## Sheet 01_Báo_cáo_Tháng (đã dựng lại theo yêu cầu)
-- **Bảng KPI** có cột **Mục tiêu tháng** (ô vàng, tự nhập) — cột Kết quả/Tỷ lệ/Đạt KPI tự tính:
-  - I. Kiểm tra website: Trang hoàn thành, Tính năng hoàn thành, Công việc & Lỗi phát hiện trong tháng.
+## Sheet Tháng & Tuần (cùng một layout, chỉ khác kỳ lọc)
+Hai sheet dùng chung 1 bố cục; sheet Tuần lọc theo tuần-trong-tháng (Tuần 1 = 1–7, …).
+- **Bảng KPI** có cột **Mục tiêu kỳ** — **ô nền vàng để BGD/Tester tự nhập theo kỳ** (không cố định);
+  Tỷ lệ đạt = Kết quả / Mục tiêu, Đạt KPI tự đánh giá.
+  - I. Kiểm tra website: Trang/Tính năng hoàn thành, Công việc & Lỗi phát hiện trong kỳ.
   - II. Hoàn thiện: Lỗi đã xử lý (lũy kế), Số Trang / Tính năng đã xử lý.
-  - III. Database (trong tháng): DN / HR / Ứng viên / Tin tuyển dụng.
+  - III. Database (trong kỳ): DN / HR / Ứng viên / Tin tuyển dụng.
 - **Tổng quan hiện tại**: trang, tính năng, lỗi đang mở, Critical/High + Database (tổng).
 - **Tình trạng xử lý lỗi**: Open / Chưa gửi Dev / Fixed / Verified / Closed / Deferred.
-- **Phân bố lỗi trong tháng**: theo mức độ & theo thiết bị.
-- **Thanh tiến độ** + **bảng chi tiết lỗi theo Trang / Tính năng** (QUERY, lọc theo tháng).
+- **Phân bố lỗi phát hiện trong kỳ**: theo mức độ & theo thiết bị.
+- **Thanh tiến độ**.
+- **Chi tiết Trang & Tính năng đã test trong kỳ**: liệt kê từ `02_UI_UX` / `03_Tính_năng`
+  các mục có **Ngày test gần nhất** trong kỳ và trạng thái Hoàn thành/Kiểm tra lại —
+  gồm cột **Số lỗi** và **Ngày test/retest** (dùng QUERY).
 
 ## Nguồn số liệu
 | Chỉ số | Nguồn | Cột |
