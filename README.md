@@ -1,40 +1,45 @@
 # Báo cáo tiến độ Website TimViec123 — dành cho BGD
 
-File `BaoCao_BGD_TimViec123.xlsx` là báo cáo tiến độ website, **đồng bộ sống (live)** từ
-file làm việc của Tester/Dev bằng công thức `IMPORTRANGE`. Khi mở bằng Google Sheets, số
-liệu tự cập nhật theo file làm việc.
+File `BaoCao_BGD_TimViec123.xlsx` là báo cáo tiến độ website, **đồng bộ sống (live)** bằng
+`IMPORTRANGE` từ **2 nguồn**:
+- **File làm việc QA** (`QA Operations Master`) — tiến độ trang/tính năng, lỗi, công việc.
+- **File Database** (`Hồ sơ`) — số DN / HR / Ứng viên / Tin tuyển dụng.
 
 ## Cách đưa lên Google Sheet
-1. Vào Google Drive → **Mới / New → Tải tệp lên / File upload** → chọn file `.xlsx` này
-   (hoặc kéo–thả file vào Drive).
-2. Bấm chuột phải file → **Mở bằng / Open with → Google Sheets**. Google tự chuyển thành
-   Google Sheet, giữ nguyên công thức + định dạng.
-3. Lần đầu mở: tại sheet **00_Hướng_dẫn**, ô **① Kích hoạt kết nối** sẽ báo `#REF!` —
-   bấm vào ô đó → **Cho phép truy cập / Allow access**. Chỉ làm 1 lần; sau đó toàn bộ báo
-   cáo có số.
+1. Kéo file `.xlsx` vào **Google Drive** → chuột phải → **Mở bằng → Google Sheets**
+   (tự chuyển, giữ nguyên công thức + định dạng).
+2. Vào sheet **00_Hướng_dẫn**, phần **KÍCH HOẠT KẾT NỐI**: nếu ô **① File làm việc QA**
+   hoặc **② File Database** báo `#REF!`, bấm vào ô đó → **Cho phép truy cập / Allow access**.
+   Làm 1 lần cho mỗi ô. Sau đó toàn bộ báo cáo có số.
 
-## Các sheet
-- **00_Hướng_dẫn** — người dùng, nguyên tắc tính số, liên kết, kích hoạt kết nối.
-- **01_Báo_cáo_Tháng** — KPI theo tháng (chọn tháng ở ô B4) + tổng quan hiện tại + phân bố lỗi.
-- **02_Báo_cáo_Tuần** — chỉ số theo tuần (Tuần 1 = ngày 1–7, Tuần 2 = 8–14…).
-- **03_Nghiệm_thu** — checklist nghiệm thu theo hạng mục.
-- **z_*** (ẩn) — sheet kéo dữ liệu thô bằng `IMPORTRANGE`, phục vụ tính COUNTIF/COUNTIFS.
+## Sheet 01_Báo_cáo_Tháng (đã dựng lại theo yêu cầu)
+- **Bảng KPI** có cột **Mục tiêu tháng** (ô vàng, tự nhập) — cột Kết quả/Tỷ lệ/Đạt KPI tự tính:
+  - I. Kiểm tra website: Trang hoàn thành, Tính năng hoàn thành, Công việc & Lỗi phát hiện trong tháng.
+  - II. Hoàn thiện: Lỗi đã xử lý (lũy kế), Số Trang / Tính năng đã xử lý.
+  - III. Database (trong tháng): DN / HR / Ứng viên / Tin tuyển dụng.
+- **Tổng quan hiện tại**: trang, tính năng, lỗi đang mở, Critical/High + Database (tổng).
+- **Tình trạng xử lý lỗi**: Open / Chưa gửi Dev / Fixed / Verified / Closed / Deferred.
+- **Phân bố lỗi trong tháng**: theo mức độ & theo thiết bị.
+- **Thanh tiến độ** + **bảng chi tiết lỗi theo Trang / Tính năng** (QUERY, lọc theo tháng).
 
-## Nguồn dữ liệu (file làm việc)
-Kéo trực tiếp từ các sheet của file làm việc QA:
-
-| Chỉ số báo cáo | Sheet nguồn | Ô/Cột |
+## Nguồn số liệu
+| Chỉ số | Nguồn | Cột |
 |---|---|---|
-| Trang: tổng/hoàn thành/tiến độ/kiểm tra lại/chưa kiểm tra | `02_UI_UX` | dòng tổng hợp `A3:N3` |
-| Tính năng: tổng/hoàn thành/tiến độ/kiểm tra lại/chưa kiểm tra | `03_Tính_năng` | dòng tổng hợp `A3:N3` |
-| Lỗi mở theo mức độ (Critical/High/Medium/Low) | `00_Dashboard_QA` | `E17:E20` |
-| Tổng lỗi / Lỗi đang mở / Ngày cập nhật | `00A_Tong_hop_Trang_Tinh_nang` | `A4:V5` |
-| Lỗi phát hiện / đã fix theo kỳ, phân bố thiết bị | `04_Bug_Master_RTM` | `B`=Ngày phát hiện, `L`=Mức độ, `M`=Thiết bị, `W`=Ngày Dev báo fix |
-| Công việc hoàn thành/đang làm theo kỳ | `01_Cong_viec_ngay` | `B`=Ngày, `O`=Trạng thái |
+| Trang (tổng 63 / hoàn thành / …) | `02_UI_UX` | dòng tổng hợp `A3:N3` |
+| Tính năng (88 / hoàn thành / …) | `03_Tính_năng` | dòng tổng hợp `A3:N3` |
+| **Lỗi (toàn bộ)** | **`05_Lỗi_Tester`** | E=BUG_ID, L=Mức độ, M=Thiết bị, Q=Ngày phát hiện, U=Trạng thái lỗi |
+| Công việc theo kỳ | `01_Cong_viec_ngay` | B=Ngày, O=Trạng thái |
+| DB Doanh nghiệp | `Hồ sơ` → `HS DN` | D=Tên, N=Ngày Đăng/Tạo |
+| DB HR | `Hồ sơ` → `HS HR` | D=Tên, E=Ngày Đăng/Tạo |
+| DB Ứng viên | `Hồ sơ` → `HS ỨNG TUYỂN` | D=Họ tên (không có cột ngày → tính theo tổng) |
+| Tin tuyển dụng | `Hồ sơ` → `Tin tuyển dụng` | C=Nội dung, D=Ngày viết |
 
-> **Lưu ý số liệu:** báo cáo lấy theo **mô hình dashboard hiện hành** của file làm việc
-> (VD: 234 tổng lỗi / 157 đang mở, tính năng 20/88). Con số này **mới hơn** file báo cáo
-> mẫu cũ (202 / 68, tính năng 3/88) vì file mẫu đã lâu không cập nhật.
+### Quy ước tính lỗi (từ 05_Lỗi_Tester)
+- **Tổng lỗi** = số dòng có BUG_ID.
+- **Đang mở** = trạng thái `Open` + `Chưa gửi Dev` (chưa xử lý xong).
+- **Đã xử lý** = `Fixed` + `Verified` + `Closed`. `Deferred` = tạm hoãn (tính riêng).
+
+> Sheet Tuần và Nghiệm thu cũng đã đổi nguồn lỗi sang `05_Lỗi_Tester` cho nhất quán.
 
 ## Tạo lại file
 ```bash
