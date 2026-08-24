@@ -121,32 +121,62 @@ function buildBugIndex_(rtmSheet) {
   if (lastRow < HEADER_ROW + 1) return idx;
   var data = src.getRange(HEADER_ROW + 1, 1, lastRow - HEADER_ROW, 22).getValues(); // cột A..V
   for (var i = 0; i < data.length; i++) {
-    var bugId = String(data[i][4]).trim(); // cột E = BUG_ID (index 4)
+    var bugId = normalizeBugId_(data[i][4]); // cột E = BUG_ID (index 4)
     if (bugId !== '') idx[bugId] = data[i];
   }
   return idx;
 }
 
-/** Điền/ghi đè các cột tự động của 1 dòng RTM theo BUG_ID (K); xóa nếu không khớp hoặc để trống. */
+/**
+ * Ghi đè các cột tự động của 1 dòng RTM theo BUG_ID (K) — CHỈ khi tìm thấy khớp ở 05_Lỗi_Tester.
+ * Không tìm thấy (gõ sai / chưa có trong 05 / BUG_ID để trống) -> KHÔNG đụng tới ô nào,
+ * để tránh xóa mất dữ liệu đã có sẵn. Chỉ đánh dấu vào ô ghi chú (AB) để Dev/Tester biết.
+ */
 function fillRtmFromBug_(sheet, row, bugIndex) {
-  var bugId = String(sheet.getRange(row, RTM_COL_BUGID).getValue()).trim();
+  var bugId = normalizeBugId_(sheet.getRange(row, RTM_COL_BUGID).getValue());
   var srcRow = bugId !== '' ? bugIndex[bugId] : null;
+
+  if (!srcRow) {
+    flagBugNotFound_(sheet, row, bugId);
+    return; // không khớp -> giữ nguyên toàn bộ dữ liệu hiện có, không xóa gì cả
+  }
+  clearBugNotFoundFlag_(sheet, row);
 
   for (var targetCol in RTM_FROM_LOI) {
     var cell = sheet.getRange(row, Number(targetCol));
-    if (srcRow) {
-      cell.setValue(srcRow[RTM_FROM_LOI[targetCol] - 1]);
-    } else {
-      cell.clearContent();
-    }
+    cell.setValue(srcRow[RTM_FROM_LOI[targetCol] - 1]);
   }
 
   var rCell = sheet.getRange(row, RTM_COL_R); // Ngày gửi lỗi: auto-stamp, ghi đè
-  if (srcRow) {
-    rCell.setValue(todayDate_());
-    rCell.setNumberFormat('dd/MM/yyyy');
-  } else {
-    rCell.clearContent();
+  rCell.setValue(todayDate_());
+  rCell.setNumberFormat('dd/MM/yyyy');
+}
+
+/** Chuẩn hoá BUG_ID để so khớp: bỏ khoảng trắng đầu/cuối và khoảng trắng ẩn (non-breaking space). */
+function normalizeBugId_(v) {
+  return String(v).replace(/\u00A0/g, ' ').trim();
+}
+
+/** Không tìm thấy BUG_ID khớp -> ghi chú cảnh báo vào Ghi chú Dev (AB) để dễ phát hiện, không xóa dữ liệu khác. */
+function flagBugNotFound_(sheet, row, bugId) {
+  if (bugId === '') return; // K đang trống thì không cần cảnh báo
+  var note = '⚠ Không tìm thấy BUG_ID "' + bugId + '" trong 05_Lỗi_Tester (kiểm tra chính tả/khoảng trắng).';
+  var abCell = sheet.getRange(row, 28); // AB Ghi chú Dev
+  var current = String(abCell.getValue());
+  if (current.indexOf('⚠ Không tìm thấy BUG_ID') === -1) {
+    abCell.setValue(current ? (note + '\n' + current) : note);
+  }
+}
+
+/** Xoá cảnh báo "không tìm thấy" (nếu có) khi BUG_ID đã khớp lại được. */
+function clearBugNotFoundFlag_(sheet, row) {
+  var abCell = sheet.getRange(row, 28); // AB Ghi chú Dev
+  var current = String(abCell.getValue());
+  if (current.indexOf('⚠ Không tìm thấy BUG_ID') !== -1) {
+    var cleaned = current.split('\n').filter(function (line) {
+      return line.indexOf('⚠ Không tìm thấy BUG_ID') === -1;
+    }).join('\n');
+    abCell.setValue(cleaned);
   }
 }
 
