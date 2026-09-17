@@ -110,5 +110,12 @@ chốt ngày 17/09/2026.
 không còn lỗi đang mở; không còn lỗi Critical/High chưa đóng; mọi lỗi đã xử lý có
 `Kết quả Retest = Pass`.
 
-Kết quả: **4/5 ĐẠT** (DS_04, DS_05, DS_21, DS_25). DS_22 chưa đạt do BUG_UI_107
-(Critical) đang mở.
+Trích lại dữ liệu khi file QA thay đổi:
+
+```bash
+python3 extract_nghiemthu_gd1.py <file_QA.xlsx> 17/09/2026
+python3 build_nghiemthu_gd1.py
+```
+
+Kết quả (chốt 17/09/2026): **5/5 ĐẠT** — 19/19 lỗi đã xử lý và retest Pass,
+không còn lỗi Critical/High đang mở.

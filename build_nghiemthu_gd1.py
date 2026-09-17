@@ -265,20 +265,34 @@ gap()
 
 sec("IX. VẤN ĐỀ TỒN ĐỌNG VÀ GHI CHÚ")
 head(["STT","Nội dung","","","","","Ảnh hưởng đến nghiệm thu","","Người phụ trách","Hạn xử lý","Trạng thái","","Ghi chú",""])
-issues=[("BUG_UI_107 (DS_22, Critical) đang mở: màu chìm trong template mail kích hoạt, chưa retest.",
-         "Chặn nghiệm thu DS_22"),
-        ("BUG_UI_107 được gắn YC_06 — tính năng này không nằm trong phạm vi DS_22 đã chốt (YC_04, YC_05, YC_07). Cần gắn lại đúng YC hoặc bổ sung YC_06 vào phạm vi.",
-         "Ảnh hưởng cách tính phạm vi"),
-        ("YC_04 còn 5 lỗi trên DS_23 (BUG_FUNC_020 đang sửa, BUG_REQ_002 Deferred). Theo phạm vi đã chốt, phần này thuộc đợt nghiệm thu sau.",
-         "Không chặn đợt này"),
-        ("3 lỗi chức năng không có ảnh bằng chứng (BUG_REG_001, BUG_FUNC_016, BUG_FUNC_019) — xác nhận bằng Kết quả Retest = Pass.",
-         "Không chặn — đã thống nhất"),
-        ("DS_22 chỉ có 1 Test Case và đang ở trạng thái Fail; DS_04, DS_21, DS_25 còn Test Case ở trạng thái Đang tiến hành.",
-         "Cần hoàn tất trước khi mở rộng phạm vi"),
-        ("BUG_REG_001 (DS_22) có Ngày Dev báo fix 30/06/2026 sớm hơn Ngày phát hiện 24/07/2026 — cần rà lại ngày trong 06_RTM_Dev_Test.",
-         "Sai lệch dữ liệu, không đổi kết luận"),
-        ("Công thức Tổng lỗi/Lỗi đã xử lý tại 02_UI_UX đếm cả dòng 'Không lỗi' (không có BUG_ID) nên bị đội số: DS_21 hiển thị 5 (thực tế 3), DS_22 hiển thị 4 (thực tế 2), DS_25 hiển thị 6 (thực tế 5). Toàn site có 29 dòng như vậy.",
-         "Sai lệch số liệu báo cáo")]
+issues=[]
+_op=[d for d in data["ds"] if d["n_open"]]
+if _op:
+    issues.append(("Còn lỗi đang mở: "+"; ".join(f'{d["ds"]} ({d["n_open"]} lỗi)' for d in _op),"Chặn nghiệm thu"))
+else:
+    issues.append(("Toàn bộ lỗi trong phạm vi đã được Dev xử lý và QA retest đạt (Kết quả Retest = Pass). "
+                   "BUG_UI_107 trên DS_22 — lỗi cuối cùng còn mở — đã được đóng và retest Pass ngày 17/09/2026.",
+                   "Không còn vướng mắc"))
+issues += [
+    ("BUG_UI_107 được gắn YC_06 (Xác minh email / Zalo) — tính năng này không nằm trong phạm vi DS_22 đã chốt "
+     "(YC_04, YC_05, YC_07). Đề nghị gắn lại đúng YC hoặc bổ sung YC_06 vào phạm vi để hồ sơ thống nhất.",
+     "Không đổi kết luận"),
+    ("YC_04 còn 5 lỗi trên DS_23 (BUG_FUNC_020 đang sửa, BUG_REQ_002 Deferred). Theo phạm vi đã chốt, "
+     "phần YC_04 trên DS_23 thuộc đợt nghiệm thu sau.",
+     "Ngoài phạm vi đợt này"),
+    ("3 lỗi chức năng không có ảnh bằng chứng (BUG_REG_001, BUG_FUNC_016, BUG_FUNC_019) — "
+     "hai bên thống nhất xác nhận bằng Kết quả Retest = Pass.",
+     "Đã thống nhất"),
+    ("DS_22 chỉ có 1 Test Case và đang ở trạng thái Fail; DS_04, DS_21, DS_25 còn Test Case ở trạng thái "
+     "Đang tiến hành. Sheet 03_Test_Execution chưa có dữ liệu.",
+     "Cần hoàn tất trước đợt sau"),
+    ("BUG_REG_001 (DS_22) có Ngày Dev báo fix 30/06/2026 sớm hơn Ngày phát hiện 24/07/2026 — "
+     "cần rà lại ngày trong 06_RTM_Dev_Test.",
+     "Sai lệch dữ liệu, không đổi kết luận"),
+    ("Công thức Tổng lỗi / Lỗi đã xử lý tại 02_UI_UX đếm cả dòng 'Không lỗi' (không có BUG_ID) nên bị đội số: "
+     "DS_21 hiển thị 5 (thực tế 3), DS_22 hiển thị 4 (thực tế 2), DS_25 hiển thị 6 (thực tế 5). "
+     "Toàn site có 29 dòng như vậy. Biên bản này dùng số thực tế đếm theo BUG_ID.",
+     "Sai lệch số liệu báo cáo")]
 for i,(t,eff) in enumerate(issues):
     r=row[0]; bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
     line([i+1,"","","","","","","","","","","","",""],i,h=34)
@@ -293,14 +307,19 @@ gap()
 sec("X. KẾT LUẬN NGHIỆM THU")
 r=row[0]
 merge(f"A{r}:C{r}","Kết quả tự đánh giá theo tiêu chí mục III",F(10,True),Fill(WHITE),Al("left"))
-concl=(f"{NPASS}/{NDS} màn hình ĐẠT nghiệm thu: "
-       + ", ".join(d["ds"] for d in data["ds"] if d["verdict"]=="ĐẠT")
-       + ". CHƯA ĐẠT: " + ", ".join(f'{d["ds"]} ({d["reason"]})' for d in data["ds"] if d["verdict"]!="ĐẠT"))
-merge(f"D{r}:{LAST}{r}",concl,F(10.5,True,RED),Fill(RED_BG),Al("left",wrap=True))
+_ok=[d for d in data["ds"] if d["verdict"]=="ĐẠT"]; _no=[d for d in data["ds"] if d["verdict"]!="ĐẠT"]
+concl=f"{NPASS}/{NDS} màn hình ĐẠT nghiệm thu: " + ", ".join(d["ds"] for d in _ok)
+concl += (". CHƯA ĐẠT: " + ", ".join(f'{d["ds"]} ({d["reason"]})' for d in _no)) if _no else \
+         f". Không còn màn hình nào chưa đạt. Đề xuất kết luận: ĐẠT NGHIỆM THU GIAI ĐOẠN 1."
+merge(f"D{r}:{LAST}{r}",concl,F(10.5,True,GREEN if not _no else RED),Fill(GREEN_BG) if not _no else Fill(RED_BG),Al("left",wrap=True))
 ws.row_dimensions[r].height=32; row[0]+=1
 r=row[0]
-merge(f"A{r}:C{r}","Điều kiện để DS_22 được nghiệm thu",F(10,True),Fill(WHITE),Al("left"))
-merge(f"D{r}:{LAST}{r}","Dev đóng BUG_UI_107, QA retest đạt và cập nhật Kết quả Retest = Pass; sau đó DS_22 đủ 4 điều kiện và được ký cùng 4 màn hình còn lại.",
+_fail=[d for d in data["ds"] if d["verdict"]!="ĐẠT"]
+merge(f"A{r}:C{r}","Điều kiện còn lại" if _fail else "Ghi nhận",F(10,True),Fill(WHITE),Al("left"))
+merge(f"D{r}:{LAST}{r}",
+      ("; ".join(f'{d["ds"]}: {d["reason"]}' for d in _fail) if _fail else
+       f"Toàn bộ {NDS} màn hình và {NYC} tính năng trong phạm vi đã thỏa mãn 6 tiêu chí tại mục III. "
+       f"{TOT}/{TOT} lỗi đã được xử lý và retest đạt. Hồ sơ đủ điều kiện trình ký."),
       F(10),Fill(WHITE),Al("left",wrap=True))
 ws.row_dimensions[r].height=28; row[0]+=1
 r=row[0]
