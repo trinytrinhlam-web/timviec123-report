@@ -91,3 +91,24 @@ số đo hiệu năng/bảo mật (X), hạng mục bàn giao (XIV), điều kho
 ```bash
 python3 build_report.py   # cần openpyxl
 ```
+
+## Biên bản nghiệm thu Giai đoạn 1 (`BaoCao_NghiemThu_GD1.xlsx`)
+
+Báo cáo nghiệm thu riêng cho 5 màn hình **DS_04, DS_05, DS_21, DS_22, DS_25**
+và 12 tính năng liên quan. Đây là văn bản **chốt tại một thời điểm** để ký,
+không đồng bộ live như file BGD.
+
+```bash
+python3 build_nghiemthu_gd1.py   # đọc data_nghiemthu_gd1.json
+```
+
+Dữ liệu trong `data_nghiemthu_gd1.json` trích từ file QA `Tester Detail- Timviec123`
+(`02_UI_UX`, `03_Tính_năng`, `05_Lỗi_Tester`, `06_RTM_Dev_Test`, `04_Test_Cases`),
+chốt ngày 17/09/2026.
+
+**Quy ước kết luận một DS = ĐẠT** khi đủ 4 điều kiện: trạng thái trang Hoàn thành;
+không còn lỗi đang mở; không còn lỗi Critical/High chưa đóng; mọi lỗi đã xử lý có
+`Kết quả Retest = Pass`.
+
+Kết quả: **4/5 ĐẠT** (DS_04, DS_05, DS_21, DS_25). DS_22 chưa đạt do BUG_UI_107
+(Critical) đang mở.

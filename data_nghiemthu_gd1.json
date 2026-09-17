@@ -1,0 +1,577 @@
+{
+ "asof": "17/09/2026",
+ "ds": [
+  {
+   "ds": "DS_04",
+   "name": "Trang Tìm kiếm",
+   "url": "/search/top",
+   "stat": "Hoàn thành",
+   "dev": {
+    "Desktop": "Đã Test",
+    "Mobile": "Đã Test",
+    "Tablet": "Đã Test"
+   },
+   "tot": 6,
+   "open": 0,
+   "done": 6,
+   "sev": "Critical: 5 | High: 1 | Medium: 0 | Low: 0",
+   "kind": "UI/UX: 6 | Functional: 0 | Security: 0 | Khác: 0",
+   "bydev": "Desktop: 3 | Mobile: 3 | Tablet: 1",
+   "pct": 1,
+   "last": "15/09/2026",
+   "tester": "Mr. Ẩn",
+   "yc": [
+    {
+     "yc": "YC_18",
+     "name": "Tìm việc theo từ khoá và địa điểm",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 6,
+     "open_in_ds": 0,
+     "last": "14/09/2026"
+    },
+    {
+     "yc": "YC_19",
+     "name": "Bộ lọc tìm kiếm nâng cao",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 1,
+     "open_in_ds": 0,
+     "last": "25/08/2026"
+    }
+   ],
+   "bugs": [
+    {
+     "bug": "BUG_UI_061",
+     "yc": "YC_18",
+     "sev": "High",
+     "type": "UI/UX",
+     "dev_env": "Desktop",
+     "title": "Tìm kiếm - Công việc",
+     "expect": "Sai màu, layout,...",
+     "found": "24/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "14/09/2026",
+     "retest": "Pass",
+     "retest_date": "14/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": false
+    },
+    {
+     "bug": "BUG_UI_062",
+     "yc": "YC_18",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Mobile, Tablet",
+     "title": "Tìm kiếm - Công việc",
+     "expect": "Sai toàn bộ bố cục",
+     "found": "24/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "14/09/2026",
+     "retest": "Pass",
+     "retest_date": "14/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": false
+    },
+    {
+     "bug": "BUG_UI_003",
+     "yc": "YC_18",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Desktop",
+     "title": "Tìm kiếm - Chi tiết công việc - CTCV - Button",
+     "expect": "BG Ứng tuyển ngay, Border Chat ngay | Màu: #257BFF",
+     "found": "05/06/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "30/06/2026",
+     "retest": "Pass",
+     "retest_date": "05/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    },
+    {
+     "bug": "BUG_UI_063",
+     "yc": "YC_18",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Desktop",
+     "title": "Tìm kiếm - Chi tiết công việc",
+     "expect": "Sai bố cục",
+     "found": "24/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "14/09/2026",
+     "retest": "Pass",
+     "retest_date": "14/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": false
+    },
+    {
+     "bug": "BUG_UI_098",
+     "yc": "YC_18, YC_19",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Mobile",
+     "title": "Lỗi layout",
+     "expect": "Thiết kế lại cho phù hợp trên Mobile\n- Button tìm kiếm: bỏ text đi\n- Bộ lọc thu gọn hoặc design gọn lại\n- Body mở rộng ra",
+     "found": "25/08/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "14/09/2026",
+     "retest": "Pass",
+     "retest_date": "14/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": false
+    },
+    {
+     "bug": "Retest-BUG_009",
+     "yc": "YC_18",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Mobile",
+     "title": "Vỡ layout khi click item",
+     "expect": "User click sẽ vào trực tiếp trang chi tiết việc làm",
+     "found": "14/09/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "14/09/2026",
+     "retest": "Pass",
+     "retest_date": "14/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": false
+    }
+   ],
+   "ntc": 4,
+   "tcst": {
+    "Đang tiến hành": 4
+   }
+  },
+  {
+   "ds": "DS_05",
+   "name": "Trang Cẩm nang nghề",
+   "url": "/chuyen-muc/cam-nang-nghe",
+   "stat": "Hoàn thành",
+   "dev": {
+    "Desktop": "Đã Test",
+    "Mobile": "Đã Test",
+    "Tablet": "Đã Test"
+   },
+   "tot": 3,
+   "open": 0,
+   "done": 3,
+   "sev": "Critical: 1 | High: 1 | Medium: 1 | Low: 0",
+   "kind": "UI/UX: 2 | Functional: 0 | Security: 0 | Khác: 1",
+   "bydev": "Desktop: 2 | Mobile: 1 | Tablet: 2",
+   "pct": 1,
+   "last": "03/07/2026",
+   "tester": "Mr. Ẩn",
+   "yc": [
+    {
+     "yc": "YC_53",
+     "name": "Cẩm nang nghề",
+     "prio": "Thấp",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 3,
+     "open_in_ds": 0,
+     "last": "17/08/2026"
+    }
+   ],
+   "bugs": [
+    {
+     "bug": "BUG_UI_037",
+     "yc": "YC_53",
+     "sev": "Medium",
+     "type": "UI/UX",
+     "dev_env": "Desktop",
+     "title": "Cẩm nang nghề",
+     "expect": "Sai font-size, màu, line-height",
+     "found": "01/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "06/08/2026",
+     "retest": "Pass",
+     "retest_date": "12/08/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    },
+    {
+     "bug": "BUG_UI_MOB_003",
+     "yc": "YC_53",
+     "sev": "High",
+     "type": "Responsive",
+     "dev_env": "Mobile, Tablet",
+     "title": "Cẩm nang nghề",
+     "expect": "Lỗi viền item",
+     "found": "01/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "06/08/2026",
+     "retest": "Pass",
+     "retest_date": "12/08/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    },
+    {
+     "bug": "BUG_UI_039",
+     "yc": "YC_53",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Desktop, Tablet",
+     "title": "Cẩm nang nghề",
+     "expect": "Lỗi background",
+     "found": "03/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "06/08/2026",
+     "retest": "Pass",
+     "retest_date": "12/08/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": false
+    }
+   ],
+   "ntc": 3,
+   "tcst": {
+    "Hoàn thành": 3
+   }
+  },
+  {
+   "ds": "DS_21",
+   "name": "Trang Đăng nhập",
+   "url": "Đăng nhập",
+   "stat": "Hoàn thành",
+   "dev": {
+    "Desktop": "Đã Test",
+    "Mobile": "Đã Test",
+    "Tablet": "Đã Test"
+   },
+   "tot": 5,
+   "open": 0,
+   "done": 5,
+   "sev": "Critical: 1 | High: 0 | Medium: 1 | Low: 1",
+   "kind": "UI/UX: 3 | Functional: 0 | Security: 0 | Khác: 2",
+   "bydev": "Desktop: 3 | Mobile: 2 | Tablet: 0",
+   "pct": 1,
+   "last": "09/07/2026",
+   "tester": "Mr. Ẩn",
+   "yc": [
+    {
+     "yc": "YC_01",
+     "name": "Đăng nhập bằng Email hoặc SĐT/Zalo",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 3,
+     "open_in_ds": 0,
+     "last": "16/09/2026"
+    },
+    {
+     "yc": "YC_02",
+     "name": "Đăng nhập bằng mạng xã hội",
+     "prio": "TB",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 3,
+     "open_in_ds": 0,
+     "last": "16/09/2026"
+    },
+    {
+     "yc": "YC_03",
+     "name": "Đăng nhập bằng Zalo qua OTP",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 0,
+     "open_in_ds": 0,
+     "last": "16/09/2026"
+    },
+    {
+     "yc": "YC_11",
+     "name": "Phân luồng Ứng viên và Nhà tuyển dụng",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 0,
+     "open_in_ds": 0,
+     "last": "14/08/2026"
+    }
+   ],
+   "bugs": [
+    {
+     "bug": "BUG_UI_004",
+     "yc": "YC_01, YC_02",
+     "sev": "Low",
+     "type": "UI/UX",
+     "dev_env": "Desktop",
+     "title": "Đăng nhập",
+     "expect": "Sai màu text | Màu: #257BFF",
+     "found": "08/06/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "12/07/2026",
+     "retest": "Pass",
+     "retest_date": "19/08/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": false
+    },
+    {
+     "bug": "BUG_UI_033",
+     "yc": "YC_01, YC_02",
+     "sev": "Medium",
+     "type": "UI/UX",
+     "dev_env": "Desktop, Mobile",
+     "title": "Đăng nhập - Màn hình login",
+     "expect": "Sai màu, font-size, icon, bố cục,...",
+     "found": "27/06/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "07/08/2026",
+     "retest": "Pass",
+     "retest_date": "12/08/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    },
+    {
+     "bug": "BUG_UI_045",
+     "yc": "YC_01, YC_02",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Desktop, Mobile",
+     "title": "Đăng nhập - Logo header",
+     "expect": "Bo góc 2 bên",
+     "found": "09/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "15/07/2026",
+     "retest": "Pass",
+     "retest_date": "24/07/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    }
+   ],
+   "ntc": 16,
+   "tcst": {
+    "Đang tiến hành": 15,
+    "Hoàn thành": 1
+   }
+  },
+  {
+   "ds": "DS_22",
+   "name": "Trang Đăng ký",
+   "url": "",
+   "stat": "Hoàn thành",
+   "dev": {
+    "Desktop": "Đã Test",
+    "Mobile": "Đã Test",
+    "Tablet": "Đã Test"
+   },
+   "tot": 4,
+   "open": 1,
+   "done": 3,
+   "sev": "Critical: 2 | High: 0 | Medium: 0 | Low: 0",
+   "kind": "UI/UX: 1 | Functional: 1 | Security: 0 | Khác: 2",
+   "bydev": "Desktop: 1 | Mobile: 1 | Tablet: 1",
+   "pct": 1,
+   "last": "10/09/2026",
+   "tester": "Mr. Ẩn",
+   "yc": [
+    {
+     "yc": "YC_04",
+     "name": "Đăng ký bằng email",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 1,
+     "open_in_ds": 0,
+     "last": "24/07/2026"
+    },
+    {
+     "yc": "YC_05",
+     "name": "Đăng ký bằng Zalo",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 0,
+     "open_in_ds": 0,
+     "last": "16/09/2026"
+    },
+    {
+     "yc": "YC_07",
+     "name": "Thông báo đăng ký thành công",
+     "prio": "TB",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 0,
+     "open_in_ds": 0,
+     "last": "14/08/2026"
+    }
+   ],
+   "bugs": [
+    {
+     "bug": "BUG_REG_001",
+     "yc": "YC_04",
+     "sev": "Critical",
+     "type": "Functional",
+     "dev_env": "N/A",
+     "title": "Đăng ký",
+     "expect": "OTP không gửi về mail",
+     "found": "24/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "30/06/2026",
+     "retest": "Pass",
+     "retest_date": "24/07/2026",
+     "status": "Fixed",
+     "evi": false,
+     "fig": false
+    },
+    {
+     "bug": "BUG_UI_107",
+     "yc": "YC_06",
+     "sev": "Critical",
+     "type": "UI/UX",
+     "dev_env": "Desktop, Tablet, Mobile",
+     "title": "Lỗi màu chìm đi trong template mail kích hoạt",
+     "expect": "Thấy rõ email",
+     "found": "10/09/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "",
+     "retest": "Chưa retest",
+     "retest_date": "",
+     "status": "Open",
+     "evi": true,
+     "fig": false
+    }
+   ],
+   "ntc": 1,
+   "tcst": {
+    "Fail": 1
+   }
+  },
+  {
+   "ds": "DS_25",
+   "name": "Trang Quên mật khẩu",
+   "url": "Lấy lại mật khẩu",
+   "stat": "Hoàn thành",
+   "dev": {
+    "Desktop": "Đã Test",
+    "Mobile": "Đã Test",
+    "Tablet": "Đã Test"
+   },
+   "tot": 6,
+   "open": 0,
+   "done": 6,
+   "sev": "Critical: 2 | High: 2 | Medium: 0 | Low: 1",
+   "kind": "UI/UX: 3 | Functional: 2 | Security: 0 | Khác: 1",
+   "bydev": "Desktop: 5 | Mobile: 4 | Tablet: 1",
+   "pct": 1,
+   "last": "16/09/2026",
+   "tester": "Mr. Ẩn",
+   "yc": [
+    {
+     "yc": "YC_08",
+     "name": "Quên mật khẩu",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 5,
+     "open_in_ds": 0,
+     "last": "05/09/2026"
+    },
+    {
+     "yc": "YC_09",
+     "name": "Xác minh khi quên mật khẩu",
+     "prio": "Cao",
+     "stat": "Hoàn thành",
+     "bugs_in_ds": 0,
+     "open_in_ds": 0,
+     "last": "14/08/2026"
+    }
+   ],
+   "bugs": [
+    {
+     "bug": "BUG_UI_005",
+     "yc": "YC_08",
+     "sev": "Low",
+     "type": "UI/UX",
+     "dev_env": "Desktop",
+     "title": "Lấy lại mật khẩu - Forgot Password",
+     "expect": "Sai thiết kế nhiều",
+     "found": "08/06/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "12/07/2026",
+     "retest": "Pass",
+     "retest_date": "05/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    },
+    {
+     "bug": "BUG_UI_035",
+     "yc": "YC_08",
+     "sev": "High",
+     "type": "UI/UX",
+     "dev_env": "Desktop, Mobile",
+     "title": "Lấy lại mật khẩu - Đặt lại Mật khẩu",
+     "expect": "Sai thiết kế Figma",
+     "found": "29/06/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "21/08/2026",
+     "retest": "Pass",
+     "retest_date": "05/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    },
+    {
+     "bug": "BUG_UI_036",
+     "yc": "YC_08",
+     "sev": "High",
+     "type": "UI/UX",
+     "dev_env": "Desktop, Mobile, Tablet",
+     "title": "Lấy lại mật khẩu - Đặt lại Mật khẩu-Thành công",
+     "expect": "Sai thiết kế Figma",
+     "found": "29/06/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "21/08/2026",
+     "retest": "Pass",
+     "retest_date": "05/09/2026",
+     "status": "Fixed",
+     "evi": true,
+     "fig": true
+    },
+    {
+     "bug": "BUG_FUNC_016",
+     "yc": "YC_08",
+     "sev": "Critical",
+     "type": "Functional",
+     "dev_env": "Desktop, Mobile",
+     "title": "Lấy lại mật khẩu - Đặt lại Mật khẩu",
+     "expect": "Nhập mật khẩu mới không được giống với mật khẩu cũ",
+     "found": "29/06/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "21/08/2026",
+     "retest": "Pass",
+     "retest_date": "05/09/2026",
+     "status": "Fixed",
+     "evi": false,
+     "fig": false
+    },
+    {
+     "bug": "BUG_FUNC_019",
+     "yc": "YC_08",
+     "sev": "Critical",
+     "type": "Functional",
+     "dev_env": "Desktop, Mobile",
+     "title": "Lấy lại mật khẩu - Thiết bị tin cậy",
+     "expect": "Tín năng chưa được code",
+     "found": "01/07/2026",
+     "dev": "Mr. Thanh",
+     "fixed": "21/08/2026",
+     "retest": "Pass",
+     "retest_date": "05/09/2026",
+     "status": "Fixed",
+     "evi": false,
+     "fig": false
+    }
+   ],
+   "ntc": 5,
+   "tcst": {
+    "Đang tiến hành": 5
+   }
+  }
+ ]
+}
