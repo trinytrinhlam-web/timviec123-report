@@ -53,8 +53,8 @@ def src(name,u,rng):
     ws=wb.create_sheet(name); ws["A1"]=f'=IMPORTRANGE({u},"{rng}")'; ws.sheet_state="hidden"; return ws
 src("z_Trang",UW(),"02_UI_UX!A3:N3")
 src("z_TinhNang",UW(),"03_Tính_năng!A3:N3")
-src("z_TrangFull",UW(),"02_UI_UX!A4:R68")
-src("z_TNFull",UW(),"03_Tính_năng!A4:T92")
+src("z_TrangFull",UW(),"02_UI_UX!A4:R200")
+src("z_TNFull",UW(),"03_Tính_năng!A4:T200")
 src("z_Loi",UW(),"05_Lỗi_Tester!A4:V606")
 src("z_CV",UW(),"01_Cong_viec_ngay!A4:P1004")
 src("z_DB_DN",UD(),"'HS DN'!D4:N970")
@@ -230,11 +230,11 @@ def build_period(sheetname, mode):
     r+=1
     isd = (mode=="week")
     if mode=="month":
-        qp=detail_query("'z_TrangFull'!$A$1:$R$65","B","I","P","E","E","I",False,"(không có trang test trong kỳ)")
-        qf=detail_query("'z_TNFull'!$A$1:$T$89","B","K","R","J","J","K",False,"(không có tính năng test trong kỳ)")
+        qp=detail_query("'z_TrangFull'!$A$1:$R$197","B","I","P","E","E","I",False,"(không có trang test trong kỳ)")
+        qf=detail_query("'z_TNFull'!$A$1:$T$197","B","K","R","J","J","K",False,"(không có tính năng test trong kỳ)")
     else:
-        qp=detail_query("'z_TrangFull'!$A$1:$R$65","B","I","P","P","E","P",True,"(không có trang test trong kỳ)")
-        qf=detail_query("'z_TNFull'!$A$1:$T$89","B","K","R","R","J","R",True,"(không có tính năng test trong kỳ)")
+        qp=detail_query("'z_TrangFull'!$A$1:$R$197","B","I","P","P","E","P",True,"(không có trang test trong kỳ)")
+        qf=detail_query("'z_TNFull'!$A$1:$T$197","B","K","R","R","J","R",True,"(không có tính năng test trong kỳ)")
     cell(s,f"A{r}",qp,F(10),Fill(WHITE),Al("left"))
     cell(s,f"F{r}",qf,F(10),Fill(WHITE),Al("left"))
     for rr2 in range(r,r+66):
@@ -331,39 +331,371 @@ m=build_period("01_Báo_cáo_Tháng","month")
 w=build_period("02_Báo_cáo_Tuần","week")
 
 # ============ 03_Nghiệm_thu ============
-n=wb.create_sheet("03_Nghiệm_thu")
-for col,wd in {"A":20,"B":24,"C":10,"D":12,"E":10,"F":16,"G":18,"H":24}.items(): n.column_dimensions[col].width=wd
-band(n,"A1:H1","BIÊN BẢN / CHECKLIST NGHIỆM THU",big=True)
-merge(n,"A2:H2","Cột Kết luận & Người duyệt do người duyệt điền.",font=F(10,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left"))
-cell(n,"A4","Kỳ nghiệm thu",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(n,"B4","Tháng 8",F(10.5,True),Fill(INPUT),Al("center"),border=box)
-cell(n,"C4","Ngày lập",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); merge(n,"D4:E4","=TODAY()",font=F(10.5,True),fill=Fill(INPUT),al=Al("center")); n["D4"].number_format="dd/mm/yyyy"
-cell(n,"F4","Người lập",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(n,"G4","",F(10.5),Fill(INPUT),Al("center"),border=box)
-r=6
-for i,h in enumerate(["Hạng mục","Phạm vi","Tổng","Hoàn thành","Tỷ lệ","Critical/High mở","Kết luận","Ghi chú"]):
-    c=get_column_letter(1+i); cell(n,f"{c}{r}",h,F(10,True,WHITE),Fill(NAVY),Al("center"),border=box)
-n.row_dimensions[r].height=30; r+=1
-items=[("UI/UX","Trang website",f"={T_TOT}",f"={T_DONE}",f"={T_PROG}",CH_OPEN),
-       ("Chức năng","88 tính năng",f"={F_TOT}",f"={F_DONE}",f"={F_PROG}",CH_OPEN),
-       ("Responsive","YC_87 + lỗi responsive","","","",f'=COUNTIF(\'z_Loi\'!$K:$K,"*Responsive*")'),
-       ("Bảo mật","Test Case Security","","","",f'=COUNTIF(\'z_Loi\'!$K:$K,"*Security*")'),
-       ("Dữ liệu","Test Case API/Database","","","","")]
-for i,(cat,scope,tot,done,ratio,ch) in enumerate(items):
-    bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
-    cell(n,f"A{r}",cat,F(10.5,True),bg,Al("left"),border=box); cell(n,f"B{r}",scope,F(10),bg,Al("left",wrap=True),border=box)
-    cell(n,f"C{r}",tot,F(10.5),bg,Al("center"),border=box,nfmt=INT); cell(n,f"D{r}",done,F(10.5,True),bg,Al("center"),border=box,nfmt=INT)
-    cell(n,f"E{r}",ratio,F(10.5),bg,Al("center"),border=box,nfmt=PCT if ratio else None)
-    cell(n,f"F{r}",ch,F(10.5,True,RED),bg,Al("center"),border=box,nfmt=INT if ch else None)
-    cell(n,f"G{r}","Chưa nghiệm thu",F(10,italic=True,color=GREY),bg,Al("center"),border=box); cell(n,f"H{r}","",F(10),bg,Al("left"),border=box)
-    n.row_dimensions[r].height=26; r+=1
-r+=1
-merge(n,f"A{r}:B{r}","KẾT LUẬN CHUNG",font=F(11,True,WHITE),fill=Fill(BLUE),al=Al("left"),border=True)
-merge(n,f"C{r}:H{r}","Chưa nghiệm thu",font=F(10.5,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left"))
-for cc in "CDEFGH": n[f"{cc}{r}"].border=box
-r+=1
-merge(n,f"A{r}:H{r}","Điều kiện khuyến nghị: không còn Critical/High chưa được phê duyệt; phạm vi và bằng chứng đầy đủ; ngoại lệ phải có người duyệt và lý do rõ ràng.",
-      font=F(9.5,color=GREY),fill=Fill(ZEBRA),al=Al("left",wrap=True)); n.row_dimensions[r].height=34
-n.sheet_view.showGridLines=False
+KT="'z_Loi'!$K:$K"
+def _open(col,crit):
+    return f'(COUNTIFS({U},"Open",{col},"{crit}")+COUNTIFS({U},"Chưa gửi Dev",{col},"{crit}"))'
+def sev_total(x): return f'=COUNTIF({L},"{x}")'
+def sev_open(x):  return "="+_open(L,x)
+def sta_cnt(x):   return f'=COUNTIF({U},"{x}")'
+def typ_total(x): return f'=COUNTIF({KT},"*{x}*")'
+def typ_open(x):  return "="+_open(KT,f"*{x}*")
+def typ_ch(x):
+    return ('=('+f'COUNTIFS({U},"Open",{KT},"*{x}*",{L},"Critical")+COUNTIFS({U},"Chưa gửi Dev",{KT},"*{x}*",{L},"Critical")'
+            f'+COUNTIFS({U},"Open",{KT},"*{x}*",{L},"High")+COUNTIFS({U},"Chưa gửi Dev",{KT},"*{x}*",{L},"High")'+')')
+def dev_open(x):  return "="+_open(M,f"*{x}*")
+BLOCKING_QUERY=('=IFERROR(QUERY(\'z_Loi\'!$A:$V,'
+ '"select E,B,C,L,K,Q,U where (L = \'Critical\' or L = \'High\') and (U = \'Open\' or U = \'Chưa gửi Dev\') '
+ 'order by L asc, Q desc limit 30 '
+ 'label E \'\', B \'\', C \'\', L \'\', K \'\', Q \'\', U \'\' format Q \'dd/mm/yyyy\'",1),'
+ '"Không còn lỗi Critical/High đang mở — đủ điều kiện về lỗi chặn")')
 
+def build_acceptance():
+    n=wb.create_sheet("03_Nghiệm_thu")
+    for col,wd in {"A":22,"B":34,"C":17,"D":17,"E":14,"F":15,"G":17,"H":22,"I":28}.items():
+        n.column_dimensions[col].width=wd
+    dv_kl=DataValidation(type="list",formula1='"Đạt,Đạt có điều kiện,Không đạt,Chưa nghiệm thu"',allow_blank=True)
+    dv_dg=DataValidation(type="list",formula1='"Đạt,Chưa đạt,Không áp dụng,Chưa đo"',allow_blank=True)
+    dv_bg=DataValidation(type="list",formula1='"Đã bàn giao,Chưa bàn giao,Không áp dụng"',allow_blank=True)
+    for dv in (dv_kl,dv_dg,dv_bg): n.add_data_validation(dv)
+    row=[1]
+    def gap(h=8):
+        n.row_dimensions[row[0]].height=h; row[0]+=1
+    def title(text):
+        r=row[0]; band(n,f"A{r}:I{r}",text,big=True); row[0]+=1; return r
+    def sec(text):
+        r=row[0]; band(n,f"A{r}:I{r}",text); row[0]+=1; return r
+    def note(text,h=26):
+        r=row[0]; merge(n,f"A{r}:I{r}",text,font=F(9.5,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left",wrap=True))
+        n.row_dimensions[r].height=h; row[0]+=1; return r
+    def head(labels,h=32):
+        r=row[0]
+        for i,lb in enumerate(labels):
+            cell(n,f"{get_column_letter(1+i)}{r}",lb,F(9.5,True,WHITE),Fill(NAVY),Al("center",wrap=True),border=box)
+        n.row_dimensions[r].height=h; row[0]+=1; return r
+    def line(vals,i=0,inputs=(),nfmts=None,h=24,left=(0,1),bold=()):
+        r=row[0]; bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
+        for j in range(9):
+            c=get_column_letter(1+j); v=vals[j] if j<len(vals) else ""
+            cell(n,f"{c}{r}",v if v!="" else None,F(10,j in bold),Fill(INPUT) if j in inputs else bg,
+                 Al("left" if j in left else "center",wrap=True),border=box,nfmt=(nfmts or {}).get(j))
+        n.row_dimensions[r].height=h; row[0]+=1; return r
+    def kv(pairs,h=24):
+        """Tối đa 3 cặp Nhãn/Giá trị trên 1 dòng: A|B:C — D|E:F — G|H:I"""
+        r=row[0]; slots=[("A","B:C"),("D","E:F"),("G","H:I")]
+        for k,(lc,vr) in enumerate(slots):
+            if k<len(pairs):
+                item=pairs[k]; lb,val=item[0],item[1]; nf=item[2] if len(item)>2 else None
+                cell(n,f"{lc}{r}",lb,F(10,True,WHITE),Fill(BLUE),Al("left",wrap=True),border=box)
+                a,b=vr.split(":"); merge(n,f"{a}{r}:{b}{r}",val if val!="" else None,font=F(10),fill=Fill(INPUT),al=Al("left"))
+                for cc in (a,b): n[f"{cc}{r}"].border=box
+                if nf: n[f"{a}{r}"].number_format=nf
+            else:
+                for cc in [lc]+vr.split(":"): cell(n,f"{cc}{r}","",F(10),Fill(WHITE),Al("left"),border=box)
+        n.row_dimensions[r].height=h; row[0]+=1; return r
+
+    title("BIÊN BẢN NGHIỆM THU WEBSITE TIMVIEC123")
+    note("Ô nền VÀNG = nhập tay. Ô nền trắng/xám có công thức = tự động lấy từ dữ liệu QA (02_UI_UX, 03_Tính_năng, 05_Lỗi_Tester) — không sửa tay. "
+         "Phần nào chưa có dữ liệu nguồn thì để trống và ghi rõ trong mục 'Thông tin còn thiếu'.",h=30)
+    gap()
+
+    # ---------- I. THÔNG TIN CHUNG ----------
+    sec("I. THÔNG TIN CHUNG")
+    kv([("Số biên bản",""),("Ngày lập","=TODAY()","dd/mm/yyyy"),("Địa điểm lập","")])
+    kv([("Tên dự án","Website TimViec123"),("Tên miền / URL",""),("Môi trường nghiệm thu","")])
+    kv([("Giai đoạn nghiệm thu","Giai đoạn 1"),("Phiên bản / Release",""),("Kỳ kiểm thử (từ)","","dd/mm/yyyy")])
+    kv([("Kỳ kiểm thử (đến)","","dd/mm/yyyy"),("Hợp đồng số",""),("Ngày hợp đồng","","dd/mm/yyyy")])
+    kv([("Tài liệu yêu cầu (SRS/BRD)",""),("Kế hoạch kiểm thử",""),("Lần nghiệm thu thứ","")])
+    gap()
+
+    # ---------- II. CÁC BÊN THAM GIA ----------
+    sec("II. CÁC BÊN THAM GIA")
+    head(["Vai trò","Đơn vị / Bộ phận","Họ và tên","Chức vụ","Email","Điện thoại","Trách nhiệm","Ghi chú",""])
+    parties=[("Bên A — Chủ đầu tư","","","","","","Phê duyệt & ký nghiệm thu"),
+             ("Bên B — Đơn vị thực hiện","","","","","","Bàn giao sản phẩm, xử lý lỗi"),
+             ("Quản lý dự án (PM)","","","","","","Điều phối, chốt phạm vi"),
+             ("QA / Tester","","Mr. Ẩn","","","","Thực hiện kiểm thử, lập hồ sơ lỗi"),
+             ("Đại diện Dev","","","","","","Sửa lỗi, xác nhận kỹ thuật"),
+             ("Người duyệt cuối","","","","","","Ra kết luận nghiệm thu")]
+    for i,p in enumerate(parties): line(list(p),i,inputs=(1,2,3,4,5),left=(0,1,2,6,7))
+    gap()
+
+    # ---------- III. PHẠM VI NGHIỆM THU ----------
+    sec("III. PHẠM VI NGHIỆM THU")
+    note("Nghiệm thu chỉ xét đúng các hạng mục liệt kê trong phạm vi. Hạng mục ngoài phạm vi không dùng làm lý do từ chối nghiệm thu.",h=22)
+    head(["Nhóm","Nội dung trong phạm vi","Số lượng trong phạm vi","Tổng trên hệ thống","Tỷ lệ phạm vi","Tài liệu tham chiếu","Ngoài phạm vi (loại trừ)","Ghi chú",""])
+    line(["Trang (DS)","Danh sách DS được chốt nghiệm thu","",f"={T_TOT}","=IFERROR(C/D,\"\")","","",""],0,
+         inputs=(2,5,6,7),nfmts={3:INT,4:PCT},left=(0,1,5,6,7))
+    n[f"E{row[0]-1}"]=f"=IFERROR(C{row[0]-1}/D{row[0]-1},\"\")"
+    line(["Tính năng (YC)","Danh sách YC được chốt nghiệm thu","",f"={F_TOT}","","","",""],1,
+         inputs=(2,5,6,7),nfmts={3:INT,4:PCT},left=(0,1,5,6,7))
+    n[f"E{row[0]-1}"]=f"=IFERROR(C{row[0]-1}/D{row[0]-1},\"\")"
+    line(["Vai trò người dùng","Khách / Ứng viên / Nhà tuyển dụng / Admin","","","","","",""],2,inputs=(2,3,5,6,7),left=(0,1,5,6,7))
+    line(["Tích hợp / API","Danh sách tích hợp bên thứ ba","","","","","",""],3,inputs=(2,3,5,6,7),left=(0,1,5,6,7))
+    gap()
+
+    # ---------- IV. MÔI TRƯỜNG KIỂM THỬ ----------
+    sec("IV. MÔI TRƯỜNG KIỂM THỬ")
+    head(["Hạng mục","Cấu hình / danh sách cụ thể","Phiên bản","Đã kiểm thử","Ghi chú","","","",""])
+    envs=["Trình duyệt Desktop","Trình duyệt Mobile","Thiết bị di động","Máy tính bảng","Độ phân giải chuẩn",
+          "Hệ điều hành","Tài khoản kiểm thử","Dữ liệu kiểm thử","Đường truyền / mạng"]
+    for i,e in enumerate(envs): line([e,"","","",""],i,inputs=(1,2,3,4),left=(0,1,4))
+    gap()
+
+    # ---------- V. TIÊU CHÍ NGHIỆM THU ----------
+    sec("V. TIÊU CHÍ NGHIỆM THU (ACCEPTANCE / EXIT CRITERIA)")
+    note("Ngưỡng bắt buộc do hai bên chốt trước khi kiểm thử. Kết quả thực tế tự động tính; đánh giá tự so sánh với ngưỡng.",h=22)
+    head(["Mã","Tiêu chí","Ngưỡng bắt buộc","Kết quả thực tế","Đánh giá","Bắt buộc?","Nguồn số liệu","Ghi chú",""])
+    crit_start=row[0]
+    def crit(code,name,thr,res,cmp_,must,srcv,nf=None,pct=False):
+        r=row[0]; i=r-crit_start
+        ins=(2,7) if res!="" else (2,3,7)
+        line([code,name,thr,res,"",must,srcv,""],i,inputs=ins,
+             nfmts={2:(PCT if pct else INT),3:(PCT if pct else (nf or INT))},left=(0,1,6,7))
+        if cmp_=="le":  n[f"E{r}"]=f'=IF(C{r}="","Chưa chốt ngưỡng",IF(D{r}<=C{r},"Đạt","Chưa đạt"))'
+        elif cmp_=="ge":n[f"E{r}"]=f'=IF(C{r}="","Chưa chốt ngưỡng",IF(D{r}>=C{r},"Đạt","Chưa đạt"))'
+        else:
+            n[f"E{r}"]=None; n[f"E{r}"].fill=Fill(INPUT); dv_dg.add(n[f"E{r}"])
+        n[f"E{r}"].font=F(10,True); n[f"E{r}"].alignment=Al("center")
+        return r
+    crit("TC01","Lỗi Critical đang mở",0,sev_open("Critical"),"le","Bắt buộc","05_Lỗi_Tester (L, U)")
+    crit("TC02","Lỗi High đang mở",0,sev_open("High"),"le","Bắt buộc","05_Lỗi_Tester (L, U)")
+    crit("TC03","Lỗi Medium đang mở",5,sev_open("Medium"),"le","Bắt buộc","05_Lỗi_Tester (L, U)")
+    crit("TC04","Lỗi Low đang mở","",sev_open("Low"),"le","Khuyến nghị","05_Lỗi_Tester (L, U)")
+    crit("TC05","Tỷ lệ trang hoàn thành kiểm thử",1,f"={T_PROG}","ge","Bắt buộc","02_UI_UX",pct=True)
+    crit("TC06","Tỷ lệ tính năng hoàn thành kiểm thử",1,f"={F_PROG}","ge","Bắt buộc","03_Tính_năng",pct=True)
+    crit("TC07","Tỷ lệ lỗi đã xử lý (Fixed/Verified/Closed)",0.95,
+         f'=IFERROR({RESOLVED[1:]}/(COUNTA({E})-1),0)',"ge","Bắt buộc","05_Lỗi_Tester (U)",pct=True)
+    crit("TC08","Tỷ lệ lỗi đã retest đạt (Verified/Closed)",0.9,
+         f'=IFERROR((COUNTIF({U},"Verified")+COUNTIF({U},"Closed"))/(COUNTA({E})-1),0)',"ge","Bắt buộc","05_Lỗi_Tester (U)",pct=True)
+    crit("TC09","Tỷ lệ Test Case Pass","","","ge","Bắt buộc","06_RTM_Dev_Test — CHƯA CÓ SỐ",pct=True)
+    crit("TC10","Độ phủ yêu cầu (RTM: YC có Test Case)","","","ge","Bắt buộc","06_RTM_Dev_Test — CHƯA CÓ SỐ",pct=True)
+    crit("TC11","Lỗi bảo mật Critical/High đang mở",0,typ_ch("Security"),"le","Bắt buộc","05_Lỗi_Tester (K, L, U)")
+    crit("TC12","Lỗi Responsive Critical/High đang mở",0,typ_ch("Responsive"),"le","Bắt buộc","05_Lỗi_Tester (K, L, U)")
+    crit("TC13","Hiệu năng trang chủ (điểm PageSpeed / LCP)","","","man","Bắt buộc","Đo bằng công cụ — CHƯA CÓ SỐ")
+    crit("TC14","Tương thích đủ danh mục trình duyệt/thiết bị đã chốt","","","man","Bắt buộc","Mục IV — CHƯA CÓ SỐ")
+    crit("TC15","Bằng chứng kiểm thử đầy đủ (ảnh/video/link retest)","","","man","Bắt buộc","05_Lỗi_Tester (O, P)")
+    crit("TC16","Không còn lỗi hồi quy (regression) đang mở","","","man","Bắt buộc","Kết quả retest — CHƯA CÓ SỐ")
+    crit("TC17","Tài liệu bàn giao đầy đủ","","","man","Bắt buộc","Mục XII")
+    crit_end=row[0]-1
+    gap()
+
+    # ---------- VI. ĐỊNH NGHĨA MỨC ĐỘ LỖI & SLA ----------
+    sec("VI. ĐỊNH NGHĨA MỨC ĐỘ LỖI VÀ SLA XỬ LÝ")
+    head(["Mức độ","Định nghĩa","Ảnh hưởng","SLA xử lý (giờ/ngày)","Chặn nghiệm thu?","Số lỗi hiện có","Đang mở","Ghi chú",""])
+    sevs=[("Critical","Chặn luồng nghiệp vụ chính, mất dữ liệu, lỗ hổng bảo mật nghiêm trọng","Không thể sử dụng","","Có"),
+          ("High","Sai nghiệp vụ, tính năng chính không hoạt động đúng","Ảnh hưởng lớn","","Có"),
+          ("Medium","Sai lệch hiển thị/nghiệp vụ phụ, có cách làm thay thế","Ảnh hưởng vừa","","Theo ngưỡng TC03"),
+          ("Low","Lỗi nhỏ về giao diện, chính tả, trải nghiệm","Ảnh hưởng thấp","","Không")]
+    for i,(s,d,a,sla,blk) in enumerate(sevs):
+        line([s,d,a,sla,blk,sev_total(s),sev_open(s),""],i,inputs=(3,7),nfmts={5:INT,6:INT},left=(0,1,2,7))
+    gap()
+
+    # ---------- VII. KẾT QUẢ KIỂM THỬ ----------
+    sec("VII. KẾT QUẢ KIỂM THỬ — TỔNG HỢP (tự động)")
+    head(["Chỉ số","Diễn giải","Số lượng","Tổng","Tỷ lệ","Chỉ số","Diễn giải","Số lượng","Tỷ lệ"])
+    stats=[("Trang hoàn thành","Đã test xong, không còn lỗi chặn",f"={T_DONE}",f"={T_TOT}",f"={T_PROG}",
+            "Tổng lỗi ghi nhận","Số dòng có BUG_ID",BUG_TOTAL,""),
+           ("Trang cần kiểm tra lại","Đã test, còn lỗi phải retest",f"={T_RE}",f"={T_TOT}","",
+            "Lỗi đang mở","Open + Chưa gửi Dev",OPEN,""),
+           ("Trang chưa kiểm tra","Chưa bắt đầu kiểm thử",f"={T_UN}",f"={T_TOT}","",
+            "Lỗi đã xử lý","Fixed + Verified + Closed",RESOLVED,""),
+           ("Tính năng hoàn thành","Đã test xong",f"={F_DONE}",f"={F_TOT}",f"={F_PROG}",
+            "Lỗi Critical/High đang mở","Chặn nghiệm thu",CH_OPEN,""),
+           ("Tính năng cần kiểm tra lại","Còn lỗi phải retest",f"={F_RE}",f"={F_TOT}","",
+            "Lỗi tạm hoãn (Deferred)","Cần ghi nhận ngoại lệ",sta_cnt("Deferred"),""),
+           ("Tính năng chưa kiểm tra","Chưa bắt đầu kiểm thử",f"={F_UN}",f"={F_TOT}","",
+            "Lỗi đã retest đạt","Verified + Closed",f'=(COUNTIF({U},"Verified")+COUNTIF({U},"Closed"))',"")]
+    for i,(a,b,c,d,e,f2,g2,h2,i2) in enumerate(stats):
+        r=line([a,b,c,d,e,f2,g2,h2,i2],i,nfmts={2:INT,3:INT,4:PCT,7:INT,8:PCT},left=(0,1,5,6))
+        if not e: n[f"E{r}"]=f'=IFERROR(C{r}/D{r},"")'; n[f"E{r}"].number_format=PCT
+        if i>0:
+            n[f"I{r}"]=f'=IFERROR(H{r}/({BUG_TOTAL[1:]}),"")'; n[f"I{r}"].number_format=PCT
+    gap()
+
+    # ---------- VIII. THỐNG KÊ LỖI ----------
+    sec("VIII. THỐNG KÊ LỖI (tự động)")
+    head(["Theo trạng thái","Số lỗi","Tỷ lệ","Theo mức độ","Tổng","Đang mở","Theo thiết bị / loại","Tổng","Đang mở"])
+    st=[("Open","Critical","Desktop"),("Chưa gửi Dev","High","Mobile"),("Fixed","Medium","Tablet"),
+        ("Verified","Low","UI/UX"),("Closed",None,"Functional"),("Deferred",None,"Security")]
+    for i,(s1,s2,s3) in enumerate(st):
+        vals=[s1,sta_cnt(s1),"",s2 or "",sev_total(s2) if s2 else "",sev_open(s2) if s2 else "",s3,"",""]
+        r=line(vals,i,nfmts={1:INT,2:PCT,4:INT,5:INT,7:INT,8:INT},left=(0,3,6))
+        n[f"C{r}"]=f'=IFERROR(B{r}/({BUG_TOTAL[1:]}),"")'; n[f"C{r}"].number_format=PCT
+        if s3 in ("Desktop","Mobile","Tablet"):
+            n[f"H{r}"]=f'=COUNTIF({M},"*{s3}*")'; n[f"I{r}"]=dev_open(s3)
+        else:
+            n[f"H{r}"]=typ_total(s3); n[f"I{r}"]=typ_open(s3)
+        n[f"H{r}"].number_format=INT; n[f"I{r}"].number_format=INT
+    gap()
+
+    # ---------- IX. KẾT QUẢ NGHIỆM THU THEO HẠNG MỤC ----------
+    sec("IX. KẾT QUẢ NGHIỆM THU THEO HẠNG MỤC")
+    head(["Hạng mục","Phạm vi","Tổng","Hoàn thành","Tỷ lệ","Lỗi đang mở","Critical/High mở","Kết luận","Ghi chú"])
+    cat_start=row[0]
+    cats=[("Giao diện & trải nghiệm (UI/UX)","Trang website",f"={T_TOT}",f"={T_DONE}",f"={T_PROG}",typ_open("UI/UX"),typ_ch("UI/UX")),
+          ("Chức năng nghiệp vụ","Tính năng theo yêu cầu",f"={F_TOT}",f"={F_DONE}",f"={F_PROG}",typ_open("Functional"),typ_ch("Functional")),
+          ("Tương thích & Responsive","Desktop / Mobile / Tablet","","","",typ_open("Responsive"),typ_ch("Responsive")),
+          ("Bảo mật","Test case Security, phân quyền, dữ liệu","","","",typ_open("Security"),typ_ch("Security")),
+          ("Dữ liệu & tích hợp (API/DB)","Luồng dữ liệu, API bên thứ ba","","","","",""),
+          ("Hiệu năng","Tốc độ tải, chịu tải","","","","",""),
+          ("SEO & chuẩn nội dung","Meta, sitemap, robots, URL","","","","",""),
+          ("Khả năng truy cập (Accessibility)","Chuẩn WCAG cơ bản","","","","",""),
+          ("Vận hành & bàn giao","Tài liệu, tài khoản, hướng dẫn","","","","","")]
+    for i,c in enumerate(cats):
+        r=line(list(c)+["",""],i,inputs=(8,),nfmts={2:INT,3:INT,4:PCT,5:INT,6:INT},left=(0,1,8),h=26)
+        if c[5]=="":
+            for cc in ("C","D","E","F","G"): n[f"{cc}{r}"].fill=Fill(INPUT)
+            n[f"H{r}"]=None
+        else:
+            n[f"H{r}"]=f'=IF(G{r}>0,"Không đạt",IF(F{r}>0,"Đạt có điều kiện","Đạt"))'
+        n[f"H{r}"].font=F(10,True); n[f"H{r}"].alignment=Al("center")
+        if c[5]=="": n[f"H{r}"].fill=Fill(INPUT); dv_kl.add(n[f"H{r}"])
+    cat_end=row[0]-1
+    gap()
+
+    # ---------- X. KIỂM THỬ PHI CHỨC NĂNG ----------
+    sec("X. KẾT QUẢ KIỂM THỬ PHI CHỨC NĂNG (nhập tay — cần bổ sung số đo)")
+    head(["Hạng mục","Chỉ số đo","Công cụ đo","Ngưỡng yêu cầu","Kết quả đo","Ngày đo","Đánh giá","Bằng chứng / link","Ghi chú"])
+    nfr=[("Hiệu năng","Điểm PageSpeed Desktop"),("Hiệu năng","Điểm PageSpeed Mobile"),("Hiệu năng","LCP (giây)"),
+         ("Hiệu năng","Thời gian tải trang chủ (giây)"),("Chịu tải","Số người dùng đồng thời"),
+         ("Bảo mật","Quét lỗ hổng (OWASP Top 10)"),("Bảo mật","HTTPS / chứng chỉ SSL"),("Bảo mật","Phân quyền theo vai trò"),
+         ("SEO","Sitemap / robots.txt / meta"),("Accessibility","Tương phản & thao tác bàn phím"),
+         ("Sao lưu","Cơ chế backup & phục hồi")]
+    for i,(a,b) in enumerate(nfr):
+        r=line([a,b,"","","","","","",""],i,inputs=(2,3,4,5,7,8),nfmts={5:"dd/mm/yyyy"},left=(0,1,7,8))
+        n[f"G{r}"].fill=Fill(INPUT); dv_dg.add(n[f"G{r}"])
+    gap()
+
+    # ---------- XI. LỖI TỒN ĐỌNG CHẶN NGHIỆM THU ----------
+    sec("XI. LỖI TỒN ĐỌNG ĐANG CHẶN NGHIỆM THU (Critical/High còn mở)")
+    note("Danh sách tự động, hiển thị tối đa 30 lỗi ưu tiên. Danh sách đầy đủ xem sheet 05_Lỗi_Tester của file QA. "
+         "Không nhập gì vào vùng bảng bên dưới (công thức sẽ tự đổ dữ liệu).",h=26)
+    head(["BUG_ID","Trang","Tính năng","Mức độ","Loại lỗi","Ngày phát hiện","Trạng thái","Người xử lý","Hạn xử lý"])
+    r=row[0]; cell(n,f"A{r}",BLOCKING_QUERY,F(10),Fill(WHITE),Al("left"))
+    for k in range(32):
+        for j in range(9):
+            n[f"{get_column_letter(1+j)}{r+k}"].border=box
+        n.row_dimensions[r+k].height=20
+    row[0]=r+32
+    gap()
+
+    # ---------- XII. NGOẠI LỆ ĐƯỢC CHẤP NHẬN ----------
+    sec("XII. NGOẠI LỆ / LỖI ĐƯỢC CHẤP NHẬN BỎ QUA (WAIVER)")
+    note("Mọi lỗi Critical/High không xử lý trước nghiệm thu phải có ngoại lệ được người duyệt của Bên A ký chấp nhận.",h=22)
+    head(["STT","BUG_ID / Hạng mục","Mức độ","Lý do chấp nhận","Ảnh hưởng còn lại","Phương án tạm thời","Hạn xử lý dứt điểm","Người duyệt","Ngày duyệt"])
+    for i in range(6):
+        line([i+1,"","","","","","","",""],i,inputs=(1,2,3,4,5,6,7,8),nfmts={6:"dd/mm/yyyy",8:"dd/mm/yyyy"},left=(1,3,4,5))
+    gap()
+
+    # ---------- XIII. RỦI RO & HẠN CHẾ ----------
+    sec("XIII. RỦI RO VÀ HẠN CHẾ ĐÃ BIẾT")
+    head(["STT","Rủi ro / hạn chế","Khả năng xảy ra","Mức ảnh hưởng","Biện pháp giảm thiểu","Người theo dõi","Hạn xử lý","Trạng thái","Ghi chú"])
+    for i in range(5):
+        line([i+1,"","","","","","","",""],i,inputs=(1,2,3,4,5,6,7,8),nfmts={6:"dd/mm/yyyy"},left=(1,4,8))
+    gap()
+
+    # ---------- XIV. HẠNG MỤC BÀN GIAO ----------
+    sec("XIV. HẠNG MỤC BÀN GIAO")
+    head(["STT","Hạng mục bàn giao","Định dạng / nơi lưu","Số lượng","Tình trạng","Ngày bàn giao","Người bàn giao","Người nhận","Ghi chú"])
+    deliver=["Mã nguồn website (repository)","Cơ sở dữ liệu (dump/backup)","Tài khoản quản trị hệ thống",
+             "Tài liệu hướng dẫn sử dụng","Tài liệu kỹ thuật / triển khai","Bộ Test Case (RTM)",
+             "Bộ hồ sơ lỗi + bằng chứng","Bộ thiết kế (Figma/ảnh)","Tên miền, hosting, chứng chỉ SSL",
+             "Tài khoản dịch vụ bên thứ ba"]
+    for i,d in enumerate(deliver):
+        r=line([i+1,d,"","","","","","",""],i,inputs=(2,3,5,6,7,8),nfmts={5:"dd/mm/yyyy"},left=(1,2,8))
+        n[f"E{r}"].fill=Fill(INPUT); dv_bg.add(n[f"E{r}"])
+    gap()
+
+    # ---------- XV. BẢO HÀNH & HỖ TRỢ ----------
+    sec("XV. BẢO HÀNH VÀ HỖ TRỢ SAU NGHIỆM THU")
+    kv([("Thời gian bảo hành",""),("Từ ngày","","dd/mm/yyyy"),("Đến ngày","","dd/mm/yyyy")])
+    kv([("Phạm vi bảo hành",""),("Kênh tiếp nhận lỗi",""),("Thời gian phản hồi (SLA)","")])
+    kv([("Thời gian khắc phục Critical",""),("Thời gian khắc phục High",""),("Chi phí ngoài bảo hành","")])
+    gap()
+
+    # ---------- XVI. KẾT LUẬN NGHIỆM THU ----------
+    sec("XVI. KẾT LUẬN NGHIỆM THU")
+    head(["Nội dung","Kết quả","","Diễn giải","","","","",""])
+    auto=(f'=IF(COUNTIF(E{crit_start}:E{crit_end},"Chưa đạt")>0,"KHÔNG ĐẠT — còn "&COUNTIF(E{crit_start}:E{crit_end},"Chưa đạt")&" tiêu chí chưa đạt",'
+          f'IF(COUNTIF(E{crit_start}:E{crit_end},"Chưa chốt ngưỡng")+COUNTBLANK(E{crit_start}:E{crit_end})>0,'
+          f'"CHƯA ĐỦ CĂN CỨ — còn tiêu chí chưa có ngưỡng hoặc chưa đánh giá","ĐẠT — toàn bộ tiêu chí bắt buộc đã thỏa mãn"))')
+    r=row[0]
+    cell(n,f"A{r}","Đề xuất tự động (theo tiêu chí mục V)",F(10,True),Fill(WHITE),Al("left"),border=box)
+    merge(n,f"B{r}:I{r}",auto,font=F(11,True,RED),fill=Fill(RED_BG),al=Al("left"))
+    for j in range(1,9): n[f"{get_column_letter(1+j)}{r}"].border=box
+    n.row_dimensions[r].height=28; row[0]+=1
+    r=row[0]
+    cell(n,f"A{r}","Số hạng mục Đạt / Không đạt (mục IX)",F(10,True),Fill(WHITE),Al("left"),border=box)
+    merge(n,f"B{r}:I{r}",f'="Đạt: "&COUNTIF(H{cat_start}:H{cat_end},"Đạt")&"  |  Đạt có điều kiện: "&COUNTIF(H{cat_start}:H{cat_end},"Đạt có điều kiện")&"  |  Không đạt: "&COUNTIF(H{cat_start}:H{cat_end},"Không đạt")&"  |  Chưa kết luận: "&COUNTBLANK(H{cat_start}:H{cat_end})',
+          font=F(10.5),fill=Fill(WHITE),al=Al("left"))
+    for j in range(1,9): n[f"{get_column_letter(1+j)}{r}"].border=box
+    n.row_dimensions[r].height=24; row[0]+=1
+    r=row[0]
+    cell(n,"A"+str(r),"KẾT LUẬN CHÍNH THỨC (người duyệt chọn)",F(10.5,True,WHITE),Fill(NAVY),Al("left"),border=box)
+    merge(n,f"B{r}:D{r}","",font=F(12,True),fill=Fill(INPUT),al=Al("center")); dv_kl.add(n[f"B{r}"])
+    cell(n,f"E{r}","Ngày kết luận",F(10,True,WHITE),Fill(BLUE),Al("center"),border=box)
+    merge(n,f"F{r}:G{r}","",font=F(10.5),fill=Fill(INPUT),al=Al("center")); n[f"F{r}"].number_format="dd/mm/yyyy"
+    cell(n,f"H{r}","Hiệu lực từ",F(10,True,WHITE),Fill(BLUE),Al("center"),border=box)
+    cell(n,f"I{r}","",F(10.5),Fill(INPUT),Al("center"),border=box,nfmt="dd/mm/yyyy")
+    for j in range(1,9): n[f"{get_column_letter(1+j)}{r}"].border=box
+    n.row_dimensions[r].height=30; row[0]+=1
+    r=row[0]
+    cell(n,f"A{r}","Lý do / điều kiện kèm theo",F(10,True),Fill(WHITE),Al("left"),border=box)
+    merge(n,f"B{r}:I{r}","",font=F(10),fill=Fill(INPUT),al=Al("left",wrap=True))
+    for j in range(1,9): n[f"{get_column_letter(1+j)}{r}"].border=box
+    n.row_dimensions[r].height=46; row[0]+=1
+    gap()
+
+    # ---------- XVII. VIỆC CẦN LÀM ----------
+    sec("XVII. VIỆC CẦN LÀM ĐỂ HOÀN TẤT NGHIỆM THU")
+    head(["STT","Việc cần làm","Đầu ra / điều kiện xong","Người phụ trách","Hạn hoàn thành","Mức ưu tiên","Trạng thái","Bằng chứng","Ghi chú"])
+    todos=["Dev sửa dứt điểm toàn bộ lỗi Critical/High đang mở",
+           "QA retest và chuyển trạng thái lỗi sang Verified/Closed",
+           "Bổ sung link bằng chứng (ảnh/video) cho các mục còn thiếu",
+           "Chốt danh sách DS/YC thuộc phạm vi nghiệm thu giai đoạn này",
+           "Chốt ngưỡng tiêu chí nghiệm thu tại mục V với Bên A",
+           "Đo và điền kết quả kiểm thử phi chức năng (mục X)",
+           "Hoàn tất bàn giao tài liệu và tài khoản (mục XIV)",
+           "Người duyệt ký kết luận nghiệm thu (mục XVI, XVIII)"]
+    for i,t2 in enumerate(todos):
+        line([i+1,t2,"","","","","","",""],i,inputs=(2,3,4,5,6,7,8),nfmts={4:"dd/mm/yyyy"},left=(1,2,7,8))
+    gap()
+
+    # ---------- XVIII. XÁC NHẬN CỦA CÁC BÊN ----------
+    sec("XVIII. XÁC NHẬN CỦA CÁC BÊN")
+    note("Biên bản được lập thành 02 bản có giá trị pháp lý như nhau, mỗi bên giữ 01 bản.",h=20)
+    head(["Vai trò","Họ và tên","Chức vụ","Ý kiến / ghi chú","","Ngày ký","Chữ ký","",""],h=26)
+    signs=["ĐẠI DIỆN BÊN A (Chủ đầu tư)","ĐẠI DIỆN BÊN B (Đơn vị thực hiện)","QUẢN LÝ DỰ ÁN","QA / TESTER","NGƯỜI DUYỆT NGHIỆM THU"]
+    for i,s in enumerate(signs):
+        r=row[0]; bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
+        cell(n,f"A{r}",s,F(10,True),bg,Al("left",wrap=True),border=box)
+        for cc in ("B","C"): cell(n,f"{cc}{r}","",F(10),Fill(INPUT),Al("center"),border=box)
+        merge(n,f"D{r}:E{r}","",font=F(10),fill=Fill(INPUT),al=Al("left",wrap=True))
+        for cc in ("D","E"): n[f"{cc}{r}"].border=box
+        cell(n,f"F{r}","",F(10),Fill(INPUT),Al("center"),border=box,nfmt="dd/mm/yyyy")
+        merge(n,f"G{r}:I{r}","",font=F(10),fill=Fill(WHITE),al=Al("center"))
+        for cc in ("G","H","I"): n[f"{cc}{r}"].border=box
+        n.row_dimensions[r].height=56; row[0]+=1
+    gap()
+
+    # ---------- PHỤ LỤC ----------
+    sec("PHỤ LỤC KÈM THEO")
+    head(["Mã","Tên phụ lục","Nguồn / đường dẫn","Đính kèm?","Ghi chú","","","",""])
+    apps=[("PL-01","Danh sách trang (DS) và trạng thái kiểm thử","File QA — sheet 02_UI_UX"),
+          ("PL-02","Danh sách tính năng (YC) và trạng thái kiểm thử","File QA — sheet 03_Tính_năng"),
+          ("PL-03","Danh sách lỗi đầy đủ kèm bằng chứng","File QA — sheet 05_Lỗi_Tester"),
+          ("PL-04","Ma trận truy vết yêu cầu — Test Case (RTM)","File QA — sheet 06_RTM_Dev_Test"),
+          ("PL-05","Nhật ký công việc kiểm thử theo ngày","File QA — sheet 01_Cong_viec_ngay"),
+          ("PL-06","Báo cáo tiến độ theo tháng / tuần","File này — sheet 01, 02"),
+          ("PL-07","Kết quả đo hiệu năng và bảo mật","Cần bổ sung"),
+          ("PL-08","Biên bản họp chốt phạm vi và tiêu chí","Cần bổ sung")]
+    for i,(a,b,c) in enumerate(apps):
+        r=line([a,b,c,"","","","","",""],i,inputs=(3,4),left=(0,1,2,4))
+    n.sheet_view.showGridLines=False
+    n.freeze_panes="A3"
+    return n
+
+n=build_acceptance()
 t=build_targets()
 for ws,clr in [(g,NAVY),(m,BLUE),(w,"2E7D32"),(n,"8B5E00")]: ws.sheet_properties.tabColor=clr
 wb.active=wb.sheetnames.index("01_Báo_cáo_Tháng")

@@ -35,10 +35,43 @@ Nơi BGD/Tester nhập **mục tiêu KPI theo từng kỳ** (ô nền vàng):
 
 Báo cáo Tháng/Tuần tự tra đúng dòng theo kỳ đang chọn → đổi tháng thì mục tiêu đổi theo.
 
+## Sheet 03_Nghiệm_thu — Biên bản nghiệm thu website
+
+Biên bản nghiệm thu đầy đủ, 18 mục + phụ lục. Quy ước màu:
+**ô nền vàng = nhập tay**, ô nền trắng/xám = công thức tự lấy từ dữ liệu QA (không sửa tay).
+
+| Mục | Nội dung | Nguồn |
+|---|---|---|
+| I | Thông tin chung (số biên bản, dự án, tên miền, môi trường, phiên bản, hợp đồng) | nhập tay |
+| II | Các bên tham gia (Bên A / Bên B / PM / QA / Dev / Người duyệt) | nhập tay |
+| III | Phạm vi nghiệm thu (DS, YC, vai trò, tích hợp) + loại trừ | nhập tay + tổng tự động |
+| IV | Môi trường kiểm thử (trình duyệt, thiết bị, OS, độ phân giải, tài khoản, dữ liệu) | nhập tay |
+| V | **Tiêu chí nghiệm thu TC01–TC17** — ngưỡng nhập tay, kết quả & đánh giá tự động | `05_Lỗi_Tester`, `02_UI_UX`, `03_Tính_năng` |
+| VI | Định nghĩa mức độ lỗi + SLA xử lý, kèm số lỗi thực tế từng mức | tự động |
+| VII | Kết quả kiểm thử — tổng hợp trang / tính năng / lỗi | tự động |
+| VIII | Thống kê lỗi theo trạng thái / mức độ / thiết bị / loại | tự động |
+| IX | Kết quả nghiệm thu theo 9 hạng mục, kết luận từng hạng mục | tự động + nhập tay |
+| X | Kiểm thử phi chức năng (hiệu năng, bảo mật, SEO, accessibility, backup) | nhập tay |
+| XI | Lỗi tồn đọng chặn nghiệm thu (Critical/High còn mở, tối đa 30 dòng) | QUERY tự động |
+| XII | Ngoại lệ được chấp nhận (waiver) — bắt buộc có người duyệt ký | nhập tay |
+| XIII | Rủi ro và hạn chế đã biết | nhập tay |
+| XIV | Hạng mục bàn giao (mã nguồn, DB, tài khoản, tài liệu, domain/SSL…) | nhập tay |
+| XV | Bảo hành và hỗ trợ sau nghiệm thu | nhập tay |
+| XVI | Kết luận nghiệm thu — có **đề xuất tự động** theo tiêu chí mục V | tự động + nhập tay |
+| XVII | Việc cần làm để hoàn tất nghiệm thu | nhập tay |
+| XVIII | Xác nhận / chữ ký các bên | nhập tay |
+| PL | Phụ lục kèm theo (PL-01 → PL-08) | nhập tay |
+
+### Thông tin còn thiếu cần bổ sung
+Các mục sau chưa có nguồn dữ liệu trong file QA, phải nhập tay trước khi ký:
+thông tin hành chính (mục I, II), phạm vi chốt (III), môi trường kiểm thử (IV),
+tỷ lệ Test Case Pass & độ phủ RTM (TC09, TC10 — cần số từ `06_RTM_Dev_Test`),
+số đo hiệu năng/bảo mật (X), hạng mục bàn giao (XIV), điều khoản bảo hành (XV).
+
 ## Nguồn số liệu
 | Chỉ số | Nguồn | Cột |
 |---|---|---|
-| Trang (tổng 63 / hoàn thành / …) | `02_UI_UX` | dòng tổng hợp `A3:N3` |
+| Trang (tổng 69 / hoàn thành / …) | `02_UI_UX` | dòng tổng hợp `A3:N3` |
 | Tính năng (88 / hoàn thành / …) | `03_Tính_năng` | dòng tổng hợp `A3:N3` |
 | **Lỗi (toàn bộ)** | **`05_Lỗi_Tester`** | E=BUG_ID, L=Mức độ, M=Thiết bị, Q=Ngày phát hiện, U=Trạng thái lỗi |
 | Công việc theo kỳ | `01_Cong_viec_ngay` | B=Ngày, O=Trạng thái |
