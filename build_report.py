@@ -300,7 +300,8 @@ for i,p in enumerate([
  "Số lỗi lấy toàn bộ từ 05_Lỗi_Tester. \"Đang mở\" = Open + Chưa gửi Dev; \"Đã xử lý\" = Fixed + Verified + Closed.",
  "Mục tiêu nhập tại sheet 04_Mục_tiêu theo từng tháng/tuần (không cố định, không dùng chung).",
  "Chi tiết theo Trang/Tính năng = mục có Ngày test gần nhất trong kỳ, trạng thái Hoàn thành/Kiểm tra lại.",
- "Chỉ số Database lấy từ file Hồ sơ, đếm theo ngày đăng/tạo của kỳ."],1):
+ "Chỉ số Database lấy từ file Hồ sơ, đếm theo ngày đăng/tạo của kỳ.",
+ "Nghiệm thu theo người dùng: hành trình ĐẠT khi mọi bước Pass và không có lỗi Critical/High đang mở; vai trò ĐẠT khi mọi hành trình ĐẠT."],1):
     cell(g,f"A{r}",i,F(11,True,BLUE),Fill(ZEBRA),Al("center"),border=box); merge(g,f"B{r}:F{r}",p,font=F(10.5),al=Al("left",wrap=True))
     for cc in "BCDEF": g[f"{cc}{r}"].border=box
     g.row_dimensions[r].height=26; r+=1
@@ -330,38 +331,219 @@ g.sheet_view.showGridLines=False
 m=build_period("01_Báo_cáo_Tháng","month")
 w=build_period("02_Báo_cáo_Tuần","week")
 
-# ============ 03_Nghiệm_thu ============
+# ============ 03_Nghiệm_thu (theo người dùng: Vai trò + Hành trình) ============
+# Kết hợp 2 hướng:
+#  I.  Tổng hợp theo VAI TRÒ  — tự tính từ checklist hành trình (III/IV).
+#  II. Chất lượng kỹ thuật    — số live từ file QA (trang, tính năng, lỗi).
+#  III.Danh sách HÀNH TRÌNH   — mỗi hành trình 1 dòng, kết luận tự động.
+#  IV. Checklist từng BƯỚC    — Tester nhập Kết quả + BUG_ID; mức độ/trạng thái lỗi tra live từ 05_Lỗi_Tester.
+from openpyxl.formatting.rule import FormulaRule
 n=wb.create_sheet("03_Nghiệm_thu")
-for col,wd in {"A":20,"B":24,"C":10,"D":12,"E":10,"F":16,"G":18,"H":24}.items(): n.column_dimensions[col].width=wd
-band(n,"A1:H1","BIÊN BẢN / CHECKLIST NGHIỆM THU",big=True)
-merge(n,"A2:H2","Cột Kết luận & Người duyệt do người duyệt điền.",font=F(10,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left"))
+for col,wd in {"A":22,"B":16,"C":12,"D":34,"E":28,"F":11,"G":11,"H":11,"I":11,"J":14,"K":16,"L":18,"M":14,"N":12}.items():
+    n.column_dimensions[col].width=wd
+
+ROLES=["Khách vãng lai","Ứng viên","Nhà tuyển dụng (DN)","HR","Quản trị viên"]
+JOURNEYS=[  # (Mã HT, Vai trò, Tên hành trình, [(Thao tác, Kết quả mong đợi)])
+ ("KV-01","Khách vãng lai","Tìm & xem việc làm khi chưa đăng nhập",[
+   ("Truy cập trang chủ","Trang tải đủ, không lỗi hiển thị (PC + Mobile)"),
+   ("Tìm việc theo từ khóa / ngành / địa điểm","Trả về danh sách tin đúng điều kiện"),
+   ("Lọc & sắp xếp kết quả","Bộ lọc lương, kinh nghiệm, hình thức hoạt động đúng"),
+   ("Xem chi tiết tin tuyển dụng","Hiển thị đủ mô tả, quyền lợi, thông tin công ty"),
+   ("Bấm Ứng tuyển khi chưa đăng nhập","Chuyển sang đăng nhập/đăng ký, quay lại đúng tin")]),
+ ("UV-01","Ứng viên","Đăng ký & đăng nhập",[
+   ("Đăng ký tài khoản ứng viên","Tạo tài khoản thành công, validate dữ liệu đúng"),
+   ("Xác thực email / OTP","Nhận mã, xác thực thành công"),
+   ("Đăng nhập / đăng xuất","Đăng nhập đúng quyền ứng viên"),
+   ("Quên mật khẩu","Nhận link/OTP, đổi mật khẩu thành công")]),
+ ("UV-02","Ứng viên","Tạo hồ sơ & CV",[
+   ("Cập nhật thông tin cá nhân","Lưu đúng, hiển thị lại đúng"),
+   ("Tạo CV từ mẫu có sẵn","Tạo/sửa/xem trước/tải PDF được"),
+   ("Tải CV có sẵn lên","Nhận đúng định dạng & dung lượng cho phép"),
+   ("Bật trạng thái tìm việc / công khai hồ sơ","NTD tìm thấy hồ sơ theo cài đặt")]),
+ ("UV-03","Ứng viên","Tìm việc & ứng tuyển",[
+   ("Tìm và lưu tin yêu thích","Tin được lưu, xem lại trong danh sách"),
+   ("Ứng tuyển bằng CV","Nộp thành công, NTD nhận được hồ sơ"),
+   ("Xem lịch sử ứng tuyển","Hiển thị đúng tin & trạng thái hồ sơ"),
+   ("Nhận thông báo khi NTD xem / phản hồi","Thông báo/email đến đúng lúc, đúng nội dung")]),
+ ("NTD-01","Nhà tuyển dụng (DN)","Đăng ký doanh nghiệp & xác thực",[
+   ("Đăng ký tài khoản nhà tuyển dụng","Tạo tài khoản thành công"),
+   ("Cập nhật thông tin công ty","Logo, giới thiệu, địa chỉ hiển thị đúng"),
+   ("Gửi giấy tờ xác thực","Upload thành công, chờ duyệt"),
+   ("Nhận kết quả duyệt","Trạng thái xác thực cập nhật, có thông báo")]),
+ ("NTD-02","Nhà tuyển dụng (DN)","Đăng & quản lý tin tuyển dụng",[
+   ("Tạo tin tuyển dụng","Nhập đủ trường, validate đúng"),
+   ("Xem trước & đăng tin","Tin gửi duyệt / đăng thành công"),
+   ("Tin hiển thị trên trang tìm việc","Ứng viên tìm thấy tin đúng ngành/địa điểm"),
+   ("Sửa / ẩn / gia hạn tin","Thay đổi áp dụng ngay, đúng trạng thái")]),
+ ("NTD-03","Nhà tuyển dụng (DN)","Nhận & xử lý hồ sơ ứng viên",[
+   ("Nhận hồ sơ ứng tuyển","Hồ sơ xuất hiện đúng tin, có thông báo"),
+   ("Xem / tải CV ứng viên","Mở và tải CV được"),
+   ("Lọc, đánh giá, đổi trạng thái hồ sơ","Trạng thái lưu đúng, ứng viên được thông báo"),
+   ("Liên hệ / hẹn phỏng vấn ứng viên","Gửi được liên hệ, ứng viên nhận được")]),
+ ("HR-01","HR","Tài khoản HR của doanh nghiệp",[
+   ("DN tạo / mời tài khoản HR","HR nhận lời mời, kích hoạt được"),
+   ("HR đăng nhập","Vào đúng doanh nghiệp, đúng phân quyền"),
+   ("HR đăng tin & xử lý hồ sơ thay DN","Thao tác thành công, DN xem được lịch sử")]),
+ ("AD-01","Quản trị viên","Kiểm duyệt & vận hành",[
+   ("Duyệt doanh nghiệp","Duyệt/từ chối, DN nhận thông báo"),
+   ("Duyệt tin tuyển dụng","Tin duyệt mới hiển thị công khai"),
+   ("Khóa tài khoản / tin vi phạm","Khóa có hiệu lực ngay"),
+   ("Xem thống kê DN / HR / Ứng viên / Tin","Số liệu khớp Database")]),
+]
+J_EXTRA=6; S_EXTRA=25
+nJ=len(JOURNEYS)+J_EXTRA; nS=sum(len(j[3]) for j in JOURNEYS)+S_EXTRA
+TECH=[("UI/UX","Trang website",f"={T_TOT}",f"={T_DONE}",f"={T_PROG}",CH_OPEN),
+      ("Chức năng","88 tính năng",f"={F_TOT}",f"={F_DONE}",f"={F_PROG}",CH_OPEN),
+      ("Responsive","YC_87 + lỗi responsive","","","",f'=COUNTIF(\'z_Loi\'!$K:$K,"*Responsive*")'),
+      ("Bảo mật","Test Case Security","","","",f'=COUNTIF(\'z_Loi\'!$K:$K,"*Security*")'),
+      ("Dữ liệu","Test Case API/Database","","","","")]
+
+# ---- bố cục hàng ----
+R_I=6;            R_IH=R_I+1;  R_I0=R_IH+1;  R_ITOT=R_I0+len(ROLES)
+R_K=R_ITOT+2                                    # kết luận chung + quyết định
+R_II=R_K+4;       R_IIH=R_II+1; R_II0=R_IIH+1
+R_SIGN=R_II0+len(TECH)+1
+R_III=R_SIGN+5;   R_IIIH=R_III+2; R_J0=R_IIIH+1; R_J1=R_J0+nJ-1
+R_IV=R_J1+2;      R_IVH=R_IV+2;   R_S0=R_IVH+1;  R_S1=R_S0+nS-1
+
+def colr(c,a=R_S0,b=R_S1): return f"${c}${a}:${c}${b}"
+S_HT,S_ROLE,S_RES,S_BLOCK=colr("A"),colr("C"),colr("G"),colr("K")
+J_CODE,J_ROLE,J_STAT,J_BLOCK=colr("A",R_J0,R_J1),colr("B",R_J0,R_J1),colr("K",R_J0,R_J1),colr("J",R_J0,R_J1)
+
+def hdr(row,labels,merges=()):
+    for i,h in enumerate(labels):
+        c=get_column_letter(1+i)
+        if h is None: continue
+        cell(n,f"{c}{row}",h,F(9.5,True,WHITE),Fill(NAVY),Al("center",wrap=True),border=box)
+    for m_ in merges: merge(n,m_,n[m_.split(":")[0]].value,font=F(9.5,True,WHITE),fill=Fill(NAVY),al=Al("center",wrap=True),border=True)
+    n.row_dimensions[row].height=32
+def note(row,text,h=18):
+    merge(n,f"A{row}:N{row}",text,font=F(9.5,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left",wrap=True)); n.row_dimensions[row].height=h
+
+band(n,"A1:N1","BIÊN BẢN NGHIỆM THU THEO NGƯỜI DÙNG — WEBSITE TIMVIEC123",big=True)
+note(2,"Nghiệm thu theo góc nhìn người dùng: mỗi VAI TRÒ phải đi hết được các HÀNH TRÌNH chính. Tester chỉ nhập ô nền vàng ở mục IV; mục I–III tự tính. Mức độ/trạng thái lỗi tra live từ 05_Lỗi_Tester theo BUG_ID.",30)
 cell(n,"A4","Kỳ nghiệm thu",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(n,"B4","Tháng 8",F(10.5,True),Fill(INPUT),Al("center"),border=box)
-cell(n,"C4","Ngày lập",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); merge(n,"D4:E4","=TODAY()",font=F(10.5,True),fill=Fill(INPUT),al=Al("center")); n["D4"].number_format="dd/mm/yyyy"
-cell(n,"F4","Người lập",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(n,"G4","",F(10.5),Fill(INPUT),Al("center"),border=box)
-r=6
-for i,h in enumerate(["Hạng mục","Phạm vi","Tổng","Hoàn thành","Tỷ lệ","Critical/High mở","Kết luận","Ghi chú"]):
-    c=get_column_letter(1+i); cell(n,f"{c}{r}",h,F(10,True,WHITE),Fill(NAVY),Al("center"),border=box)
-n.row_dimensions[r].height=30; r+=1
-items=[("UI/UX","Trang website",f"={T_TOT}",f"={T_DONE}",f"={T_PROG}",CH_OPEN),
-       ("Chức năng","88 tính năng",f"={F_TOT}",f"={F_DONE}",f"={F_PROG}",CH_OPEN),
-       ("Responsive","YC_87 + lỗi responsive","","","",f'=COUNTIF(\'z_Loi\'!$K:$K,"*Responsive*")'),
-       ("Bảo mật","Test Case Security","","","",f'=COUNTIF(\'z_Loi\'!$K:$K,"*Security*")'),
-       ("Dữ liệu","Test Case API/Database","","","","")]
-for i,(cat,scope,tot,done,ratio,ch) in enumerate(items):
-    bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
+cell(n,"C4","Ngày lập",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); cell(n,"D4","=TODAY()",F(10.5,True),Fill(INPUT),Al("center"),border=box,nfmt="dd/mm/yyyy")
+cell(n,"E4","Người lập",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); merge(n,"F4:H4","",font=F(10.5),fill=Fill(INPUT),al=Al("center"),border=True)
+cell(n,"I4","Môi trường",F(10.5,True,WHITE),Fill(BLUE),Al("center"),border=box); merge(n,"J4:K4","Production",font=F(10.5),fill=Fill(INPUT),al=Al("center"),border=True)
+
+# ---- I. Tổng hợp theo vai trò ----
+band(n,f"A{R_I}:N{R_I}","I. TỔNG HỢP THEO VAI TRÒ NGƯỜI DÙNG (tự tính từ mục III–IV)")
+hdr(R_IH,["Vai trò","Số hành trình","Hành trình ĐẠT","Tổng số bước","Pass","Fail","Blocked","Chưa test","% Pass","Lỗi C/H đang chặn","Kết luận","Ghi chú / Người duyệt",None,None],[f"L{R_IH}:N{R_IH}"])
+def role_row(r,role_ref,bold=False):
+    f=F(10.5,bold)
+    cell(n,f"B{r}",f'=COUNTIF({J_ROLE},{role_ref})',f,None,Al("center"),INT,box)
+    cell(n,f"C{r}",f'=COUNTIFS({J_ROLE},{role_ref},{J_STAT},"ĐẠT")',F(10.5,True,GREEN),None,Al("center"),INT,box)
+    cell(n,f"D{r}",f'=COUNTIFS({S_ROLE},{role_ref},{S_HT},"<>")',f,None,Al("center"),INT,box)
+    for c,v in (("E","Pass"),("F","Fail"),("G","Blocked")):
+        cell(n,f"{c}{r}",f'=COUNTIFS({S_ROLE},{role_ref},{S_RES},"{v}")',f,None,Al("center"),INT,box)
+    cell(n,f"H{r}",f"=D{r}-E{r}-F{r}-G{r}",f,None,Al("center"),INT,box)
+    cell(n,f"I{r}",f'=IF(D{r}=0,"",E{r}/D{r})',F(10.5,True),None,Al("center"),PCT,box)
+    cell(n,f"J{r}",f'=COUNTIFS({S_ROLE},{role_ref},{S_BLOCK},"CHẶN")',F(10.5,True,RED),None,Al("center"),INT,box)
+    cell(n,f"K{r}",f'=IF(B{r}=0,"—",IF(AND(C{r}=B{r},J{r}=0),"ĐẠT",IF(OR(F{r}+G{r}>0,J{r}>0),"CHƯA ĐẠT","ĐANG TEST")))',F(10.5,True),None,Al("center"),None,box)
+for i,role in enumerate(ROLES):
+    r=R_I0+i; bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
+    cell(n,f"A{r}",role,F(10.5,True),bg,Al("left"),border=box)
+    role_row(r,f"$A{r}")
+    for c in "BCDEFGHIJK": n[f"{c}{r}"].fill=bg
+    merge(n,f"L{r}:N{r}","",font=F(10),fill=Fill(INPUT),al=Al("left",wrap=True),border=True); n.row_dimensions[r].height=24
+r=R_ITOT
+cell(n,f"A{r}","TỔNG",F(10.5,True,WHITE),Fill(BLUE),Al("left"),border=box)
+for c in "BCDEFGHJ": cell(n,f"{c}{r}",f"=SUM({c}{R_I0}:{c}{r-1})",F(10.5,True),Fill(LBLUE),Al("center"),INT,box)
+cell(n,f"I{r}",f'=IF(D{r}=0,"",E{r}/D{r})',F(10.5,True),Fill(LBLUE),Al("center"),PCT,box)
+cell(n,f"K{r}",f'=IF(B{r}=0,"—",IF(AND(C{r}=B{r},J{r}=0),"ĐẠT",IF(OR(F{r}+G{r}>0,J{r}>0),"CHƯA ĐẠT","ĐANG TEST")))',F(10.5,True),Fill(LBLUE),Al("center"),None,box)
+merge(n,f"L{r}:N{r}","",fill=Fill(LBLUE),border=True); n.row_dimensions[r].height=24
+
+# ---- Kết luận chung + quyết định ----
+r=R_K; T=R_ITOT
+merge(n,f"A{r}:B{r}","KẾT LUẬN (tự động)",font=F(11,True,WHITE),fill=Fill(BLUE),al=Al("left"),border=True)
+merge(n,f"C{r}:N{r}",
+      f'=IF(B{T}=0,"Chưa có hành trình nghiệm thu",IF(K{T}="ĐẠT","✔ ĐỦ ĐIỀU KIỆN NGHIỆM THU — "&C{T}&"/"&B{T}&" hành trình đạt, không còn lỗi Critical/High chặn",'
+      f'"✖ CHƯA ĐỦ ĐIỀU KIỆN — "&C{T}&"/"&B{T}&" hành trình đạt; "&F{T}&" bước Fail, "&G{T}&" Blocked, "&H{T}&" chưa test; "&J{T}&" lỗi Critical/High đang chặn"))',
+      font=F(11,True),fill=Fill(WHITE),al=Al("left",wrap=True),border=True); n.row_dimensions[r].height=30
+r+=1
+merge(n,f"A{r}:B{r}","QUYẾT ĐỊNH BGD",font=F(11,True,WHITE),fill=Fill(BLUE),al=Al("left"),border=True)
+merge(n,f"C{r}:E{r}","",font=F(11,True),fill=Fill(INPUT),al=Al("center"),border=True)
+dvq=DataValidation(type="list",formula1='"Đồng ý nghiệm thu,Nghiệm thu có điều kiện,Chưa nghiệm thu"'); n.add_data_validation(dvq); dvq.add(n[f"C{r}"])
+merge(n,f"F{r}:G{r}","Điều kiện / ngoại lệ",font=F(10,True,WHITE),fill=Fill(BLUE),al=Al("center"),border=True)
+merge(n,f"H{r}:N{r}","",font=F(10),fill=Fill(INPUT),al=Al("left",wrap=True),border=True); n.row_dimensions[r].height=28
+r+=1
+note(r,"Điều kiện ĐẠT: mọi bước của hành trình là Pass và không có BUG_ID mức Critical/High còn Open/Chưa gửi Dev. Ngoại lệ phải ghi rõ lý do và người duyệt.",28)
+
+# ---- II. Chất lượng kỹ thuật ----
+band(n,f"A{R_II}:N{R_II}","II. CHẤT LƯỢNG KỸ THUẬT (live từ file QA)")
+hdr(R_IIH,["Hạng mục","Phạm vi","Tổng","Hoàn thành","Tỷ lệ","Critical/High mở","Kết luận","Ghi chú",None,None,None,None,None,None],[f"H{R_IIH}:N{R_IIH}"])
+for i,(cat,scope,tot,done,ratio,ch) in enumerate(TECH):
+    r=R_II0+i; bg=Fill(ZEBRA) if i%2 else Fill(WHITE)
     cell(n,f"A{r}",cat,F(10.5,True),bg,Al("left"),border=box); cell(n,f"B{r}",scope,F(10),bg,Al("left",wrap=True),border=box)
     cell(n,f"C{r}",tot,F(10.5),bg,Al("center"),border=box,nfmt=INT); cell(n,f"D{r}",done,F(10.5,True),bg,Al("center"),border=box,nfmt=INT)
     cell(n,f"E{r}",ratio,F(10.5),bg,Al("center"),border=box,nfmt=PCT if ratio else None)
     cell(n,f"F{r}",ch,F(10.5,True,RED),bg,Al("center"),border=box,nfmt=INT if ch else None)
-    cell(n,f"G{r}","Chưa nghiệm thu",F(10,italic=True,color=GREY),bg,Al("center"),border=box); cell(n,f"H{r}","",F(10),bg,Al("left"),border=box)
-    n.row_dimensions[r].height=26; r+=1
-r+=1
-merge(n,f"A{r}:B{r}","KẾT LUẬN CHUNG",font=F(11,True,WHITE),fill=Fill(BLUE),al=Al("left"),border=True)
-merge(n,f"C{r}:H{r}","Chưa nghiệm thu",font=F(10.5,italic=True,color=GREY),fill=Fill(WHITE),al=Al("left"))
-for cc in "CDEFGH": n[f"{cc}{r}"].border=box
-r+=1
-merge(n,f"A{r}:H{r}","Điều kiện khuyến nghị: không còn Critical/High chưa được phê duyệt; phạm vi và bằng chứng đầy đủ; ngoại lệ phải có người duyệt và lý do rõ ràng.",
-      font=F(9.5,color=GREY),fill=Fill(ZEBRA),al=Al("left",wrap=True)); n.row_dimensions[r].height=34
+    cell(n,f"G{r}","",F(10),Fill(INPUT),Al("center"),border=box)
+    merge(n,f"H{r}:N{r}","",font=F(10),fill=Fill(INPUT),al=Al("left",wrap=True),border=True); n.row_dimensions[r].height=24
+dvt=DataValidation(type="list",formula1='"Đạt,Chưa đạt,Đạt có điều kiện"'); n.add_data_validation(dvt); dvt.add(f"G{R_II0}:G{R_II0+len(TECH)-1}")
+
+# ---- Ký duyệt ----
+r=R_SIGN
+for rng,lbl in ((f"A{r}:C{r}","NGƯỜI LẬP (Tester)"),(f"D{r}:E{r}","QA LEAD"),(f"F{r}:J{r}","ĐẠI DIỆN DEV"),(f"K{r}:N{r}","BAN GIÁM ĐỐC")):
+    merge(n,rng,lbl,font=F(10.5,True,WHITE),fill=Fill(BLUE),al=Al("center"),border=True)
+    a,b=rng.split(":"); merge(n,f"{a[0]}{r+1}:{b[0]}{r+3}","(Ký, ghi rõ họ tên)",font=F(9.5,italic=True,color=GREY),al=Al("center","bottom"),border=True)
+
+# ---- III. Danh sách hành trình ----
+band(n,f"A{R_III}:N{R_III}","III. DANH SÁCH HÀNH TRÌNH NGƯỜI DÙNG (kết luận tự tính từ mục IV)")
+note(R_III+1,"Thêm hành trình mới vào các dòng trống (nhập Mã HT, Vai trò, Tên). Mã HT phải khớp với cột Mã HT ở mục IV.")
+hdr(R_IIIH,["Mã HT","Vai trò","Tên hành trình",None,"Số bước","Pass","Fail","Blocked","% Pass","Lỗi C/H chặn","Kết luận","Ghi chú",None,None],[f"C{R_IIIH}:D{R_IIIH}",f"L{R_IIIH}:N{R_IIIH}"])
+for i in range(nJ):
+    r=R_J0+i; j=JOURNEYS[i] if i<len(JOURNEYS) else ("","","",[])
+    cell(n,f"A{r}",j[0] or None,F(10.5,True),Fill(INPUT),Al("center"),border=box)
+    cell(n,f"B{r}",j[1] or None,F(10),Fill(INPUT),Al("left",wrap=True),border=box)
+    merge(n,f"C{r}:D{r}",j[2] or None,font=F(10.5),fill=Fill(INPUT),al=Al("left",wrap=True),border=True)
+    k=f"$A{r}"
+    cell(n,f"E{r}",f'=IF({k}="","",COUNTIF({S_HT},{k}))',F(10.5),None,Al("center"),INT,box)
+    for c,v in (("F","Pass"),("G","Fail"),("H","Blocked")):
+        cell(n,f"{c}{r}",f'=IF({k}="","",COUNTIFS({S_HT},{k},{S_RES},"{v}"))',F(10.5),None,Al("center"),INT,box)
+    cell(n,f"I{r}",f'=IF(OR({k}="",N(E{r})=0),"",F{r}/E{r})',F(10.5,True),None,Al("center"),PCT,box)
+    cell(n,f"J{r}",f'=IF({k}="","",COUNTIFS({S_HT},{k},{S_BLOCK},"CHẶN"))',F(10.5,True,RED),None,Al("center"),INT,box)
+    cell(n,f"K{r}",f'=IF({k}="","",IF(E{r}=0,"Chưa có bước",IF(J{r}>0,"CHƯA ĐẠT",IF(F{r}=E{r},"ĐẠT",IF(G{r}+H{r}>0,"CHƯA ĐẠT","ĐANG TEST")))))',F(10.5,True),None,Al("center"),None,box)
+    merge(n,f"L{r}:N{r}","",font=F(10),fill=Fill(INPUT),al=Al("left",wrap=True),border=True); n.row_dimensions[r].height=22
+dvr=DataValidation(type="list",formula1='"'+",".join(ROLES)+'"',allow_blank=True); n.add_data_validation(dvr); dvr.add(f"B{R_J0}:B{R_J1}")
+
+# ---- IV. Checklist từng bước ----
+band(n,f"A{R_IV}:N{R_IV}","IV. CHECKLIST CHI TIẾT TỪNG BƯỚC (Tester nhập ô nền vàng)")
+note(R_IV+1,"Kết quả: Pass / Fail / Blocked / Chưa test. Bước Fail hoặc Blocked phải ghi BUG_ID (khớp cột BUG_ID ở 05_Lỗi_Tester) → Mức độ, Trạng thái lỗi, Chặn? tự điền. Bằng chứng: link ảnh/video.")
+hdr(R_IVH,["Mã HT","Bước","Vai trò (tự điền)","Thao tác","Kết quả mong đợi","TC_ID","Kết quả","BUG_ID","Mức độ lỗi","Trạng thái lỗi","Chặn?","Bằng chứng","Người test","Ngày test"])
+steps=[(j[0],k+1,a,b) for j in JOURNEYS for k,(a,b) in enumerate(j[3])]
+for i in range(nS):
+    r=R_S0+i; s=steps[i] if i<len(steps) else ("","","","")
+    cell(n,f"A{r}",s[0] or None,F(10,True),Fill(INPUT),Al("center"),border=box)
+    cell(n,f"B{r}",s[1] or None,F(10),Fill(INPUT),Al("center"),border=box)
+    cell(n,f"C{r}",f'=IF($A{r}="","",IFERROR(VLOOKUP($A{r},$A${R_J0}:$B${R_J1},2,0),"⚠ Sai Mã HT"))',F(9.5,color=GREY),None,Al("left",wrap=True),border=box)
+    cell(n,f"D{r}",s[2] or None,F(10),Fill(INPUT),Al("left",wrap=True),border=box)
+    cell(n,f"E{r}",s[3] or None,F(10),Fill(INPUT),Al("left",wrap=True),border=box)
+    cell(n,f"F{r}",None,F(10),Fill(INPUT),Al("center"),border=box)
+    cell(n,f"G{r}","Chưa test" if s[0] else None,F(10,True),Fill(INPUT),Al("center"),border=box)
+    cell(n,f"H{r}",None,F(10),Fill(INPUT),Al("center"),border=box)
+    cell(n,f"I{r}",f'=IF($H{r}="","",IFERROR(INDEX({L},MATCH($H{r},{E},0)),"Không tìm thấy"))',F(10),None,Al("center"),border=box)
+    cell(n,f"J{r}",f'=IF($H{r}="","",IFERROR(INDEX({U},MATCH($H{r},{E},0)),""))',F(10),None,Al("center"),border=box)
+    cell(n,f"K{r}",f'=IF($H{r}="","",IF(AND(OR(I{r}="Critical",I{r}="High"),OR(J{r}="Open",J{r}="Chưa gửi Dev")),"CHẶN",""))',F(10,True,RED),None,Al("center"),border=box)
+    cell(n,f"L{r}",None,F(9.5,color="1155CC"),Fill(INPUT),Al("left",wrap=True),border=box)
+    cell(n,f"M{r}",None,F(10),Fill(INPUT),Al("left"),border=box)
+    cell(n,f"N{r}",None,F(10),Fill(INPUT),Al("center"),border=box,nfmt="dd/mm/yyyy")
+    n.row_dimensions[r].height=30
+dvk=DataValidation(type="list",formula1='"Pass,Fail,Blocked,Chưa test"',allow_blank=True); n.add_data_validation(dvk); dvk.add(f"G{R_S0}:G{R_S1}")
+dvd=DataValidation(type="date",operator="greaterThan",formula1="1",allow_blank=True); n.add_data_validation(dvd); dvd.add(f"N{R_S0}:N{R_S1}")
+
+# ---- Tô màu kết luận ----
+def cf(rng,text,color,bg):
+    tl=rng.split(":")[0].replace("$","")
+    n.conditional_formatting.add(rng,FormulaRule(formula=[f'{tl}="{text}"'],font=Font(bold=True,color=color),fill=Fill(bg)))
+for rng in (f"K{R_I0}:K{R_ITOT}",f"K{R_J0}:K{R_J1}"):
+    cf(rng,"ĐẠT",GREEN,GREEN_BG); cf(rng,"CHƯA ĐẠT",RED,RED_BG); cf(rng,"ĐANG TEST",AMBER,"FFF3CD")
+cf(f"G{R_S0}:G{R_S1}","Pass",GREEN,GREEN_BG); cf(f"G{R_S0}:G{R_S1}","Fail",RED,RED_BG); cf(f"G{R_S0}:G{R_S1}","Blocked",AMBER,"FFF3CD")
+cf(f"K{R_S0}:K{R_S1}","CHẶN",RED,RED_BG)
+n.conditional_formatting.add(f"C{R_K}",FormulaRule(formula=[f'LEFT(C{R_K},1)="✔"'],font=Font(bold=True,color=GREEN),fill=Fill(GREEN_BG)))
+n.conditional_formatting.add(f"C{R_K}",FormulaRule(formula=[f'LEFT(C{R_K},1)="✖"'],font=Font(bold=True,color=RED),fill=Fill(RED_BG)))
+n.freeze_panes="A5"
 n.sheet_view.showGridLines=False
 
 t=build_targets()

@@ -28,6 +28,20 @@ Hai sheet dùng chung 1 bố cục; sheet Tuần lọc theo tuần-trong-tháng 
   Hoàn thành/Kiểm tra lại — cột thứ 3 là **Trạng thái** (báo cáo Tháng) hoặc
   **Ngày test/retest** (báo cáo Tuần).
 
+## Sheet 03_Nghiệm_thu — nghiệm thu theo người dùng
+Kết hợp 2 hướng: **vai trò người dùng** (tổng hợp) + **hành trình đầu-cuối** (UAT, căn cứ ký).
+- **I. Tổng hợp theo vai trò**: Khách vãng lai / Ứng viên / Nhà tuyển dụng (DN) / HR / Quản trị viên —
+  số hành trình, hành trình ĐẠT, Pass/Fail/Blocked/Chưa test, % Pass, lỗi Critical/High đang chặn, Kết luận.
+  Tự tính từ mục III–IV. Bên dưới: **Kết luận tự động**, ô **Quyết định BGD** (dropdown) và điều kiện/ngoại lệ.
+- **II. Chất lượng kỹ thuật**: bảng UI/UX, Chức năng, Responsive, Bảo mật, Dữ liệu (live từ file QA) + khối ký duyệt.
+- **III. Danh sách hành trình**: 9 hành trình mẫu (KV-01, UV-01..03, NTD-01..03, HR-01, AD-01) + 6 dòng trống.
+- **IV. Checklist từng bước**: Tester nhập *Kết quả* (Pass/Fail/Blocked/Chưa test), *TC_ID*, *BUG_ID*,
+  bằng chứng, người/ngày test. *Mức độ* và *Trạng thái lỗi* tra live từ `05_Lỗi_Tester` theo BUG_ID;
+  **Chặn?** = Critical/High và đang Open/Chưa gửi Dev.
+
+Quy tắc: **Hành trình ĐẠT** = mọi bước Pass + không có lỗi chặn. **Vai trò ĐẠT** = mọi hành trình của vai trò ĐẠT.
+Có Fail/Blocked/lỗi chặn → CHƯA ĐẠT; còn lại → ĐANG TEST. Mỗi bước ghi 1 BUG_ID (nhiều lỗi thì tách thêm dòng).
+
 ## Sheet 04_Mục_tiêu
 Nơi BGD/Tester nhập **mục tiêu KPI theo từng kỳ** (ô nền vàng):
 - **Mục tiêu theo Tháng**: mỗi dòng là 1 tháng (1–12), cột là 11 chỉ số KPI.
