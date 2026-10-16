@@ -1,0 +1,30 @@
+{
+ "ngay_kiem": "16/10/2026",
+ "ban_giao_dien": "triển khai 15/10/2026 15:19 (index-BIg9IMmH.js)",
+ "cach_kiem": "Chạy trực tiếp trên website bằng Chromium (Playwright) ở các khổ 360/375/390 (mobile), 768/1024 (tablet), 1280/1440 (desktop); đo tốc độ tải bằng giả lập 4G (9 Mbps, trễ 170 ms, không bộ nhớ đệm) như lần 1; gọi API công khai để kiểm lỗi API; đọc mã giao diện bản 15/10 để xác định lỗi nào Dev đã có thay đổi.",
+ "gioi_han": "Không đăng nhập được tài khoản NTD / Ứng viên: website chặn mọi API khi email chưa kích hoạt (EMAIL_NOT_VERIFIED) và chưa có hộp thư nhận email kích hoạt. Vì vậy các lỗi trong khu NTD sau đăng nhập chưa chạy lại được trên giao diện; những lỗi đó được đánh giá theo trạng thái QA và ghi kèm bằng chứng mã nguồn nếu có.",
+ "ket_luan_them": "Bản giao diện 15/10 đã có thay đổi cho một số lỗi (xem cột Bằng chứng mã nguồn) nhưng chưa được kiểm lại trên tài khoản NTD nên chưa tính đạt. Các luồng chính vẫn chạy từ đầu đến cuối như lần 1.",
+ "de_nghi": [],
+ "phuong_phap": [
+  ["Thiết bị giả lập", "Mobile 390×844 (iPhone 13), 375×667, 360×800; Tablet 768×1024 và 1024×768; Desktop 1280×800, 1440×900. Trình duyệt Chromium (Playwright)."],
+  ["Đo tốc độ 4G", "Giả lập 9 Mbps, trễ 170 ms, tắt bộ nhớ đệm, khổ 390 — cùng thông số lần 1. Chụp màn hình ở giây 3, 5, 8 sau khi mở trang; đo First Contentful Paint."],
+  ["Đọc mã nguồn", "Tải toàn bộ 373 tệp JS của bản giao diện 15/10 và tìm đoạn mã liên quan từng lỗi. Bằng chứng mã nguồn chỉ cho biết Dev đã có thay đổi, KHÔNG thay cho kiểm thử thật; mã có bằng chứng nhưng chưa chạy thật vẫn ghi 'Chưa kiểm'."],
+  ["API", "Chỉ gọi GET công khai; riêng route chưa có (job-alerts, auth/refresh) gửi 1 POST không token, body rỗng để xem mã trả về 404 hay 401/422. Không ghi dữ liệu."],
+  ["Không làm", "Không tạo tài khoản, không ứng tuyển, không gửi tin nhắn, không ghi vào file QA."]
+ ],
+ "items": [
+  {"ma": "Retest_BUG_028", "ket_qua": "Fail", "thiet_bi": "Mobile 390, giả lập 4G",
+   "nhan_xet": "Trang /login (vỏ chung của khu NTD, tải cùng bộ CSS/JS trước khi vào trang NTD): giây 3 và giây 5 vẫn trắng hoàn toàn, giây 8 mới hiện nội dung; FCP 4,2–4,6 s ở 3 trang /login, /register, /. Không có khung chờ. Nguyên nhân: máy chủ gửi index-BGfcSxQy.css 3,1 MB và index-BIg9IMmH.js 558 KB KHÔNG nén (không có Content-Encoding); nén gzip CSS chỉ còn 393 KB. Các trang NTD sau đăng nhập tải thêm dữ liệu nên chậm hơn mức này.",
+   "anh": ["anh_kiem_lai/Retest_BUG_028_4g_login_3s_5s_8s.png"]},
+  {"ma": "Retest_BUG_027", "bang_chung_ma": "job-post: có hộp xác nhận 'Bỏ thông tin tin tuyển dụng đang nhập?' khi rời trang Đăng tin (useChanRoiTrang: chặn đổi route + beforeunload)."},
+  {"ma": "Retest_BUG_030", "bang_chung_ma": "ChatUserMobile: tin gửi lỗi được giữ trong khung chat kèm nút 'Gửi lại' và 'Xoá tin chưa gửi được'."},
+  {"ma": "Retest_BUG_031", "bang_chung_ma": "ApplicationActionBar: kiểm tra thời lượng — trống, số âm, không phải số nguyên, dưới 5 phút, trên 600 phút đều báo lỗi."},
+  {"ma": "Retest_BUG_032", "bang_chung_ma": "register-success: xử lý trường hợp already_verified, hiện 'Email đã được kích hoạt trước đó.' (cần backend trả cờ này)."},
+  {"ma": "Retest_BUG_036", "bang_chung_ma": "Không còn chuỗi 'Đã gửi offer' trong toàn bộ mã giao diện; nhãn phía NTD: Hồ sơ mới / Đang xem xét / Ứng tuyển thành công / Không phù hợp."},
+  {"ma": "REQ_UI_002", "bang_chung_ma": "BottomNav: có huy hiệu số tin chưa đọc trên mục Tin nhắn và Cộng đồng."},
+  {"ma": "REQ_BUG_043", "bang_chung_ma": "job-post: thông báo mới 'Tin chỉ vào hàng chờ duyệt khi tài khoản (CCCD) và công ty (ĐKKD) đã được xác minh…'; câu 'vào Hồ sơ công ty để tải…' không còn trong mã giao diện (có thể do API trả về)."},
+  {"ma": "Retest_BUG_044", "bang_chung_ma": "EmployerVerifyCard: hiện 'Đã gửi lúc … — đang chờ duyệt' / 'Đang chờ admin xét duyệt'; chưa xác định nhãn trên trang Tài khoản."},
+  {"ma": "REQ_FUNC_005", "bang_chung_ma": "job-post: vẫn chỉ có dòng nhắc tĩnh 'Vui lòng không điền thông tin liên hệ cá nhân…'; chưa thấy cảnh báo khi phát hiện SĐT/email."}
+ ],
+ "kich_ban": []
+}

@@ -58,3 +58,25 @@ Báo cáo Tháng/Tuần tự tra đúng dòng theo kỳ đang chọn → đổi 
 ```bash
 python3 build_report.py   # cần openpyxl
 ```
+
+## Nghiệm thu GĐ2 — Nhà tuyển dụng, lần 2 (`nghiem_thu_gd2/`)
+
+Biên bản lần 1 (29/09/2026, file `Biên bản nghiệm thu GD2.xlsx` trên Drive > Report Timviec123 >
+Tháng 9) kết luận **CHƯA ĐẠT**. Lần 2 đối chiếu lại từng mã lỗi, luồng F1–F8, 23 yêu cầu,
+19 trang và 116 kịch bản của lần 1 với trạng thái QA hiện tại và kết quả kiểm lại trên website.
+
+```bash
+cd nghiem_thu_gd2
+python3 extract_nghiemthu_gd2.py "<Biên bản nghiệm thu GD2.xlsx>" <file_QA.xlsx> ket_qua_kiem_lai_1610.json 16/10/2026
+python3 build_nghiemthu_gd2.py      # -> BaoCao_NghiemThu_GD2_lan2.xlsx
+```
+
+- `ket_qua_kiem_lai_1610.json`: kết quả kiểm lại từng mã (`Pass` / `Fail` / `Không xác định`),
+  nhận xét, ảnh (`anh_kiem_lai/`) và bằng chứng mã nguồn. Kiểm thêm thì bổ sung vào file này
+  rồi chạy lại 2 lệnh trên.
+- **Điều kiện ĐẠT**: mọi mã nhóm chặn duyệt (8 lỗi "Cần sửa trước khi duyệt" + 7 lỗi
+  "QA - cần xử lý" của lần 1 + lỗi Critical/High phát sinh sau 29/09 trong khu NTD) phải
+  kiểm lại đạt. Dev báo đã sửa (Fixed/Verified) mà chưa retest đạt thì chưa tính.
+- Sheet **Lỗi Verified (Dev báo sửa)**: kết quả kiểm các lỗi đang Verified trong
+  `06_RTM_Dev_Test` kèm đề xuất cập nhật QA (chưa ghi vào file QA).
+- `kiem_tra/perf4g.js`: đo tốc độ tải trên 4G giả lập (Playwright).
