@@ -338,6 +338,14 @@ table(ws8, ["STT", "Mã", "Khu NTD (GĐ2)", "DS_ID", "Trang", "Mức độ", "Th
             "Kiểm 16/10", "Nhận xét", "Bằng chứng mã nguồn", "Đề xuất cập nhật QA"],
       [5, 18, 8, 8, 22, 9, 14, 34, 14, 12, 50, 34, 30], vrows, styles={9}, heights=50)
 
+# ===== Phát hiện mới =====
+moi = META.get("phat_hien_moi", [])
+if moi:
+    wsm = wb.create_sheet("Phát hiện mới 16-10")
+    table(wsm, ["STT", "Mô tả", "Mức đề xuất", "Trang", "Ảnh"], [5, 90, 14, 14, 40],
+          [[n, m[0], m[1], m[2], ", ".join(os.path.basename(a) for a in m[3])] for n, m in enumerate(moi, 1)],
+          freeze=False, heights=45)
+
 # ===== Ảnh =====
 ws9 = wb.create_sheet("Ảnh kiểm lại")
 ws9.column_dimensions["A"].width = 2; ws9.column_dimensions["B"].width = 110; ws9.sheet_view.showGridLines = False
@@ -346,7 +354,9 @@ c.font = F(11, True, NAVY)
 r = 3
 for i in sorted(items, key=lambda i: (nhom_order.index(i["nhom"]), i["ma"])) + [
         {"ma": v["ma"], "kiem_lai": v["kiem_lai"], "danh_gia": "", "tieu_de": v["tieu_de"]} for v in data["verified"]
-        if v["ma"] not in by_ma]:
+        if v["ma"] not in by_ma] + [
+        {"ma": f"Phát hiện mới {n}", "kiem_lai": {"ket_qua": m[1], "anh": m[3]}, "tieu_de": m[0]}
+        for n, m in enumerate(moi, 1) if m[3]]:
     k = kl(i)
     for a in k.get("anh", []):
         p = os.path.join(HERE, a)

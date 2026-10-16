@@ -2,29 +2,303 @@
  "ngay_kiem": "16/10/2026",
  "ban_giao_dien": "triển khai 15/10/2026 15:19 (index-BIg9IMmH.js)",
  "cach_kiem": "Chạy trực tiếp trên website bằng Chromium (Playwright) ở các khổ 360/375/390 (mobile), 768/1024 (tablet), 1280/1440 (desktop); đo tốc độ tải bằng giả lập 4G (9 Mbps, trễ 170 ms, không bộ nhớ đệm) như lần 1; gọi API công khai để kiểm lỗi API; đọc mã giao diện bản 15/10 để xác định lỗi nào Dev đã có thay đổi.",
- "gioi_han": "Không đăng nhập được tài khoản NTD / Ứng viên: website chặn mọi API khi email chưa kích hoạt (EMAIL_NOT_VERIFIED) và chưa có hộp thư nhận email kích hoạt. Vì vậy các lỗi trong khu NTD sau đăng nhập chưa chạy lại được trên giao diện; những lỗi đó được đánh giá theo trạng thái QA và ghi kèm bằng chứng mã nguồn nếu có.",
+ "gioi_han": "Không đăng nhập được tài khoản NTD / Ứng viên: website chặn mọi API khi email chưa kích hoạt (EMAIL_NOT_VERIFIED) và chưa có hộp thư nhận email kích hoạt. Các lỗi trong khu NTD sau đăng nhập (F2–F8) chưa chạy lại được trên giao diện; được đánh giá theo trạng thái QA, kèm bằng chứng mã nguồn nếu có. Đã kiểm thật: 12 lỗi Verified ở trang công khai, Retest_BUG_028 (4G), Retest_BUG_047 và 4 lỗi API.",
  "ket_luan_them": "Bản giao diện 15/10 đã có thay đổi cho một số lỗi (xem cột Bằng chứng mã nguồn) nhưng chưa được kiểm lại trên tài khoản NTD nên chưa tính đạt. Các luồng chính vẫn chạy từ đầu đến cuối như lần 1.",
- "de_nghi": [],
+ "de_nghi": [
+  "Dev sửa 21 mã chặn duyệt ở sheet \"Điểm chặn\", ưu tiên BUG_API_003 (token NTD đọc được dữ liệu riêng tư của Ứng viên) và BUG_API_002 (link tin mở ra tin khác).",
+  "Retest_BUG_028 (tải chậm trên 4G): bật nén gzip/brotli trên nginx cho .css/.js (CSS 3,1 MB còn khoảng 0,4 MB), tách CSS theo trang và thêm khung chờ thay cho trang trắng.",
+  "Dev điền Ngày Dev báo fix và Cách xử lý trong 06_RTM_Dev_Test cho các mã đã sửa ở bản 15/10 (Retest_BUG_027, 030, 031, 036…); hiện cả 21 mã chặn đều trống.",
+  "Cấp tài khoản demo đã kích hoạt (NTD đã xác thực có tin và hồ sơ ứng tuyển như Sanwa / STT 361; Ứng viên Đỗ Minh An) để chạy lại F2–F8 và 40 lỗi Verified cần đăng nhập.",
+  "Cập nhật QA theo sheet \"Lỗi Verified (Dev báo sửa)\": 6 lỗi Pass chuyển Closed; 5 lỗi Fail trả về Open (REQ_UI_001, Retest_BUG_021, BUG_UI_102, BUG_FUNC_049, BUG_UI_103).",
+  "Thống nhất lại mức độ 4 lỗi đang xếp \"lệch nhỏ\" nhưng ghi Critical/High trong QA: BUG_UI_083, BUG_UI_101 (Critical), BUG_UI_084, BUG_UI_085 (High).",
+  "Gửi Dev 7 điểm phát hiện mới ở sheet \"Phát hiện mới 16-10\" (dữ liệu test lộ ra trang chủ, link tin cũ bị gãy, header lặp ở 1024 px…).",
+  "Nghiệm thu lại lần 3 cùng đợt retest F1–F8 ở Tuần 4 tháng 10 (19–25/10) sau khi Dev báo sửa xong các mã chặn."
+ ],
  "phuong_phap": [
-  ["Thiết bị giả lập", "Mobile 390×844 (iPhone 13), 375×667, 360×800; Tablet 768×1024 và 1024×768; Desktop 1280×800, 1440×900. Trình duyệt Chromium (Playwright)."],
-  ["Đo tốc độ 4G", "Giả lập 9 Mbps, trễ 170 ms, tắt bộ nhớ đệm, khổ 390 — cùng thông số lần 1. Chụp màn hình ở giây 3, 5, 8 sau khi mở trang; đo First Contentful Paint."],
-  ["Đọc mã nguồn", "Tải toàn bộ 373 tệp JS của bản giao diện 15/10 và tìm đoạn mã liên quan từng lỗi. Bằng chứng mã nguồn chỉ cho biết Dev đã có thay đổi, KHÔNG thay cho kiểm thử thật; mã có bằng chứng nhưng chưa chạy thật vẫn ghi 'Chưa kiểm'."],
-  ["API", "Chỉ gọi GET công khai; riêng route chưa có (job-alerts, auth/refresh) gửi 1 POST không token, body rỗng để xem mã trả về 404 hay 401/422. Không ghi dữ liệu."],
-  ["Không làm", "Không tạo tài khoản, không ứng tuyển, không gửi tin nhắn, không ghi vào file QA."]
+  [
+   "Thiết bị giả lập",
+   "Mobile 390×844 (iPhone 13), 375×667, 360×800; Tablet 768×1024 và 1024×768; Desktop 1280×800, 1440×900. Trình duyệt Chromium (Playwright)."
+  ],
+  [
+   "Đo tốc độ 4G",
+   "Giả lập 9 Mbps, trễ 170 ms, tắt bộ nhớ đệm, khổ 390 — cùng thông số lần 1. Chụp màn hình ở giây 3, 5, 8 sau khi mở trang; đo First Contentful Paint."
+  ],
+  [
+   "Đọc mã nguồn",
+   "Tải toàn bộ 373 tệp JS của bản giao diện 15/10 và tìm đoạn mã liên quan từng lỗi. Bằng chứng mã nguồn chỉ cho biết Dev đã có thay đổi, KHÔNG thay cho kiểm thử thật; mã có bằng chứng nhưng chưa chạy thật vẫn ghi 'Chưa kiểm'."
+  ],
+  [
+   "API",
+   "Chỉ gọi GET công khai; riêng route chưa có (job-alerts, auth/refresh) gửi 1 POST không token, body rỗng để xem mã trả về 404 hay 401/422. Không ghi dữ liệu."
+  ],
+  [
+   "Không làm",
+   "Không tạo tài khoản, không ứng tuyển, không gửi tin nhắn, không ghi vào file QA."
+  ]
  ],
  "items": [
-  {"ma": "Retest_BUG_028", "ket_qua": "Fail", "thiet_bi": "Mobile 390, giả lập 4G",
+  {
+   "ma": "Retest_BUG_028",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390, giả lập 4G",
    "nhan_xet": "Trang /login (vỏ chung của khu NTD, tải cùng bộ CSS/JS trước khi vào trang NTD): giây 3 và giây 5 vẫn trắng hoàn toàn, giây 8 mới hiện nội dung; FCP 4,2–4,6 s ở 3 trang /login, /register, /. Không có khung chờ. Nguyên nhân: máy chủ gửi index-BGfcSxQy.css 3,1 MB và index-BIg9IMmH.js 558 KB KHÔNG nén (không có Content-Encoding); nén gzip CSS chỉ còn 393 KB. Các trang NTD sau đăng nhập tải thêm dữ liệu nên chậm hơn mức này.",
-   "anh": ["anh_kiem_lai/Retest_BUG_028_4g_login_3s_5s_8s.png"]},
-  {"ma": "Retest_BUG_027", "bang_chung_ma": "job-post: có hộp xác nhận 'Bỏ thông tin tin tuyển dụng đang nhập?' khi rời trang Đăng tin (useChanRoiTrang: chặn đổi route + beforeunload)."},
-  {"ma": "Retest_BUG_030", "bang_chung_ma": "ChatUserMobile: tin gửi lỗi được giữ trong khung chat kèm nút 'Gửi lại' và 'Xoá tin chưa gửi được'."},
-  {"ma": "Retest_BUG_031", "bang_chung_ma": "ApplicationActionBar: kiểm tra thời lượng — trống, số âm, không phải số nguyên, dưới 5 phút, trên 600 phút đều báo lỗi."},
-  {"ma": "Retest_BUG_032", "bang_chung_ma": "register-success: xử lý trường hợp already_verified, hiện 'Email đã được kích hoạt trước đó.' (cần backend trả cờ này)."},
-  {"ma": "Retest_BUG_036", "bang_chung_ma": "Không còn chuỗi 'Đã gửi offer' trong toàn bộ mã giao diện; nhãn phía NTD: Hồ sơ mới / Đang xem xét / Ứng tuyển thành công / Không phù hợp."},
-  {"ma": "REQ_UI_002", "bang_chung_ma": "BottomNav: có huy hiệu số tin chưa đọc trên mục Tin nhắn và Cộng đồng."},
-  {"ma": "REQ_BUG_043", "bang_chung_ma": "job-post: thông báo mới 'Tin chỉ vào hàng chờ duyệt khi tài khoản (CCCD) và công ty (ĐKKD) đã được xác minh…'; câu 'vào Hồ sơ công ty để tải…' không còn trong mã giao diện (có thể do API trả về)."},
-  {"ma": "Retest_BUG_044", "bang_chung_ma": "EmployerVerifyCard: hiện 'Đã gửi lúc … — đang chờ duyệt' / 'Đang chờ admin xét duyệt'; chưa xác định nhãn trên trang Tài khoản."},
-  {"ma": "REQ_FUNC_005", "bang_chung_ma": "job-post: vẫn chỉ có dòng nhắc tĩnh 'Vui lòng không điền thông tin liên hệ cá nhân…'; chưa thấy cảnh báo khi phát hiện SĐT/email."}
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_028_4g_login_3s_5s_8s.png"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_027",
+   "bang_chung_ma": "job-post: có hộp xác nhận 'Bỏ thông tin tin tuyển dụng đang nhập?' khi rời trang Đăng tin (useChanRoiTrang: chặn đổi route + beforeunload)."
+  },
+  {
+   "ma": "Retest_BUG_030",
+   "bang_chung_ma": "ChatUserMobile: tin gửi lỗi được giữ trong khung chat kèm nút 'Gửi lại' và 'Xoá tin chưa gửi được'."
+  },
+  {
+   "ma": "Retest_BUG_031",
+   "bang_chung_ma": "ApplicationActionBar: kiểm tra thời lượng — trống, số âm, không phải số nguyên, dưới 5 phút, trên 600 phút đều báo lỗi."
+  },
+  {
+   "ma": "Retest_BUG_032",
+   "bang_chung_ma": "register-success: xử lý trường hợp already_verified, hiện 'Email đã được kích hoạt trước đó.' (cần backend trả cờ này)."
+  },
+  {
+   "ma": "Retest_BUG_036",
+   "bang_chung_ma": "Không còn chuỗi 'Đã gửi offer' trong toàn bộ mã giao diện; nhãn phía NTD: Hồ sơ mới / Đang xem xét / Ứng tuyển thành công / Không phù hợp."
+  },
+  {
+   "ma": "REQ_UI_002",
+   "bang_chung_ma": "BottomNav: có huy hiệu số tin chưa đọc trên mục Tin nhắn và Cộng đồng."
+  },
+  {
+   "ma": "REQ_BUG_043",
+   "bang_chung_ma": "job-post: thông báo mới 'Tin chỉ vào hàng chờ duyệt khi tài khoản (CCCD) và công ty (ĐKKD) đã được xác minh…'; câu 'vào Hồ sơ công ty để tải…' không còn trong mã giao diện (có thể do API trả về)."
+  },
+  {
+   "ma": "Retest_BUG_044",
+   "bang_chung_ma": "EmployerVerifyCard: hiện 'Đã gửi lúc … — đang chờ duyệt' / 'Đang chờ admin xét duyệt'; chưa xác định nhãn trên trang Tài khoản."
+  },
+  {
+   "ma": "REQ_FUNC_005",
+   "bang_chung_ma": "job-post: vẫn chỉ có dòng nhắc tĩnh 'Vui lòng không điền thông tin liên hệ cá nhân…'; chưa thấy cảnh báo khi phát hiện SĐT/email."
+  },
+  {
+   "ma": "REQ_UI_001",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Danh mục ngành nghề trên trang chủ (14 mục) vẫn dùng chung icon mặc định ShieldUser cho 8 mục: Việc theo ngày, Kho – Vận tải, Xây dựng, Giao hàng – Tài xế, Xuất khẩu LĐ, Nông – Ngư, Giúp việc, Văn phòng. API /master-data/job-categories trả icon=null cho 8 mục này, frontend tự lấy 'ShieldUser'. Chỉ 4 mục có icon gần đúng yêu cầu: Bảo vệ – Tạp vụ (ShieldUser ~ security-user), Kỹ thuật – Thợ (Settings ~ setting-2), Bán hàng (GraphNewUp ~ status-up), Chuyên môn (MedalRibbonsStar ~ medal-star). Chưa có icon nào trong các icon Calendar/Time, truck-fast, Ruler Cross Pen, convert-3d-cube, global-refresh, tree, 24-support, printer. Cả 3 khổ đều như vậy. Không có link Figma để đối chiếu.",
+   "anh": [
+    "anh_kiem_lai/REQ_UI_001_390_danhmuc.jpg"
+   ],
+   "url": "https://timviec123.vn/ ; GET https://app.timviec123.vn/api/v1/master-data/job-categories"
+  },
+  {
+   "ma": "BUG_UI_100",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, 375×844, 360×844",
+   "nhan_xet": "Tab 'Bài đăng' của trang Bellwood: thẻ bài đăng (.post-card) không còn viền, bo góc hay đổ bóng riêng và rộng 370/390px (94,9%). Khung tin tuyển dụng bên trong (.post-job-mini) rộng 350px (89,7%). Ở 375px là 355/335px, ở 360px là 340/320px. Không tràn ngang (scrollWidth = viewport) và không có phần tử chồng nhau. Ảnh lỗi có 3 lớp thẻ lồng có viền, khung tin chỉ rộng khoảng 76%. Như vậy đã bớt lớp và phần nội dung rộng hơn. Chưa đối chiếu được ảnh BUG_UI_100_fix.png vì không có file.",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_100_390_posts.jpg"
+   ],
+   "url": "https://timviec123.vn/nha-tuyen-dung/bellwood-furniture-vietnam-co-ltd (tab Bài đăng)"
+  },
+  {
+   "ma": "Retest-BUG_005",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Đo bằng getBoundingClientRect. Box logo .company-logo ở mục 'Công ty nổi bật' = 68×68px ở cả 3 khổ (8/8 thẻ), cách mép thẻ trên 12px và trái 12px, viền 1px rgb(215,224,239) = #D7E0EF, khớp thông số Figma trong ảnh lỗi (68×68, top/left 12, border 1px #D7E0EF). Logo ở danh sách 'Gợi ý cho bạn' (.tct__logo) cũng 68×68. Lệch nhỏ ngoài phạm vi lỗi: border-radius đang 12px, Figma ghi 8px.",
+   "anh": [
+    "anh_kiem_lai/Retest-BUG_005_390.jpg"
+   ],
+   "url": "https://timviec123.vn/cong-ty/dia-phuong"
+  },
+  {
+   "ma": "Retest-BUG_006",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, 375×812, 360×800",
+   "nhan_xet": "Bấm 'Bộ lọc' ở trang DN địa phương trên mobile. Bộ lọc không còn là bảng chip cũ (Ngành nghề/Mức lương/Kinh nghiệm + Xoá lọc/Áp dụng) mà là bottom sheet theo khung Figma 'DN địa phương > bộ lọc' trong ảnh lỗi: ô 'Tìm kiếm vị trí mong muốn', cột trái là nhóm ngành (Công nhân KCN, Việc theo ngày, ...), cột phải là các nghề theo nhóm, cuối có nút tròn (x) và nút 'Xác nhận'. Không tràn ngang ở 360/375/390. Chưa mở được Figma gốc, chỉ so với khung Figma trong ảnh lỗi. Khác biệt nhỏ cần Design xác nhận: trên mobile danh sách nghề xếp 1 cột (Figma 2 cột), có thêm dòng 'Nghề công ty đang tuyển – Đã chọn 0/5 – Chọn tối đa 5 công việc'.",
+   "anh": [
+    "anh_kiem_lai/Retest-BUG_006_390.jpg"
+   ],
+   "url": "https://timviec123.vn/cong-ty/dia-phuong"
+  },
+  {
+   "ma": "Retest-BUG_007",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024 và 1024×768, Mobile 390×844",
+   "nhan_xet": "Hàng chip lọc bị lệch trái (Địa điểm/Ngành nghề/Mức lương/Loại công việc/Kinh nghiệm) đã được bỏ. Mục 'Gợi ý cho bạn' giờ có tab Đề xuất/Công nhân KCN và nút 'Bộ lọc' căn phải (1440: x=1313, rộng 91px). Nút này mở bộ lọc danh mục công việc giống mobile, đúng devnote: desktop mở dạng popover, tablet/mobile mở dạng bottom sheet. Cả 4 khổ đều không còn hàng chip lệch trái.",
+   "anh": [
+    "anh_kiem_lai/Retest-BUG_007_1440.jpg"
+   ],
+   "url": "https://timviec123.vn/cong-ty/dia-phuong"
+  },
+  {
+   "ma": "Retest-BUG_FUNC_003",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Ô 'Tìm công ty theo tên…' ở trang DN địa phương (gọi GET /companies?q=...): 1440 tìm 'bellwood' ra 'Tìm thấy 1 công ty' Bellwood Furniture Vietnam Co., Ltd.; 768 tìm 'Bellwood Furniture' ra Bellwood; 390 tìm 'Hải Đăng' ra Công ty TNHH Thương mại Tổng hợp Hải Đăng. Đường dẫn trong ảnh lỗi /search/top?keyword=bellwood giờ trả 3 tin của Bellwood (trước là 'Không tìm thấy kết quả'). Hạn chế phụ: tìm không dấu 'hai dang' ra 0 kết quả.",
+   "anh": [
+    "anh_kiem_lai/Retest-BUG_FUNC_003_1440_result.jpg"
+   ],
+   "url": "https://timviec123.vn/cong-ty/dia-phuong?q=bellwood ; https://timviec123.vn/search/top?keyword=bellwood"
+  },
+  {
+   "ma": "REQ_FUNC_001",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844 (chỉ trang công khai)",
+   "nhan_xet": "Trang công khai của Bellwood đã có các dòng Website/Email/Số điện thoại nhưng đều hiện '—' ở cả 3 khổ. GET /companies/{slug} của cả 55 doanh nghiệp công khai đều có website=null, email=null, phone=null, nên không có doanh nghiệp nào để xác nhận các trường này hiển thị được giá trị. Phần thiếu trường trong ảnh lỗi là form 'Chỉnh sửa bổ sung' của NTD, cần đăng nhập NTD nên chưa kiểm. Dấu hiệu từ mã nguồn (chưa phải kết quả kiểm): bundle edit-CTW4yGEa.js đã có ô ced-website, ced-email, ced-phone.",
+   "anh": [
+    "anh_kiem_lai/REQ_FUNC_001_390_web.jpg"
+   ],
+   "url": "https://timviec123.vn/nha-tuyen-dung/bellwood-furniture-vietnam-co-ltd ; GET /api/v1/companies/{slug} (55 DN)"
+  },
+  {
+   "ma": "Retest_BUG_021",
+   "ket_qua": "Fail",
+   "thiet_bi": "Tablet/laptop nhỏ: 900×800, 1024×768 (có và không có touch), 1100×800, 1280×800; thêm 768×1024, 1440×900, 390×844",
+   "nhan_xet": "Lỗi còn. Ở /search/top với khổ 1024×768 (kể cả có touch và có từ khoá) và 1100×800, thanh bộ lọc không hiển thị và không có trong DOM. Giữa ô tìm kiếm và danh sách tin chỉ còn khoảng trống, giống hệt ảnh lỗi. Dò thêm thì thanh lọc mất ở mọi chiều rộng từ 960 đến 1279px (đã thử 960, 975, 985, 990, 1000, 1023, 1150, 1200, 1239, 1240, 1279). Ở 1280 và 1440 hiện đủ 6 bộ lọc: Địa điểm, Ngành nghề, Lương, Loại công việc, Kinh nghiệm, Thêm. Ở ≤950px là giao diện mobile, chỉ có Địa điểm, Lương, Thêm.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_021_1024x768.jpg",
+    "anh_kiem_lai/Retest_BUG_021_1280x800.jpg"
+   ],
+   "url": "https://timviec123.vn/search/top ; https://timviec123.vn/search/top?keyword=bellwood"
+  },
+  {
+   "ma": "Retest_BUG_045",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Chỉ gõ email rồi blur, không bấm 'Tạo tài khoản'. Trang gọi POST /auth/register/check-availability. info@timviec123.vn và Timviec123.vn@gmail.com (email ở footer) đều báo 'Email có thể sử dụng.' (chưa đăng ký), các DN địa phương không công khai email. Vì vậy dùng timviec123test@gmail.com, là email đã đăng ký có sẵn trong chính ảnh lỗi. Ở cả 3 khổ, dưới ô chỉ hiện dòng đỏ 'Email này đã được đăng ký.', không còn khối 'Đây là tài khoản của bạn? Đăng nhập hoặc lấy lại mật khẩu'. Liên kết 'Quay lại Đăng nhập' vẫn ở đầu form.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_045_390.jpg"
+   ],
+   "url": "https://timviec123.vn/register"
+  },
+  {
+   "ma": "BUG_UI_102",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Chỉ sửa một phần. Không còn trang trắng: /viec-lam/khong-ton-tai-999999 và /viec-lam/tuyen-dung-abc-194 hiện thẻ 'Không tìm thấy tin tuyển dụng – Tin tuyển dụng này không tồn tại hoặc hiện không còn hiển thị công khai...' kèm nút 'Tìm Việc Khác' và 'Về Trang Chủ' ở cả 3 khổ. Nhưng còn 2 vấn đề. (1) Chính link trong ảnh lỗi /viec-lam/tuyen-dung-tho-moc-may-tho-lap-rap-do-go-noi-that-xuat-khau-thu-nhap-den-12-trieu (link dạng cũ, không có id) giờ báo 'không tồn tại / không còn hiển thị công khai', trong khi tin này (id 37) vẫn đang tuyển tại .../...-12-trieu-37. Thông báo sai trạng thái; nên chuyển hướng sang link đúng. (2) Thông báo chung chung, không cho biết tin hết hạn, tạm dừng hay đã xoá. Tin đã hết hạn (id 7) vẫn hiện như tin đang tuyển, không có thông báo (xem Retest_BUG_047).",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_102_evidenceURL_390.jpg",
+    "anh_kiem_lai/BUG_UI_102_job37_active_1440.jpg"
+   ],
+   "url": "https://timviec123.vn/viec-lam/khong-ton-tai-999999 ; https://timviec123.vn/viec-lam/tuyen-dung-tho-moc-may-tho-lap-rap-do-go-noi-that-xuat-khau-thu-nhap-den-12-trieu ; https://timviec123.vn/viec-lam/tuyen-dung-tho-moc-may-tho-lap-rap-do-go-noi-that-xuat-khau-thu-nhap-den-12-trieu-37"
+  },
+  {
+   "ma": "BUG_FUNC_049",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Kiểm tin id 110 (tin trong ảnh lỗi). Phần chi tiết đã thêm Lương cơ bản, Ngày trả lương, Kinh nghiệm, Vị trí tuyển. So với Figma trong ảnh lỗi vẫn thiếu: (a) mục 'Yêu cầu công việc' riêng, hiện vẫn nằm dạng văn bản trong 'Phạm vi công việc'; (b) mục 'Thời gian làm việc'; (c) các dòng Kỹ năng, Chuyên môn, Bằng cấp/chứng chỉ, Lĩnh vực. Dữ liệu API của cả 152 tin công khai: requirements=null, work_time_slots=[], industry=null. Frontend có khối 'Yêu cầu công việc', 'Thời gian làm việc', 'Lĩnh vực:' nhưng chỉ hiện khi có dữ liệu, nên hiện không tin nào hiển thị được. Frontend không có nhãn 'Kỹ năng' hay 'Chuyên môn' (skills được hiển thị dưới nhãn 'Chứng chỉ:'). Dòng 'Tại văn phòng' (work_mode) không còn hiện, chỗ đó là tag 'Toàn thời gian'. Nút 'Gửi tôi việc làm tương tự' đã có và backend route đã tồn tại (xem BUG_API_001), chưa kiểm luồng vì cần đăng nhập. Form đăng tin của NTD (ghi chú 'chưa có phần nhập') cần đăng nhập NTD nên chưa kiểm.",
+   "anh": [
+    "anh_kiem_lai/BUG_FUNC_049_390_chi_tiet.jpg"
+   ],
+   "url": "https://timviec123.vn/viec-lam/tuyen-truong-phong-san-xuat-quan-doc-xuong-che-tao-khuon-mau-doanh-nghiep-nhat-ban-110 ; GET /api/v1/jobs/{slug_id} (152 tin)"
+  },
+  {
+   "ma": "BUG_UI_103",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Kiểm tin id 110. Đã sửa 2 điểm. Nút 'Đổi câu hỏi gợi ý' đã căn giữa (justify-content:center, khoảng trống trái/phải 161/161px ở 1440, 289/289 ở 768, 100/100 ở 390). Avatar người đăng tin (Lâm Diễm Nga) đã hiển thị. Còn sai: khối công ty trong trang tin vẫn chỉ có 'Quy mô' và 'Địa điểm', thiếu 'Lĩnh vực' ở cả 3 khổ, dù API công ty Sanwa có business_fields ('Sản xuất sản phẩm từ plastic', ...). Phản hồi của người tìm việc 'L***' vẫn là icon người mặc định, do API reviews trả avatar=null; chưa kiểm được trường hợp reviewer có ảnh. Chưa mở Figma gốc, chỉ so với khung Figma trong ảnh lỗi.",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_103_390_doi.jpg"
+   ],
+   "url": "https://timviec123.vn/viec-lam/tuyen-truong-phong-san-xuat-quan-doc-xuong-che-tao-khuon-mau-doanh-nghiep-nhat-ban-110 ; GET /api/v1/companies/sanwa-precision-molds-vietnam-co-ltd ; GET /api/v1/companies/sanwa-precision-molds-vietnam-co-ltd/reviews"
+  },
+  {
+   "ma": "Retest_BUG_047",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Tin hết hạn id 7 (Admin ghi hết hạn 31/07/2026) vẫn hiện như tin đang tuyển ở cả 3 khổ: ghi '106 ngày trước', không có nhãn hay thông báo 'hết hạn'. Nút 'Ứng tuyển ngay' (jd-cta-apply, jd-footer__apply) và 'Chat ngay' không bị khoá (disabled=null). Tin vẫn nằm trong GET /jobs công khai (152 tin), API chi tiết không có trường hết hạn (application_deadline=null). Tin đã đóng id 194 không có trong danh sách công khai (id lớn nhất là 193) nên không biết slug thật. Thử /viec-lam/tuyen-dung-abc-194 thì không còn trang trắng, có thẻ 'Không tìm thấy tin tuyển dụng ... không tồn tại hoặc hiện không còn hiển thị công khai' và 2 nút Tìm Việc Khác / Về Trang Chủ. Tuy vậy trang không nói tin 'đã đóng' và không gợi ý việc làm tương tự. Phần tin đang duyệt (NTD xem trước, nhãn 'Đang chờ duyệt') cần đăng nhập nên chưa kiểm.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_047_390.jpg",
+    "anh_kiem_lai/Retest_BUG_047_id194_1440.jpg"
+   ],
+   "url": "https://timviec123.vn/viec-lam/tuyen-dung-truong-phong-marketing-mang-branding-thuc-day-ban-hang-7 ; https://timviec123.vn/viec-lam/tuyen-dung-abc-194 ; GET /api/v1/jobs?per_page=100"
+  },
+  {
+   "ma": "BUG_API_001",
+   "ket_qua": "Pass",
+   "thiet_bi": "API (không phụ thuộc thiết bị)",
+   "nhan_xet": "Route đã có. POST /candidate/job-alerts body {} không token trả HTTP 401 {code:'UNAUTHENTICATED', message:'Vui lòng đăng nhập để tiếp tục.'}, trước đây là 404 ROUTE_NOT_FOUND. GET cùng route cũng trả 401. Đối chứng: route không tồn tại /candidate/route-khong-ton-tai-xyz vẫn trả 404 ROUTE_NOT_FOUND. Phần còn lại của kết quả mong đợi (POST có token ứng viên trả 200/201 và tạo được đăng ký) cần đăng nhập nên chưa kiểm.",
+   "anh": [],
+   "url": "POST/GET https://app.timviec123.vn/api/v1/candidate/job-alerts"
+  },
+  {
+   "ma": "BUG_API_002",
+   "ket_qua": "Fail",
+   "thiet_bi": "API (không phụ thuộc thiết bị)",
+   "nhan_xet": "Lỗi gốc vẫn còn: GET /jobs/abc-3 và GET /jobs/<slug tin 193>-3 đều trả HTTP 200 với nội dung tin id 3; website /viec-lam/<slug tin 193>-3 cũng hiện tin id 3. API vẫn lấy số cuối đường dẫn làm id, không so khớp slug. (Hiện không có cặp tin trùng tiêu đề nên chưa tái hiện đúng kịch bản gốc, nhưng cơ chế gây lỗi vẫn nguyên.)",
+   "anh": [
+    "anh_kiem_lai/BUG_API_002_ui_slug193_suffix3_1440.jpg"
+   ],
+   "url": "GET https://app.timviec123.vn/api/v1/jobs?per_page=100&page=1..2 ; GET /api/v1/jobs/abc-3 ; GET /api/v1/jobs/tuyen-ky-thuat-vien-thi-nghiem-vat-lieu-kiem-tra-chat-luong-thep-tai-kkt-dung-quat-thu-nhap-11-15-trieu-3"
+  },
+  {
+   "ma": "BUG_API_003",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "API (không phụ thuộc thiết bị)",
+   "nhan_xet": "Không xác định (cần tài khoản NTD). Lỗi cần token hợp lệ của tài khoản Nhà tuyển dụng để gọi GET /candidate/applications. Theo quy tắc không đăng nhập và không thử cách khác.",
+   "anh": [],
+   "url": "Không gọi"
+  },
+  {
+   "ma": "BUG_API_004",
+   "ket_qua": "Fail",
+   "thiet_bi": "API (không phụ thuộc thiết bị)",
+   "nhan_xet": "Vẫn chưa có route làm mới token. POST body {} không token tới /auth/refresh, /auth/refresh-token và /auth/token/refresh đều trả HTTP 404 {code:'ROUTE_NOT_FOUND', message:'Endpoint không tồn tại.'}. Chưa kiểm được phương án thay thế (bỏ refresh_token khỏi response đăng nhập) vì cần đăng nhập. Frontend (index-BIg9IMmH.js) vẫn lưu cookie 'refreshToken' nhưng không gọi endpoint refresh nào.",
+   "anh": [],
+   "url": "POST https://app.timviec123.vn/api/v1/auth/refresh, /auth/refresh-token, /auth/token/refresh"
+  }
  ],
- "kich_ban": []
+ "kich_ban": [],
+ "phat_hien_moi": [
+  [
+   "Link tin dạng cũ (không có số id ở cuối) báo \"không tồn tại\" dù tin vẫn đang tuyển (ví dụ tin id 37). Nên chuyển hướng sang link đúng.",
+   "TB",
+   "DS_65",
+   [
+    "anh_kiem_lai/BUG_UI_102_job37_active_1440.jpg"
+   ]
+  ],
+  [
+   "Dữ liệu test lộ ra production: mục \"Nhà tuyển dụng hàng đầu\" ở Trang chủ có công ty 0 việc làm và công ty \"asdas\"; danh sách công ty còn \"dasd\", \"Test company\", 2 công ty \"Tomaz\", \"Công ty TNHH Properwell Việt Nam\" bị trùng.",
+   "Cao",
+   "DS_01, DS_02",
+   [
+    "anh_kiem_lai/NEW_home_ntd_hang_dau_1440_ntd.jpg"
+   ]
+  ],
+  [
+   "Quy mô / năm thành lập công ty hiển thị không khớp giữa thẻ danh sách, trang công ty và API (Bellwood: 501-1000 và 450-600 nhân sự; Sanwa: API 1001-5000, trang 1000-2000; Bellwood thành lập 2017 nhưng \"Những con số biết nói\" ghi 2020).",
+   "TB",
+   "DS_02, DS_03",
+   []
+  ],
+  [
+   "Tìm công ty không hỗ trợ gõ không dấu: \"hai dang\" 0 kết quả, \"Hải Đăng\" 1 kết quả.",
+   "TB",
+   "DS_02",
+   []
+  ],
+  [
+   "Khổ 1024 px: Trang chủ, DN địa phương, trang công ty hiện cùng lúc header desktop (Menu) và thanh điều hướng dưới của mobile.",
+   "TB",
+   "DS_01–DS_03",
+   [
+    "anh_kiem_lai/Retest-BUG_007_1024.jpg"
+   ]
+  ],
+  [
+   "Lượt xem tin bị cộng 2 lần khi đổi chiều rộng màn hình (trang tải lại tin và gửi lại POST /jobs/{slug}/view).",
+   "Thấp",
+   "DS_65",
+   []
+  ],
+  [
+   "POST /auth/register/check-availability không cần đăng nhập cho biết một email đã đăng ký hay chưa (dò được tài khoản).",
+   "Thấp (bảo mật)",
+   "DS_22",
+   []
+  ]
+ ]
 }
