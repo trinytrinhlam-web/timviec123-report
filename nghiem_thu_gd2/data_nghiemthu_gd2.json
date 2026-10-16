@@ -4,13 +4,13 @@
   "ngay_kiem": "16/10/2026",
   "ban_giao_dien": "triển khai 15/10/2026 15:19 (index-BIg9IMmH.js)",
   "cach_kiem": "Chạy trực tiếp trên website bằng Chromium (Playwright) ở các khổ 360/375/390 (mobile), 768/1024 (tablet), 1280/1440 (desktop); đo tốc độ tải bằng giả lập 4G (9 Mbps, trễ 170 ms, không bộ nhớ đệm) như lần 1; gọi API công khai để kiểm lỗi API; đọc mã giao diện bản 15/10 để xác định lỗi nào Dev đã có thay đổi.",
-  "gioi_han": "Không đăng nhập được tài khoản NTD / Ứng viên: website chặn mọi API khi email chưa kích hoạt (EMAIL_NOT_VERIFIED) và chưa có hộp thư nhận email kích hoạt. Các lỗi trong khu NTD sau đăng nhập (F2–F8) chưa chạy lại được trên giao diện; được đánh giá theo trạng thái QA, kèm bằng chứng mã nguồn nếu có. Đã kiểm thật: 12 lỗi Verified ở trang công khai, Retest_BUG_028 (4G), Retest_BUG_047 và 4 lỗi API.",
+  "gioi_han": "Đã đăng nhập được bằng tài khoản demo trong .env nhưng phần chạy lại F1–F8 và 40 lỗi Verified sau đăng nhập chưa thực hiện trong phiên này. Các lỗi đó được đánh giá theo trạng thái QA, kèm bằng chứng mã nguồn nếu có. Đã kiểm thật: 12 lỗi Verified ở trang công khai, Retest_BUG_028 (4G), Retest_BUG_047 và 4 lỗi API (BUG_API_003 bằng token NTD).",
   "ket_luan_them": "Bản giao diện 15/10 đã có thay đổi cho một số lỗi (xem cột Bằng chứng mã nguồn) nhưng chưa được kiểm lại trên tài khoản NTD nên chưa tính đạt. Các luồng chính vẫn chạy từ đầu đến cuối như lần 1.",
   "de_nghi": [
-   "Dev sửa 21 mã chặn duyệt ở sheet \"Điểm chặn\", ưu tiên BUG_API_003 (token NTD đọc được dữ liệu riêng tư của Ứng viên) và BUG_API_002 (link tin mở ra tin khác).",
+   "Dev sửa 20 mã chặn duyệt còn lại ở sheet \"Điểm chặn\", ưu tiên BUG_API_002 (link tin mở ra tin khác) và Retest_BUG_047 (tin hết hạn vẫn nhận ứng tuyển). BUG_API_003 đã kiểm lại đạt.",
    "Retest_BUG_028 (tải chậm trên 4G): bật nén gzip/brotli trên nginx cho .css/.js (CSS 3,1 MB còn khoảng 0,4 MB), tách CSS theo trang và thêm khung chờ thay cho trang trắng.",
    "Dev điền Ngày Dev báo fix và Cách xử lý trong 06_RTM_Dev_Test cho các mã đã sửa ở bản 15/10 (Retest_BUG_027, 030, 031, 036…); hiện cả 21 mã chặn đều trống.",
-   "Cấp tài khoản demo đã kích hoạt (NTD đã xác thực có tin và hồ sơ ứng tuyển như Sanwa / STT 361; Ứng viên Đỗ Minh An) để chạy lại F2–F8 và 40 lỗi Verified cần đăng nhập.",
+   "Chạy lại F2–F8 và 40 lỗi Verified cần đăng nhập bằng các tài khoản demo trong .env (Sanwa = IDOR_NTD1 có tin và hồ sơ ứng tuyển; Ứng viên Đỗ Minh An = CANDIDATE).",
    "Cập nhật QA theo sheet \"Lỗi Verified (Dev báo sửa)\": 6 lỗi Pass chuyển Closed; 5 lỗi Fail trả về Open (REQ_UI_001, Retest_BUG_021, BUG_UI_102, BUG_FUNC_049, BUG_UI_103).",
    "Thống nhất lại mức độ 4 lỗi đang xếp \"lệch nhỏ\" nhưng ghi Critical/High trong QA: BUG_UI_083, BUG_UI_101 (Critical), BUG_UI_084, BUG_UI_085 (High).",
    "Gửi Dev 7 điểm phát hiện mới ở sheet \"Phát hiện mới 16-10\" (dữ liệu test lộ ra trang chủ, link tin cũ bị gãy, header lặp ở 1024 px…).",
@@ -1218,13 +1218,13 @@
    "ngay_gui": "01/10/2026",
    "kiem_lai": {
     "ma": "BUG_API_003",
-    "ket_qua": "Không xác định",
-    "thiet_bi": "API (không phụ thuộc thiết bị)",
-    "nhan_xet": "Không xác định (cần tài khoản NTD). Lỗi cần token hợp lệ của tài khoản Nhà tuyển dụng để gọi GET /candidate/applications. Theo quy tắc không đăng nhập và không thử cách khác.",
+    "ket_qua": "Pass",
+    "thiet_bi": "API (token Nhà tuyển dụng đã đăng nhập)",
+    "nhan_xet": "GET /candidate/applications bằng token NTD (tài khoản demo EMPLOYER) nay trả HTTP 403, code INVALID_USER_TYPE, \"Tài khoản của bạn không có quyền truy cập khu vực này.\" — đúng kết quả mong đợi. Mới kiểm endpoint ghi trong lỗi gốc; các endpoint /candidate/* khác chưa rà hết.",
     "anh": [],
     "url": "Không gọi"
    },
-   "danh_gia": "CÒN MỞ"
+   "danh_gia": "ĐÃ ĐẠT"
   },
   {
    "ma": "BUG_API_002",
@@ -1716,14 +1716,13 @@
     "BUG_UI_081": "CÒN MỞ",
     "BUG_FUNC_017": "CÒN MỞ",
     "BUG_UI_082": "CÒN MỞ",
-    "BUG_API_003": "CÒN MỞ"
+    "BUG_API_003": "ĐÃ ĐẠT"
    },
    "chan_con": [
     "BUG_FUNC_035",
     "BUG_UI_081",
     "BUG_FUNC_017",
-    "BUG_UI_082",
-    "BUG_API_003"
+    "BUG_UI_082"
    ]
   },
   {
