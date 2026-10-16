@@ -52,11 +52,24 @@
   },
   {
    "ma": "Retest_BUG_030",
-   "bang_chung_ma": "ChatUserMobile: tin gửi lỗi được giữ trong khung chat kèm nút 'Gửi lại' và 'Xoá tin chưa gửi được'."
+   "bang_chung_ma": "ChatUserMobile: tin gửi lỗi được giữ trong khung chat kèm nút 'Gửi lại' và 'Xoá tin chưa gửi được'.",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Sanwa ↔ Đỗ Minh An)",
+   "nhan_xet": "Ngắt mạng (setOffline), gửi tin: tin hiện trong khung chat, viền đỏ, dòng 'Chưa gửi được · Gửi lại · Xoá' bằng tiếng Việt, không còn dòng lỗi kỹ thuật/đường dẫn API. Bật mạng lại: tin chưa tự gửi, bấm 'Gửi lại' thì gửi thành công (POST 201), trạng thái 'Đã gửi'.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_030_offline_390.jpg",
+    "anh_kiem_lai/Retest_BUG_030_390.jpg"
+   ]
   },
   {
    "ma": "Retest_BUG_031",
-   "bang_chung_ma": "ApplicationActionBar: kiểm tra thời lượng — trống, số âm, không phải số nguyên, dưới 5 phút, trên 600 phút đều báo lỗi."
+   "bang_chung_ma": "ApplicationActionBar: kiểm tra thời lượng — trống, số âm, không phải số nguyên, dưới 5 phút, trên 600 phút đều báo lỗi.",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Sanwa, hồ sơ 48)",
+   "nhan_xet": "Form Hẹn phỏng vấn Online: thời lượng 0, -5, 3 → 'Thời lượng tối thiểu 5 phút.'; 'abc' → 'Thời lượng phải là số phút nguyên.'; 601 → 'Thời lượng tối đa 600 phút (10 giờ).'; form không đóng, không gọi API tạo lịch. Link 'abc' → 'Link phỏng vấn không hợp lệ (cần bắt đầu bằng http:// hoặc https://)'.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_031_dur0_390.jpg"
+   ]
   },
   {
    "ma": "Retest_BUG_032",
@@ -64,11 +77,24 @@
   },
   {
    "ma": "Retest_BUG_036",
-   "bang_chung_ma": "Không còn chuỗi 'Đã gửi offer' trong toàn bộ mã giao diện; nhãn phía NTD: Hồ sơ mới / Đang xem xét / Ứng tuyển thành công / Không phù hợp."
+   "bang_chung_ma": "Không còn chuỗi 'Đã gửi offer' trong toàn bộ mã giao diện; nhãn phía NTD: Hồ sơ mới / Đang xem xét / Ứng tuyển thành công / Không phù hợp.",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Ứng viên Đỗ Minh An)",
+   "nhan_xet": "Lịch sử tìm việc > Đã ứng tuyển: hồ sơ Greenfield (NTD đã chọn Ứng tuyển thành công) hiện nhãn '[Ứng tuyển thành công]' bằng tiếng Việt, khớp nhãn phía NTD; không còn 'Đã gửi offer'. (API vẫn trả status_label 'Đã gửi offer' nhưng giao diện dùng nhãn mới.)",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_036_390.jpg"
+   ]
   },
   {
    "ma": "REQ_UI_002",
-   "bang_chung_ma": "BottomNav: có huy hiệu số tin chưa đọc trên mục Tin nhắn và Cộng đồng."
+   "bang_chung_ma": "BottomNav: có huy hiệu số tin chưa đọc trên mục Tin nhắn và Cộng đồng.",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390 (Sanwa)",
+   "nhan_xet": "Phần huy hiệu đã có: sau khi Ứng viên nhắn tin, thanh điều hướng dưới hiện số đỏ 1 trên 'Tin nhắn', hội thoại có chấm đỏ, tab 'Chưa đọc 1'. Phần Trợ lý Timviec123 (chấm chưa đọc trên dòng Trợ lý, thẻ thông báo có biểu tượng trạng thái, nút hành động) chưa kiểm được vì Trợ lý chưa có thông báo nào (cần Admin duyệt/từ chối).",
+   "anh": [
+    "anh_kiem_lai/REQ_UI_002_messages_390.jpg",
+    "anh_kiem_lai/REQ_UI_002_bnav_390.jpg"
+   ]
   },
   {
    "ma": "REQ_BUG_043",
@@ -248,9 +274,403 @@
    "nhan_xet": "Vẫn chưa có route làm mới token. POST body {} không token tới /auth/refresh, /auth/refresh-token và /auth/token/refresh đều trả HTTP 404 {code:'ROUTE_NOT_FOUND', message:'Endpoint không tồn tại.'}. Chưa kiểm được phương án thay thế (bỏ refresh_token khỏi response đăng nhập) vì cần đăng nhập. Frontend (index-BIg9IMmH.js) vẫn lưu cookie 'refreshToken' nhưng không gọi endpoint refresh nào.",
    "anh": [],
    "url": "POST https://app.timviec123.vn/api/v1/auth/refresh, /auth/refresh-token, /auth/token/refresh"
+  },
+  {
+   "ma": "Retest_BUG_023",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 360, 375, 390, 412; Tablet 768 (tài khoản Sanwa, hồ sơ id 32)",
+   "nhan_xet": "Trang hồ sơ ứng viên không còn thanh điều hướng dưới; hai nút 'Trả kết quả' và 'Hẹn phỏng vấn' nằm trọn trong màn hình (ví dụ 390×844: nút ở y 761–832) và elementFromPoint tại tâm nút trúng đúng nút ở cả 5 khổ. Lưu ý nhỏ: ở 375 chữ 'Hẹn phỏng vấn' xuống 2 dòng.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_023_375.jpg",
+    "anh_kiem_lai/Retest_BUG_023_390.jpg"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_026",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Sanwa, Hồ sơ đã nộp)",
+   "nhan_xet": "Bật nút 'Chỉ yêu thích': API GET /recruiter/applications?is_favorite=true trả 200 (lần 1: 422 'Dữ liệu không hợp lệ'). Thả tim hồ sơ Đỗ Minh An (POST /recruiter/applications/32/favorite 200) rồi lọc: ra đúng 1 hồ sơ. Đã bỏ tim lại. Còn điểm nhỏ: khi lọc mà chưa có hồ sơ yêu thích, trang báo 'Công ty chưa nhận được hồ sơ ứng tuyển nào' (sai ngữ cảnh, công ty có 4 hồ sơ).",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_026_loc_rong_390.jpg",
+    "anh_kiem_lai/Retest_BUG_026_loc_1_390.jpg"
+   ]
+  },
+  {
+   "ma": "REQ_FUNC_004",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa) + API",
+   "nhan_xet": "Sau khi Ứng viên nộp hồ sơ id 48 (16/10): NTD không nhận thông báo nào — GET /notifications/unread-count = 0, Trợ lý Timviec123 (GET /notifications?kenh=bot) rỗng, không có huy hiệu ở Tin nhắn. Yêu cầu thông báo khi có hồ sơ mới chưa có.",
+   "anh": [
+    "anh_kiem_lai/troly_sanwa_390.jpg"
+   ]
+  },
+  {
+   "ma": "REQ_FUNC_003",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390 (Sanwa) + API",
+   "nhan_xet": "Đã có kênh thông báo của Trợ lý (API /notifications?kenh=bot, /notifications/unread-count) nhưng Trợ lý của Sanwa rỗng, vẫn chỉ ghi 'Thông báo xác thực và duyệt tin sẽ hiện ở đây'. Không tạo được sự kiện duyệt/từ chối xác thực hoặc tin (cần Admin) nên chưa kiểm được thông báo có gửi khi có sự kiện mới hay không.",
+   "anh": [
+    "anh_kiem_lai/troly_sanwa_390.jpg"
+   ]
+  },
+  {
+   "ma": "REQ_FUNC_006",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa, hồ sơ 48)",
+   "nhan_xet": "Đã có cảnh báo: đặt lịch thứ 2 cùng 09:00 17/10 cho cùng ứng viên → API 409 INTERVIEW_TIME_CONFLICT, hộp 'Trùng lịch phỏng vấn — Ứng viên này đã có lịch phỏng vấn 09:00–09:45 ngày 17/10/2026. Bạn vẫn muốn đặt lịch này?' với nút 'Vẫn đặt lịch' / 'Chọn giờ khác'. Chưa đạt trọn yêu cầu: với CÙNG một ứng viên vẫn cho 'Vẫn đặt lịch' (yêu cầu ghi chặn và gợi ý Đổi lịch). Cần PO chốt có chấp nhận cách cảnh báo này không.",
+   "anh": [
+    "anh_kiem_lai/interview_B_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_086",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390, Desktop 1440",
+   "nhan_xet": "Trang 'Hồ sơ đã nộp' (/employer/applications) đã có: danh sách hồ sơ, 5 nhóm trạng thái có số đếm, ô tìm, lọc yêu thích, thả tim, chat, tuỳ chọn. Chưa đối chiếu chi tiết với Figma.",
+   "anh": [
+    "anh_kiem_lai/NTD-HS-01_390.jpg"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_025",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa)",
+   "nhan_xet": "Sau khi Ứng viên nộp 1 hồ sơ ngày 16/10: thẻ 'Hiệu quả tuyển dụng' (7 ngày) ở trang Tài khoản vẫn ghi Ứng viên tiếp cận 0 / Hồ sơ ứng tuyển 0 / Lượt trao đổi 0, trong khi trang 'Dữ liệu hiệu quả tuyển dụng' cùng kỳ ghi Hồ sơ ứng tuyển 1, biểu đồ 16/10 'Nhận 1 CV' → hai trang vẫn lệch số. 'Tỷ lệ chuyển đổi' 33% nay không vượt 100% và khớp trang Vị trí ứng tuyển (1 CV / 3 lượt xem).",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_025_account_390.jpg",
+    "anh_kiem_lai/Retest_BUG_025_analytics_top.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_047",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa)",
+   "nhan_xet": "Chuỗi Tài khoản → Dữ liệu hiệu quả → Vị trí ứng tuyển → Quay lại → Quay lại về đúng từng bước. Nhưng ở Vị trí ứng tuyển bấm một dòng tin → /employer/postings/110/applicants → nút Quay lại đưa về /employer/postings (Quản lý tin) thay vì về Vị trí ứng tuyển (bước trước đó).",
+   "anh": []
+  },
+  {
+   "ma": "BUG_UI_101",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa)",
+   "nhan_xet": "Ứng viên gần đây: avatar đã nhỏ lại (44 px), bố cục tìm kiếm + 4 bộ lọc gọn. Nhưng trường dữ liệu hiển thị sai: nhiều thẻ in mã thô chưa dịch — 'intermediate', 'unskilled_labor', '1_2_years', 'over_10_years' (ví dụ Lê Thu Chi: 'Nữ | 30 tuổi | intermediate | 1_2_years'). Chưa đối chiếu Figma.",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_101_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_046",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa)",
+   "nhan_xet": "Trang Vị trí ứng tuyển vẫn liệt kê theo TIÊU ĐỀ TIN (ví dụ 'Tuyển trưởng phòng sản xuất / Quản đốc xưởng chế tạo khuôn mẫu - Doanh nghiệp Nhật Bản'), cột Xem / CV / Tỷ lệ — chưa đổi sang theo dõi theo vị trí ứng tuyển như mô tả lỗi.",
+   "anh": []
+  },
+  {
+   "ma": "BUG_UI_097",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa)",
+   "nhan_xet": "Chưa có mục 'Đề xuất ứng viên phù hợp' theo tin ở trang Hồ sơ ứng tuyển & Đề xuất / danh sách ứng viên theo tin; chưa thấy quyết định thiết kế cuối cùng hay ghi chú của Dev trong RTM.",
+   "anh": []
+  },
+  {
+   "ma": "Retest_BUG_029",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Sanwa ↔ Đỗ Minh An, hồ sơ 48 và 32)",
+   "nhan_xet": "Đặt lịch (id 15) → hồ sơ 48 'Đã hẹn phỏng vấn'; huỷ lịch duy nhất (hộp xác nhận ghi 'đơn sẽ quay về trạng thái Vào danh sách ngắn') → NTD 'Vào danh sách ngắn', Ứng viên '[Đang xem xét]'; không còn 'Đã hẹn phỏng vấn'. Hồ sơ cũ 32 (lịch huỷ 28–30/09, trước khi sửa) vẫn sai nhãn cho tới khi tạo rồi huỷ lịch mới (id 16) mới về 'Vào danh sách ngắn' → các hồ sơ cũ khác có thể còn sai nhãn, cần Dev rà dữ liệu cũ.",
+   "anh": [
+    "anh_kiem_lai/NTD-PV-07_empty_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_095",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440, Mobile 390 (Sanwa)",
+   "nhan_xet": "Vị trí ứng tuyển: các dòng dữ liệu đã có border-bottom (nét đứt), nhưng dòng tiêu đề bảng 'Vị trí tuyển dụng / Xem / CV / Tỷ lệ' vẫn không có border-bottom ở cả desktop và mobile — đúng điểm lỗi gốc 'Title thiếu border-bottom'. Không mở được Figma (không có quyền), so theo mô tả lỗi và ảnh gốc.",
+   "anh": [
+    "anh_kiem_lai/_employer_analytics_postings_390_top.jpg",
+    "anh_kiem_lai/_employer_analytics_postings_1440_top.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_096",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440 (Sanwa)",
+   "nhan_xet": "Biểu đồ ở Dữ liệu hiệu quả tuyển dụng vẫn nằm trên nền trắng, không có khung nền xám nhạt bo góc + viền như phần thiết kế trong ảnh lỗi gốc; thiếu tiêu đề phụ 'Hiệu quả tuyển dụng' trong khung như thiết kế. Không mở được Figma (không có quyền).",
+   "anh": [
+    "anh_kiem_lai/_employer_analytics_recruitment_1440_top.jpg",
+    "anh_kiem_lai/BUG_UI_096_thiet_ke_trong_anh_loi.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_020",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Sanwa)",
+   "nhan_xet": "Biểu đồ trên mobile vẫn nền trắng với đường kẻ nét đứt, chưa có khung nền xám nhạt bo góc như thiết kế trong ảnh lỗi gốc. Không mở được Figma (không có quyền).",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_025_analytics_top.jpg",
+    "anh_kiem_lai/BUG_UI_MOB_020_thiet_ke_trong_anh_loi.jpg"
+   ]
   }
  ],
- "kich_ban": [],
+ "kich_ban": [
+  {
+   "ma": "NTD-HS-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Đỗ Minh An nộp hồ sơ vào tin 110 của Sanwa (hồ sơ id 48): phía NTD thấy ngay ở nhóm 'Hồ sơ mới' (3), ghi 'Hôm nay', đúng tin, đúng ứng viên."
+  },
+  {
+   "ma": "NTD-HS-02",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Sau khi nộp, nút ở trang tin đổi thành 'Đã ứng tuyển'."
+  },
+  {
+   "ma": "NTD-HS-11",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Ứng viên nộp hồ sơ id 48: NTD không có thông báo (Trợ lý rỗng, /notifications/unread-count = 0); chỉ thấy khi tự mở Hồ sơ đã nộp (nhóm Hồ sơ mới tăng lên 3). Gắn REQ_FUNC_004."
+  },
+  {
+   "ma": "NTD-HS-17",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Hộp thư NTD có các nhóm Tất cả / Chưa đọc / Đã ứng tuyển / Tin việc; tin mới của Đỗ Minh An nằm đầu danh sách 'Vừa xong', 'Chưa đọc 1' đếm đúng."
+  },
+  {
+   "ma": "NTD-HS-20",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Gửi tin khi mất mạng: có trạng thái 'Chưa gửi được' + nút Gửi lại, thông báo tiếng Việt, không lộ API; gửi lại thành công khi có mạng (Retest_BUG_030)."
+  },
+  {
+   "ma": "NTD-PV-10",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Đặt lịch trùng giờ: hiện cảnh báo 'Trùng lịch phỏng vấn' (409 INTERVIEW_TIME_CONFLICT), cho chọn 'Vẫn đặt lịch' hoặc 'Chọn giờ khác' — đúng mong đợi 'cảnh báo trùng giờ hoặc cho phép theo quy định'."
+  },
+  {
+   "ma": "NTD-PV-04",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Thời lượng 0/-5/3/abc/601 và link 'abc' đều báo lỗi tại ô, không tạo lịch; ô ngày là bộ chọn lịch, ngày 1–15/10 (quá khứ) bị khoá."
+  },
+  {
+   "ma": "NTD-PV-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Form Hẹn phỏng vấn Online có Tiêu đề, Ngày, Giờ, Thời lượng, Link, Thông tin đính kèm; nút Xác nhận và Đóng; nút ở đáy không bị che (Retest_BUG_023 đạt)."
+  },
+  {
+   "ma": "NTD-PV-02",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "NTD đặt lịch Online (id 15, 17/10 09:00): Ứng viên thấy ở nhóm 'Cần phản hồi', trạng thái 'Đã đề xuất', có Xác nhận tham dự / Đề nghị đổi lịch / Từ chối, có link phòng."
+  },
+  {
+   "ma": "NTD-PV-05",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Ứng viên bấm 'Xác nhận tham dự' (POST /candidate/interviews/15/confirm 200); NTD thấy 'Ứng viên đã xác nhận lúc 07:01 · 16/10/2026', trạng thái 'Đã xác nhận'. Chưa thử Đề nghị đổi lịch / Từ chối phía Ứng viên."
+  },
+  {
+   "ma": "NTD-PV-06",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Lịch phỏng vấn NTD: Cần xử lý 1 / Sắp tới 1 / Đã kết thúc 5; mỗi nhóm hiện đúng lịch (lịch A ở Sắp tới, lịch cũ đã huỷ ở Đã kết thúc)."
+  },
+  {
+   "ma": "NTD-PV-08",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Đổi lịch: để trống báo 'Vui lòng chọn ngày.' / 'Vui lòng chọn giờ.'; chọn 18/10 10:00 + lý do → POST /recruiter/interviews/15/reschedule 200, lịch hiện 10:00 · 18/10/2026 kèm 'Lý do đổi lịch', trạng thái về 'Đã đề xuất' (ứng viên phải xác nhận lại). Chưa bấm Hoàn tất / Vắng mặt để giữ lịch cho bước huỷ. Ghi chú: ô giờ là đồng hồ quay, không gõ được giờ trên mobile."
+  },
+  {
+   "ma": "NTD-PV-09",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Huỷ lịch duy nhất của hồ sơ 48 → nhãn đổi thành 'Vào danh sách ngắn' / 'Đang xem xét' ở hai phía (Retest_BUG_029). Dữ liệu cũ hồ sơ 32 vẫn sai nhãn."
+  },
+  {
+   "ma": "NTD-PV-07",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 + API",
+   "nhan_xet": "Huỷ lịch: bắt buộc lý do (để trống báo 'Vui lòng nhập lý do huỷ lịch phỏng vấn.'), lịch rời 'Sắp tới' — đạt. Nhưng Ứng viên KHÔNG nhận thông báo huỷ trong ứng dụng (GET /notifications của Ứng viên sau 2 phút không có mục mới) dù hộp thoại hứa 'sẽ nhận được thông báo kèm lý do này'. Chưa kiểm email."
+  },
+  {
+   "ma": "NTD-PV-11",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Trả kết quả → Không phù hợp → nhập lý do → Gửi kết quả: POST /recruiter/applications/48/reject 200; Ứng viên thấy '[Không phù hợp]' ở Lịch sử tìm việc và nhận thông báo 'Cập nhật đơn ứng tuyển … Không phù hợp'. Hộp thoại cảnh báo 'Đơn chuyển sang Không phù hợp sẽ không đổi lại được'."
+  },
+  {
+   "ma": "NTD-HS-06",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 360–412, Tablet 768",
+   "nhan_xet": "Hồ sơ ứng viên có thông tin cơ bản, Công việc mong muốn, các mục hồ sơ, nút tải/yêu thích/chat ở đầu trang; 'Trả kết quả' và 'Hẹn phỏng vấn' ở đáy không bị che (Retest_BUG_023)."
+  },
+  {
+   "ma": "NTD-HS-07",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "SĐT và email ứng viên hiển thị che một phần: 0905****99, timviec123tes****@gmail.com."
+  },
+  {
+   "ma": "NTD-HS-09",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Trả kết quả 'Không phù hợp' cho hồ sơ 48: trạng thái đổi, Ứng viên thấy '[Không phù hợp]' + thông báo; hồ sơ Greenfield 'Ứng tuyển thành công' hiện đúng tiếng Việt ở Ứng viên (Retest_BUG_036)."
+  },
+  {
+   "ma": "NTD-HS-15",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "NTD gửi tin (id 257) → Ứng viên thấy ở Lịch sử tìm việc/Hộp thư đúng nội dung '[TEST GĐ2 16/10] NTD gửi khi mất mạng'."
+  },
+  {
+   "ma": "NTD-HS-18",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Trợ lý Timviec123 của Sanwa chưa có thông báo nào ('Thông báo xác thực và duyệt tin sẽ hiện ở đây'); không tạo được sự kiện duyệt/từ chối (cần Admin). Gắn REQ_FUNC_003."
+  },
+  {
+   "ma": "NTD-DB-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Thẻ Hiệu quả tuyển dụng ở Tài khoản có 3 chỉ số (Ứng viên tiếp cận, Hồ sơ ứng tuyển, Lượt trao đổi), kỳ 7 ngày, nút 'Dữ liệu hiệu quả tuyển dụng'."
+  },
+  {
+   "ma": "NTD-DB-03",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Cùng kỳ 7 ngày: thẻ ở Tài khoản 'Hồ sơ ứng tuyển 0', trang chi tiết 'Hồ sơ ứng tuyển 1' (Retest_BUG_025)."
+  },
+  {
+   "ma": "NTD-DB-04",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Trang Dữ liệu hiệu quả có đủ Chuẩn bị phỏng vấn, Ứng viên tiếp cận, Hồ sơ ứng tuyển, Lượt trao đổi, Hồ sơ tôi đã xem, Ứng viên quan tâm, Vị trí ứng tuyển, Tỷ lệ chuyển đổi; biểu đồ hiện '16/10 Nhận 1 CV'."
+  },
+  {
+   "ma": "NTD-DB-07",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Trước khi có hồ sơ mới: tất cả chỉ số 0, 'Chưa có hồ sơ nào trong kỳ này'."
+  },
+  {
+   "ma": "NTD-DB-10",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Thẻ 'Gói dịch vụ từ Timviec123' vẫn hiện 'Gói dịch vụ 1/2' với chữ 'Lorem ipsum dolor sit amet…'."
+  },
+  {
+   "ma": "NTD-DB-11",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Tài khoản Sanwa (đã xác thực): nhãn 'Đã xác thực' và 'Đã hoàn thiện' đúng. Chưa kiểm trạng thái Chưa xác thực / Đang chờ duyệt (cần tài khoản ở trạng thái đó — kiểm ở luồng F1/F2)."
+  },
+  {
+   "ma": "NTD-DB-09",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Đã có 1 hồ sơ thật trong kỳ (id 48) nhưng thẻ Tài khoản ghi 0 (Retest_BUG_025). Tỷ lệ chuyển đổi 33% = 1 CV / 3 lượt xem, khớp Vị trí ứng tuyển."
+  },
+  {
+   "ma": "NTD-DB-06",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Ứng viên quan tâm (7 ngày): 'Chưa có ứng viên nào lưu tin trong kỳ này'."
+  },
+  {
+   "ma": "NTD-DB-02",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Bấm '7 ngày' có 3 lựa chọn 7/30/90 ngày; chọn 30 ngày → API ?period=30d, chỉ số và biểu đồ đổi (Hồ sơ ứng tuyển 3, mốc 23/09–25/09 'Nhận 2 CV')."
+  },
+  {
+   "ma": "NTD-DB-08",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Desktop 1440 (khách) + Mobile 390 (NTD)",
+   "nhan_xet": "Khách mở tin 110 ba lần (3 phiên mới): POST /jobs/{slug}/view đều trả counted:false, view_count giữ 53; cột Xem ở Vị trí ứng tuyển không đổi. Máy chủ lọc trùng lượt xem (có thể theo IP — các lần thử cùng 1 IP); quy tắc đếm không được mô tả trên giao diện."
+  },
+  {
+   "ma": "NTD-HS-12",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Thẻ có tên, trạng thái, giới tính, tuổi, học vấn, kinh nghiệm, địa điểm, nút Chat, nhưng học vấn/kinh nghiệm của nhiều ứng viên hiện mã thô ('intermediate', 'unskilled_labor', '1_2_years', 'over_10_years') (BUG_UI_101)."
+  },
+  {
+   "ma": "NTD-HS-13",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Lọc Giới tính = Nữ → 13 thẻ, không còn Nam (API gender=female); danh sách lựa chọn Kinh nghiệm/Học vấn bằng tiếng Việt. Tìm 'kỹ sư' → 0 kết quả (chưa rõ có ứng viên vị trí này không). Lưu ý: giá trị trên thẻ ('1_2_years', 'over_10_years') không khớp các mức lọc (1-3 năm, Trên 7 năm)."
+  },
+  {
+   "ma": "NTD-HS-14",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Bấm Chat ngay ở Lê Thu Chi: khung chat mở với tên, nút thu nhỏ và đóng, ô nhập, gợi ý 'Mời gửi hồ sơ' (đang tải lịch sử). Không gửi tin."
+  },
+  {
+   "ma": "NTD-DB-05",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Vị trí ứng tuyển (7 ngày): tin 110 Xem 3 / CV 1 / 33%, các tin khác 0/0/0% — số CV khớp hồ sơ nộp trong kỳ, tỷ lệ = CV/Xem. (Vẫn hiển thị tiêu đề tin — BUG_FUNC_046.)"
+  },
+  {
+   "ma": "NTD-HS-04",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Tất cả 5 / Hồ sơ mới 2 / Đang xem xét 2 / Ứng tuyển thành công 0 / Không phù hợp 1 — số thẻ trong từng nhóm khớp số đếm."
+  },
+  {
+   "ma": "NTD-HS-05",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Tìm 'Bùi Hồng' → 2 hồ sơ Bùi Hồng Đạt; 'Lê Thu' → 1; tìm theo email 'timviec123test' → các hồ sơ Đỗ Minh An; 'khongcoai' → 0. Lọc yêu thích chạy đúng (Retest_BUG_026)."
+  },
+  {
+   "ma": "NTD-HS-10",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Sanwa mở /employer/applications/34 (hồ sơ thuộc Greenfield): API 404, trang báo 'Đơn ứng tuyển không tồn tại.' — bị chặn đúng."
+  },
+  {
+   "ma": "NTD-HS-08",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Bấm tải hồ sơ ở hồ sơ 32: trình duyệt nhận tệp 'Ho-so-Do-Minh-An.pdf' (PDF hợp lệ)."
+  },
+  {
+   "ma": "NTD-HS-03",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Sau khi nộp hồ sơ 48: trang tin công khai 110 ghi 'Ứng tuyển: 3' (trước đó 2), thẻ tin ở Quản lý tin của NTD cũng 'Ứng tuyển: 3'."
+  },
+  {
+   "ma": "NTD-HS-16",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (2 phiên song song)",
+   "nhan_xet": "Ứng viên gửi tin trong hội thoại 65; màn hình NTD đang mở hiện tin mới sau ~1,2 giây, không tải lại trang."
+  },
+  {
+   "ma": "NTD-HS-19",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Tin có emoji, chữ có dấu, '<b>…</b> & <i>…</i>', nội dung dài: hiển thị nguyên văn (không thành chữ đậm/không chạy mã), bong bóng rộng 302/390 px, không tràn ngang."
+  },
+  {
+   "ma": "NTD-HS-21",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Rà Tài khoản, Quản lý tin, Hồ sơ đã nộp, Danh sách ứng viên theo tin (/employer/postings/110/applicants), Ứng viên gần đây, Dữ liệu hiệu quả: chưa có mục đề xuất ứng viên phù hợp theo tin; Ứng viên gần đây chỉ xếp theo cự ly ('Cùng khu vực')."
+  },
+  {
+   "ma": "NTD-PV-03",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Đặt lịch Offline (id 16) cho hồ sơ 32: ô Địa điểm tự điền địa chỉ công ty; Ứng viên thấy 'Phỏng vấn trực tiếp' 09:00 · 17/10/2026 kèm địa chỉ Lô CN-58, KCN VSIP Quảng Ngãi. Đã huỷ sau khi kiểm."
+  }
+ ],
  "phat_hien_moi": [
   [
    "Link tin dạng cũ (không có số id ở cuối) báo \"không tồn tại\" dù tin vẫn đang tuyển (ví dụ tin id 37). Nên chuyển hướng sang link đúng.",
@@ -299,6 +719,40 @@
    "Thấp (bảo mật)",
    "DS_22",
    []
+  ],
+  [
+   "Giờ trong thông báo 'Mời phỏng vấn' gửi Ứng viên lệch +7 tiếng: lịch đặt 09:00 ngày 17/10/2026 nhưng thông báo ghi 'vào 16:00 ngày 17/10/2026' (API lưu scheduledAt 09:00+00:00, thông báo đổi thêm múi giờ). Lời mời ngày 29/09 vẫn ghi đúng 09:00 → lỗi mới phát sinh sau lần 1.",
+   "Cao",
+   "DS_58, DS_64 (thông báo Ứng viên)",
+   []
+  ],
+  [
+   "Đổi lịch / Huỷ lịch phỏng vấn không tạo thông báo cho Ứng viên trong ứng dụng (chỉ có thông báo Mời phỏng vấn), trong khi hộp huỷ ghi 'Ứng viên sẽ nhận được thông báo kèm lý do này'.",
+   "TB",
+   "DS_58",
+   []
+  ],
+  [
+   "Trang Tài khoản NTD hiển thị khối 'Gói dịch vụ 1 / Gói dịch vụ 2' với chữ mẫu 'Lorem ipsum dolor sit amet…' cho người dùng thật.",
+   "TB",
+   "DS_46",
+   [
+    "anh_kiem_lai/Retest_BUG_025_account_390.jpg"
+   ]
+  ],
+  [
+   "Ứng viên gần đây (NTD): thẻ ứng viên hiện mã dữ liệu thô chưa dịch cho Học vấn/Kinh nghiệm ('intermediate', 'unskilled_labor', '1_2_years', 'over_10_years'); các mã này cũng không khớp mức lọc trên trang (1-3 năm, Trên 7 năm).",
+   "Cao",
+   "DS_62",
+   [
+    "anh_kiem_lai/BUG_UI_101_390.jpg"
+   ]
   ]
+ ],
+ "du_lieu_tao": [
+  "Hồ sơ ứng tuyển id 48: Đỗ Minh An → tin 110 Sanwa (thư ứng tuyển ghi [TEST GĐ2 16/10])",
+  "Lịch phỏng vấn id 15 (Lịch A): tạo 17/10 09:00 → đổi 18/10 10:00 → đã huỷ (lý do ghi [TEST GĐ2 16/10])",
+  "Thả tim rồi bỏ tim hồ sơ 32 (trả lại như cũ)",
+  "Tin nhắn hội thoại 65: id 255 (UV), id 257 (NTD gửi lại sau mất mạng); tin 'x' id 256 gửi nhầm đã thu hồi"
  ]
 }

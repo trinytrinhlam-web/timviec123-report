@@ -84,7 +84,7 @@ for y in data["yc"] + data["trang"]:
 for k in data["kich_ban"]:
     st = k["ma_tt"]; kk = k.get("kiem_lai")
     if kk:
-        k["kq2"] = {"Pass": "Đạt", "Fail": "Lỗi"}.get(kk["ket_qua"], "Chưa kiểm lại")
+        k["kq2"] = {"Pass": "Đạt", "Fail": "Lỗi"}.get(kk["ket_qua"], "Không xác định")
         k["gc2"] = kk.get("nhan_xet", "")
     elif not st:
         k["kq2"] = "Giữ kết quả 29/09" if k["kq1"] == "Đạt" else "Chưa kiểm lại"
@@ -312,7 +312,8 @@ table(ws7, ["Mã", "Luồng", "Kịch bản", "Ưu tiên", "Thiết bị", "Tran
         k["kq2"], k["gc2"]] for k in data["kich_ban"]], heights=40)
 for r in range(2, ws7.max_row + 1):
     v = ws7.cell(r, 11).value
-    col = {"Đạt": (GREEN, GREEN_BG), "Lỗi": (RED, RED_BG), "Chưa kiểm lại": (AMBER, AMBER_BG)}.get(v)
+    col = {"Đạt": (GREEN, GREEN_BG), "Lỗi": (RED, RED_BG), "Chưa kiểm lại": (AMBER, AMBER_BG),
+           "Không xác định": (AMBER, AMBER_BG)}.get(v)
     if col:
         ws7.cell(r, 11).font = F(9.5, True, col[0]); ws7.cell(r, 11).fill = Fill(col[1])
 
@@ -375,6 +376,11 @@ ws10.column_dimensions["A"].width = 26; ws10.column_dimensions["B"].width = 110;
 for n, (a, b) in enumerate(META.get("phuong_phap", []), 1):
     ws10.cell(n, 1, a).font = F(10, True); c = ws10.cell(n, 2, b); c.font = F(10); c.alignment = Al("left", "top")
     ws10.cell(n, 1).alignment = Al("left", "top"); ws10.row_dimensions[n].height = 15 * (len(b) // 120 + 1) + 4
+n = len(META.get("phuong_phap", [])) + 2
+if META.get("du_lieu_tao"):
+    ws10.cell(n, 1, "Dữ liệu test đã tạo").font = F(10, True, NAVY)
+    for i, x in enumerate(META["du_lieu_tao"], n):
+        c = ws10.cell(i, 2, "• " + x); c.font = F(10); c.alignment = Al("left", "top")
 
 for w_ in wb.worksheets:
     w_.page_setup.orientation = "landscape"; w_.page_setup.paperSize = w_.PAPERSIZE_A4
