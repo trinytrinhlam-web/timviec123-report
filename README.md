@@ -64,6 +64,8 @@ python3 build_report.py   # cần openpyxl
 Biên bản lần 1 (29/09/2026, file `Biên bản nghiệm thu GD2.xlsx` trên Drive > Report Timviec123 >
 Tháng 9) kết luận **CHƯA ĐẠT**. Lần 2 đối chiếu lại từng mã lỗi, luồng F1–F8, 23 yêu cầu,
 19 trang và 116 kịch bản của lần 1 với trạng thái QA hiện tại và kết quả kiểm lại trên website.
+Ngày 16/10 đã chạy lại toàn bộ 116 kịch bản và 52 lỗi Verified bằng các tài khoản demo:
+kết luận lần 2 vẫn **CHƯA ĐẠT** (còn 9/21 mã chặn duyệt).
 
 ```bash
 cd nghiem_thu_gd2
@@ -77,6 +79,8 @@ python3 build_nghiemthu_gd2.py      # -> BaoCao_NghiemThu_GD2_lan2.xlsx
 - **Điều kiện ĐẠT**: mọi mã nhóm chặn duyệt (8 lỗi "Cần sửa trước khi duyệt" + 7 lỗi
   "QA - cần xử lý" của lần 1 + lỗi Critical/High phát sinh sau 29/09 trong khu NTD) phải
   kiểm lại đạt. Dev báo đã sửa (Fixed/Verified) mà chưa retest đạt thì chưa tính.
+- **Kết luận luồng**: luồng Chưa đạt khi còn mã chặn của luồng / trang luồng đi qua, hoặc có
+  kịch bản Lỗi khi chạy lại (giống cách tính lần 1).
 - Sheet **Lỗi Verified (Dev báo sửa)**: kết quả kiểm các lỗi đang Verified trong
   `06_RTM_Dev_Test` kèm đề xuất cập nhật QA (chưa ghi vào file QA).
 - `kiem_tra/perf4g.js`: đo tốc độ tải trên 4G giả lập (Playwright).

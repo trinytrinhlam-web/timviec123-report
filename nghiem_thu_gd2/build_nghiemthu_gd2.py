@@ -76,8 +76,6 @@ def ket_luan_2(kl1, ma_tt, bad):
     return kl1
 
 
-for f in data["luong"]:
-    f["kl2"] = ket_luan_2(f["kl1"], f["ma_tt"], f["chan_con"])
 for y in data["yc"] + data["trang"]:
     y["chan_con"] = [c for c, v in y["ma_tt"].items() if by_ma[c]["chan"] and v != "ĐÃ ĐẠT"]
     y["kl2"] = ket_luan_2(y["kl1"], y["ma_tt"], y["chan_con"])
@@ -95,6 +93,13 @@ for k in data["kich_ban"]:
         k["kq2"] = "Lỗi"; k["gc2"] = ma_tt_text(st)
     else:
         k["kq2"] = "Chưa kiểm lại"; k["gc2"] = ma_tt_text(st)
+
+# Luồng: như lần 1, luồng có kịch bản Lỗi khi chạy lại thì Chưa đạt (kể cả khi đã hết mã chặn).
+for f in data["luong"]:
+    ks = [k for k in data["kich_ban"] if k["luong"][:2] == f["ma"]]
+    f["kb2"] = collections.Counter(k["kq2"] for k in ks)
+    f["kb_loi2"] = [k["ma"] for k in ks if k["kq2"] == "Lỗi"]
+    f["kl2"] = ket_luan_2(f["kl1"], f["ma_tt"], f["chan_con"] + f["kb_loi2"])
 
 VERDICT = "ĐẠT" if not chan_con else "CHƯA ĐẠT"
 cnt = collections.Counter
@@ -221,12 +226,13 @@ for nh, lab in [("Cần sửa trước khi duyệt", "Lỗi cần sửa trước
     kq(lab, v1, f"{da}/{len(lst)} đạt", dg_cnt(lst), bad=da < len(lst) and nh in NHOM_CHAN_ALL)
 fl2 = cnt(f["kl2"] for f in data["luong"]); fl1 = cnt(f["kl1"] for f in data["luong"])
 kq("Luồng F1–F8", ", ".join(f"{k}: {v}" for k, v in fl1.items()), ", ".join(f"{k}: {v}" for k, v in fl2.items()),
-   "Luồng chưa đạt khi còn mã chặn duyệt của luồng hoặc của trang mà luồng đi qua")
+   "Luồng chưa đạt khi còn mã chặn duyệt của luồng / trang luồng đi qua, hoặc có kịch bản Lỗi khi chạy lại")
 y1 = cnt(y["kl1"] for y in data["yc"]); y2 = cnt(y["kl2"] for y in data["yc"])
 kq("Yêu cầu tính năng (23)", ", ".join(f"{k}: {v}" for k, v in y1.items()), ", ".join(f"{k}: {v}" for k, v in y2.items()))
 k1 = cnt(k["kq1"] for k in data["kich_ban"]); k2 = cnt(k["kq2"] for k in data["kich_ban"])
 kq("Kịch bản (116)", ", ".join(f"{k}: {v}" for k, v in k1.items()), ", ".join(f"{k}: {v}" for k, v in k2.items()),
-   "'Giữ kết quả 29/09' = kịch bản đã Đạt ở lần 1, không có mã lỗi, chưa chạy lại")
+   "'Giữ kết quả 29/09' = kịch bản đã Đạt ở lần 1, không có mã lỗi, chưa chạy lại" if k2.get("Giữ kết quả 29/09")
+   else "Chạy lại toàn bộ kịch bản trên website ngày 16/10; 'Không xác định' = thiếu điều kiện (xem Giới hạn lần 2)")
 vv = data["verified"]; vk = cnt((v["kiem_lai"] or {}).get("ket_qua", "Chưa kiểm") for v in vv)
 kq(f"Lỗi Verified toàn site ({len(vv)})", "—", ", ".join(f"{k}: {v}" for k, v in vk.items()),
    "Sheet 'Lỗi Verified (Dev báo sửa)'. Chỉ ghi kết quả ở báo cáo, chưa ghi vào file QA")
@@ -285,10 +291,12 @@ table(ws3, HDR, WID, [item_row(n, i) for n, i in enumerate(srt, 1)], styles={11,
 # ===== Luồng / YC / Trang / Kịch bản =====
 ws4 = wb.create_sheet("Kết quả theo luồng")
 table(ws4, ["Luồng", "Tên luồng", "Số kịch bản", "Đạt / Lỗi / Ghi nhận (29/09)", "Kết luận lần 1",
-            "Mã lỗi của luồng và trang đi qua — đánh giá lần 2", "Mã chặn duyệt còn lại", "Kết luận lần 2"],
-      [7, 30, 9, 14, 15, 70, 40, 15],
-      [[f["ma"], f["ten"], f["so_kb"], f"{f['dat']} / {f['loi']} / {f['ghi_nhan']}", f["kl1"], ma_tt_text(f["ma_tt"]),
-        ", ".join(f["chan_con"]) or "—", f["kl2"]] for f in data["luong"]], styles={4, 7}, heights=75)
+            "Đạt / Lỗi / Không xác định (16/10)", "Mã lỗi của luồng và trang đi qua — đánh giá lần 2",
+            "Mã chặn còn lại / kịch bản Lỗi lần 2", "Kết luận lần 2"],
+      [7, 28, 9, 14, 15, 14, 64, 40, 15],
+      [[f["ma"], f["ten"], f["so_kb"], f"{f['dat']} / {f['loi']} / {f['ghi_nhan']}", f["kl1"],
+        f"{f['kb2']['Đạt']} / {f['kb2']['Lỗi']} / {f['kb2']['Không xác định']}", ma_tt_text(f["ma_tt"]),
+        ", ".join(f["chan_con"] + f["kb_loi2"]) or "—", f["kl2"]] for f in data["luong"]], styles={4, 8}, heights=75)
 
 ws5 = wb.create_sheet("Tính năng theo yêu cầu")
 table(ws5, ["Mã yêu cầu", "Tên yêu cầu", "Trang", "Ưu tiên", "Kết luận lần 1", "Mã lỗi liên quan — đánh giá lần 2",

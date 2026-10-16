@@ -1,18 +1,18 @@
 {
  "ngay_kiem": "16/10/2026",
  "ban_giao_dien": "triển khai 15/10/2026 15:19 (index-BIg9IMmH.js)",
- "cach_kiem": "Chạy trực tiếp trên website bằng Chromium (Playwright) ở các khổ 360/375/390 (mobile), 768/1024 (tablet), 1280/1440 (desktop); đo tốc độ tải bằng giả lập 4G (9 Mbps, trễ 170 ms, không bộ nhớ đệm) như lần 1; gọi API công khai để kiểm lỗi API; đọc mã giao diện bản 15/10 để xác định lỗi nào Dev đã có thay đổi.",
- "gioi_han": "Đã đăng nhập được bằng tài khoản demo trong .env nhưng phần chạy lại F1–F8 và 40 lỗi Verified sau đăng nhập chưa thực hiện trong phiên này. Các lỗi đó được đánh giá theo trạng thái QA, kèm bằng chứng mã nguồn nếu có. Đã kiểm thật: 12 lỗi Verified ở trang công khai, Retest_BUG_028 (4G), Retest_BUG_047 và 4 lỗi API (BUG_API_003 bằng token NTD).",
- "ket_luan_them": "Bản giao diện 15/10 đã có thay đổi cho một số lỗi (xem cột Bằng chứng mã nguồn) nhưng chưa được kiểm lại trên tài khoản NTD nên chưa tính đạt. Các luồng chính vẫn chạy từ đầu đến cuối như lần 1.",
+ "cach_kiem": "Chạy lại trực tiếp trên website bằng Chromium (Playwright) ở các khổ 360/375/384/390/412/430 (mobile), 768/1024 (tablet), 1280/1440 (desktop), đăng nhập bằng các tài khoản demo trong .env: NTD Sanwa, Woosung, Phú An, Vạn Tường, Thành Tín, 'Test company' (NTD chưa xác thực); Ứng viên Đỗ Minh An, Đinh Diễm Ngọc; thêm 1 tài khoản NTD đăng ký mới ngày 16/10. Chạy đủ 116 kịch bản F1–F8, kiểm lại 49 mã lỗi/yêu cầu của lần 1 và phát sinh, 52 lỗi đang Verified (cả phía Ứng viên). Đo tốc độ bằng giả lập 4G (9 Mbps, trễ 170 ms, không bộ nhớ đệm) như lần 1; gọi API bằng token từng vai trò để kiểm phân quyền/IDOR; so giao diện với ảnh bằng chứng gốc trên Drive (nhiều ảnh có kèm khung Figma bên phải).",
+ "gioi_han": "1) Môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt: tài khoản NTD mới (user id 128) chưa kích hoạt được, các kịch bản F1 sau bước kích hoạt và onboarding NTD (DK-02, 07–12, 14–17) ghi 'Không xác định'; F2 bước 1–4 kiểm bằng form Đăng tin của Woosung, bước xác thực kiểm bằng NTD chưa xác thực 'Test company'. 2) Không có quyền Admin: chưa kiểm duyệt/từ chối xác thực, duyệt/từ chối tin (QT-05, QT-09 phần sau duyệt, QT-15), quản lý góp ý (BUG_FUNC_036). 3) Không mở được Figma: lỗi giao diện chỉ so với ảnh Figma có trong ảnh bằng chứng; mã chỉ có khung đỏ mà không có Figma ghi 'Không xác định'. 4) Chromium không giả lập được bàn phím ảo và thanh Home của iPhone (XS-04 kiểm qua CSS safe-area, XS-05 'Không xác định'). 5) Không có tài khoản ≥20 tin (QT-17) và công ty có 2 HR (QT-14). Trình duyệt kiểm thử chạy múi giờ UTC; giờ lịch phỏng vấn ghi trong nhận xét là giờ trình duyệt hiển thị. 6) Theo yêu cầu, không ghi kết quả vào file QA.",
+ "ket_luan_them": "Nội dung các mã còn chặn: BUG_FUNC_018, BUG_FUNC_045 — ô chứng chỉ ở Đăng tin rỗng; Retest_BUG_047 — tin quá hạn 20/09 vẫn ở nhóm 'Đăng tuyển', vẫn hiện tìm kiếm và nhận hồ sơ; BUG_API_002 — link tin lấy id cuối đường dẫn; Retest_BUG_025 — số liệu Tài khoản và Dữ liệu hiệu quả lệch; BUG_FUNC_046, BUG_FUNC_047 — trang Vị trí ứng tuyển; Retest_BUG_027 — Back/X ở Đăng tin không hỏi xác nhận, mất dữ liệu; Retest_BUG_028 — tải chậm trên 4G. Đã đạt 12/21 mã chặn (lần này thêm BUG_FUNC_035, BUG_FUNC_017, BUG_UI_081, BUG_UI_082, Retest_BUG_044, BUG_FUNC_050). 116 kịch bản: 79 đạt, 15 lỗi, 22 không xác định (chủ yếu do không kích hoạt được email và cần Admin); 7/8 luồng Chưa đạt, F1 Đạt có ghi chú. Phát hiện thêm 1 lỗi mức Cao chưa có mã QA: nút 'Tìm việc' ở Tài khoản đổi hẳn NTD sang loại Ứng viên và khoá khỏi khu NTD (NTD-TK-09). Thẻ Ứng viên gần đây vẫn hiện mã dữ liệu thô (BUG_UI_101, QA ghi Critical nhưng xếp nhóm lệch nhỏ).",
  "de_nghi": [
-  "Dev sửa 20 mã chặn duyệt còn lại ở sheet \"Điểm chặn\", ưu tiên BUG_API_002 (link tin mở ra tin khác) và Retest_BUG_047 (tin hết hạn vẫn nhận ứng tuyển). BUG_API_003 đã kiểm lại đạt.",
-  "Retest_BUG_028 (tải chậm trên 4G): bật nén gzip/brotli trên nginx cho .css/.js (CSS 3,1 MB còn khoảng 0,4 MB), tách CSS theo trang và thêm khung chờ thay cho trang trắng.",
-  "Dev điền Ngày Dev báo fix và Cách xử lý trong 06_RTM_Dev_Test cho các mã đã sửa ở bản 15/10 (Retest_BUG_027, 030, 031, 036…); hiện cả 21 mã chặn đều trống.",
-  "Chạy lại F2–F8 và 40 lỗi Verified cần đăng nhập bằng các tài khoản demo trong .env (Sanwa = IDOR_NTD1 có tin và hồ sơ ứng tuyển; Ứng viên Đỗ Minh An = CANDIDATE).",
-  "Cập nhật QA theo sheet \"Lỗi Verified (Dev báo sửa)\": 6 lỗi Pass chuyển Closed; 5 lỗi Fail trả về Open (REQ_UI_001, Retest_BUG_021, BUG_UI_102, BUG_FUNC_049, BUG_UI_103).",
-  "Thống nhất lại mức độ 4 lỗi đang xếp \"lệch nhỏ\" nhưng ghi Critical/High trong QA: BUG_UI_083, BUG_UI_101 (Critical), BUG_UI_084, BUG_UI_085 (High).",
-  "Gửi Dev 7 điểm phát hiện mới ở sheet \"Phát hiện mới 16-10\" (dữ liệu test lộ ra trang chủ, link tin cũ bị gãy, header lặp ở 1024 px…).",
-  "Nghiệm thu lại lần 3 cùng đợt retest F1–F8 ở Tuần 4 tháng 10 (19–25/10) sau khi Dev báo sửa xong các mã chặn."
+  "Dev sửa 9 mã chặn còn lại ở sheet \"Điểm chặn\", ưu tiên: Retest_BUG_047 (tin hết hạn phải chuyển nhóm 'Đã đóng/Hết hạn', ẩn khỏi tìm kiếm và chặn ứng tuyển — hiện chỉ tin bị Đóng mới bị chặn 422), BUG_FUNC_018/045 (nạp danh mục chứng chỉ), BUG_API_002, Retest_BUG_027.",
+  "Ghi vào QA và sửa ngay lỗi mới mức Cao: NTD bấm 'Tìm việc' ở trang Tài khoản → PUT /auth/profile user_type=candidate, NTD bị chuyển về form onboarding Ứng viên ở mọi trang /employer/* (chỉ quay lại được qua Quay lại → 'Đăng tin tuyển dụng'). Đồng thời xếp lại BUG_UI_101 (Ứng viên gần đây hiện mã thô intermediate, 1_2_years…) vào nhóm chặn duyệt vì QA ghi Critical.",
+  "Retest_BUG_028 (tải chậm trên 4G): bật nén gzip/brotli cho .css/.js, tách CSS theo trang và thêm khung chờ thay cho trang trắng (mọi trang hiện tải 93–104 tệp JS, 13–17 s khi chưa có bộ nhớ đệm).",
+  "Cập nhật QA theo sheet \"Lỗi Verified (Dev báo sửa)\" (52 mã): 30 Pass chuyển Closed; 12 Fail trả về Open (REQ_UI_001, Retest_BUG_021, BUG_FUNC_018, BUG_UI_088, BUG_UI_077, BUG_UI_080, BUG_LO_016, BUG_UI_102, BUG_FUNC_049, BUG_UI_103, Retest_BUG_027, REQ_FUNC_005); 10 'Không xác định' cần Figma hoặc Admin để chốt.",
+  "Để kiểm nốt phần 'Không xác định': cho phép kết nối IMAP (hoặc chuyển tiếp email kích hoạt) cho tài khoản timviec123test+gd2ntd4890; Admin duyệt/từ chối hồ sơ xác thực của 'Test company' và 1 tin test để kiểm QT-05, QT-15, REQ_FUNC_003; cấp quyền xem file Figma 0yHvixlmTcCEGLkS9O9t3s.",
+  "Dọn dữ liệu test sau nghiệm thu: hồ sơ ứng tuyển id 48, 49; giấy tờ ảnh giả 'TEST GĐ2 16/10' của 'Test company' (đề nghị Admin từ chối); tài khoản user id 128; góp ý id 2 (xem sheet Cách kiểm lần 2 > Dữ liệu test đã tạo).",
+  "Gửi Dev các điểm ở sheet \"Phát hiện mới 16-10\" (17 điểm: dữ liệu test lộ ra trang chủ, chip công việc hiện '#2' ở hồ sơ Ứng viên, Tạm dừng/Mở lại không hỏi xác nhận, thông báo 429 khi gửi lại email hiển thị sai…).",
+  "Nghiệm thu lại lần 3 sau khi Dev báo sửa xong 9 mã chặn và lỗi Cao mới; chỉ cần chạy lại các kịch bản Fail và 'Không xác định'."
  ],
  "phuong_phap": [
   [
@@ -28,27 +28,38 @@
    "Tải toàn bộ 373 tệp JS của bản giao diện 15/10 và tìm đoạn mã liên quan từng lỗi. Bằng chứng mã nguồn chỉ cho biết Dev đã có thay đổi, KHÔNG thay cho kiểm thử thật; mã có bằng chứng nhưng chưa chạy thật vẫn ghi 'Chưa kiểm'."
   ],
   [
-   "API",
-   "Chỉ gọi GET công khai; riêng route chưa có (job-alerts, auth/refresh) gửi 1 POST không token, body rỗng để xem mã trả về 404 hay 401/422. Không ghi dữ liệu."
+   "Tài khoản",
+   "NTD đã xác thực: Sanwa (IDOR_NTD1), Woosung (IDOR_NTD2), Phú An (IDOR_NTD3), Vạn Tường (IDOR_NTD4), Thành Tín (EMPLOYER). NTD chưa xác thực: 'Test company' (IDOR_UV1). Ứng viên: Đỗ Minh An (CANDIDATE/IDOR_UV2), Đinh Diễm Ngọc (IDOR_UV3). NTD mới đăng ký 16/10 (chưa kích hoạt)."
   ],
   [
-   "Không làm",
-   "Không tạo tài khoản, không ứng tuyển, không gửi tin nhắn, không ghi vào file QA."
+   "API",
+   "Gọi API bằng token của từng vai trò: không token (401), Ứng viên gọi API NTD (403), NTD công ty khác đọc/sửa tin, hồ sơ, hội thoại, bài cộng đồng (404/403) — kiểm phân quyền/IDOR; ghi lại mã trả về và thông báo."
+  ],
+  [
+   "Dữ liệu test",
+   "Được phép tạo/sửa dữ liệu demo; nội dung tự nhập có tiền tố [TEST GĐ2 16/10]; tạo xong thì xoá hoặc trả về như cũ, phần còn lại liệt kê ở 'Dữ liệu test đã tạo'. Không thanh toán, không thao tác Admin, không ghi vào file QA."
   ]
  ],
  "items": [
   {
    "ma": "Retest_BUG_028",
    "ket_qua": "Fail",
-   "thiet_bi": "Mobile 390, giả lập 4G",
-   "nhan_xet": "Trang /login (vỏ chung của khu NTD, tải cùng bộ CSS/JS trước khi vào trang NTD): giây 3 và giây 5 vẫn trắng hoàn toàn, giây 8 mới hiện nội dung; FCP 4,2–4,6 s ở 3 trang /login, /register, /. Không có khung chờ. Nguyên nhân: máy chủ gửi index-BGfcSxQy.css 3,1 MB và index-BIg9IMmH.js 558 KB KHÔNG nén (không có Content-Encoding); nén gzip CSS chỉ còn 393 KB. Các trang NTD sau đăng nhập tải thêm dữ liệu nên chậm hơn mức này.",
+   "thiet_bi": "Mobile 390, 4G giả lập 9 Mbps / 170 ms, không bộ nhớ đệm",
+   "nhan_xet": "Đo lại sau khi ĐĂNG NHẬP (Woosung), 6 trang khu NTD: nội dung chính hiện sau 16,6–19,2 s (Tài khoản 16,7 s; Quản lý tin 19,0 s; Hồ sơ đã nộp 16,9 s; Dữ liệu hiệu quả 19,2 s; Ứng viên gần đây 18,6 s; Tin nhắn 16,6 s), FCP 4,8–6,4 s — chậm hơn lần 1 (7,8–8,4 s). Quản lý tin trắng hoàn toàn tới giây 18, không có khung chờ; 167 yêu cầu, ~5,7 MB tải về. Máy chủ không nén: index CSS 3,1 MB (gzip còn 393 KB), JS 558 KB. Trang /login (chưa đăng nhập): FCP 4,2–4,6 s, giây 3 và 5 vẫn trắng.",
    "anh": [
-    "anh_kiem_lai/Retest_BUG_028_4g_login_3s_5s_8s.png"
+    "anh_kiem_lai/Retest_BUG_028_quanlytin_4g_frames.jpg",
+    "anh_kiem_lai/Retest_BUG_028_4g_login_3s_5s_8s.jpg"
    ]
   },
   {
    "ma": "Retest_BUG_027",
-   "bang_chung_ma": "job-post: có hộp xác nhận 'Bỏ thông tin tin tuyển dụng đang nhập?' khi rời trang Đăng tin (useChanRoiTrang: chặn đổi route + beforeunload)."
+   "bang_chung_ma": "job-post: có hộp xác nhận 'Bỏ thông tin tin tuyển dụng đang nhập?' khi rời trang Đăng tin (useChanRoiTrang: chặn đổi route + beforeunload).",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Woosung)",
+   "nhan_xet": "Mở Quản lý tin → Đăng tin → bước 1, 2 → bước 3/5 (đã chọn Kinh nghiệm 'Dưới 1 năm', Học vấn 'THPT') → bấm Back của trình duyệt (page.goBack): trang rời form về /employer/postings ngay, KHÔNG có hộp xác nhận, dữ liệu đã nhập mất. Mã bản 15/10 có hộp 'Bỏ thông tin tin tuyển dụng đang nhập?' nhưng không bật khi bấm Back.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_027_back_390.jpg"
+   ]
   },
   {
    "ma": "Retest_BUG_030",
@@ -73,7 +84,11 @@
   },
   {
    "ma": "Retest_BUG_032",
-   "bang_chung_ma": "register-success: xử lý trường hợp already_verified, hiện 'Email đã được kích hoạt trước đó.' (cần backend trả cờ này)."
+   "bang_chung_ma": "register-success: xử lý trường hợp already_verified, hiện 'Email đã được kích hoạt trước đó.' (cần backend trả cờ này).",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Desktop, Tablet, Mobile",
+   "nhan_xet": "Cần tài khoản NTD mới: kích hoạt email rồi gửi giấy tờ xác thực. Đã đăng ký tài khoản timviec123test+gd2ntd4890 (user id 128) nhưng môi trường kiểm thử chặn IMAP (cổng 993) nên không đọc được email kích hoạt; tài khoản chưa kích hoạt không vào được onboarding NTD.",
+   "anh": []
   },
   {
    "ma": "Retest_BUG_036",
@@ -98,15 +113,33 @@
   },
   {
    "ma": "REQ_BUG_043",
-   "bang_chung_ma": "job-post: thông báo mới 'Tin chỉ vào hàng chờ duyệt khi tài khoản (CCCD) và công ty (ĐKKD) đã được xác minh…'; câu 'vào Hồ sơ công ty để tải…' không còn trong mã giao diện (có thể do API trả về)."
+   "bang_chung_ma": "job-post: thông báo mới 'Tin chỉ vào hàng chờ duyệt khi tài khoản (CCCD) và công ty (ĐKKD) đã được xác minh…'; câu 'vào Hồ sơ công ty để tải…' không còn trong mã giao diện (có thể do API trả về).",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Tài khoản IDOR_UV1 (thực tế là NTD 'Test company', chưa xác thực): khi đã gửi đủ CCCD + ĐKKD và đang chờ, bấm Đăng tin hiện 'Hồ sơ xác thực đang chờ duyệt — CCCD và Giấy phép đăng ký kinh doanh của bạn đang chờ quản trị viên duyệt. Bạn có thể đăng tin ngay sau khi được duyệt.' (nút Xem trạng thái / Để sau), không yêu cầu tải lại. Khi chưa gửi thì mới hướng dẫn 'Cần xác thực… Xác thực ngay'. Chưa ghi giờ gửi trong hộp này (giờ gửi có ở trang Hồ sơ).",
+   "anh": [
+    "anh_kiem_lai/du_giayto_dangtin_ghep.jpg"
+   ]
   },
   {
    "ma": "Retest_BUG_044",
-   "bang_chung_ma": "EmployerVerifyCard: hiện 'Đã gửi lúc … — đang chờ duyệt' / 'Đang chờ admin xét duyệt'; chưa xác định nhãn trên trang Tài khoản."
+   "bang_chung_ma": "EmployerVerifyCard: hiện 'Đã gửi lúc … — đang chờ duyệt' / 'Đang chờ admin xét duyệt'; chưa xác định nhãn trên trang Tài khoản.",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Tài khoản IDOR_UV1 (thực tế là NTD 'Test company', chưa xác thực) sau khi gửi CCCD (và ĐKKD): trang Tài khoản ghi nhãn 'Đang chờ xét duyệt' dưới Chức vụ, thẻ Trung tâm xác thực 'Đang chờ xét duyệt' (thẻ Thông tin công ty cũng 'Đang chờ xét duyệt' sau khi gửi ĐKKD) — thống nhất với trang Chỉnh sửa hồ sơ 'Đang chờ xét duyệt, Đã gửi lúc 16/10/2026 16:12'.",
+   "anh": [
+    "anh_kiem_lai/chi_cccd_ghep.jpg"
+   ]
   },
   {
    "ma": "REQ_FUNC_005",
-   "bang_chung_ma": "job-post: vẫn chỉ có dòng nhắc tĩnh 'Vui lòng không điền thông tin liên hệ cá nhân…'; chưa thấy cảnh báo khi phát hiện SĐT/email."
+   "bang_chung_ma": "job-post: vẫn chỉ có dòng nhắc tĩnh 'Vui lòng không điền thông tin liên hệ cá nhân…'; chưa thấy cảnh báo khi phát hiện SĐT/email.",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Woosung, form Đăng tin bước 5)",
+   "nhan_xet": "Mô tả có '0905123456', 'tuyendung.test@gmail.com', 'Zalo 0905123456': không có cảnh báo tại ô, bấm Đăng tin → POST /recruiter/jobs 201 (tin id 202) — tin vẫn đăng được, không bị chặn/đánh dấu. Chỉ có dòng nhắc tĩnh 'Vui lòng không điền thông tin liên hệ cá nhân…'.",
+   "anh": [
+    "anh_kiem_lai/REQ_FUNC_005_nhap.jpg"
+   ]
   },
   {
    "ma": "REQ_UI_001",
@@ -234,10 +267,10 @@
    "ma": "Retest_BUG_047",
    "ket_qua": "Fail",
    "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
-   "nhan_xet": "Tin hết hạn id 7 (Admin ghi hết hạn 31/07/2026) vẫn hiện như tin đang tuyển ở cả 3 khổ: ghi '106 ngày trước', không có nhãn hay thông báo 'hết hạn'. Nút 'Ứng tuyển ngay' (jd-cta-apply, jd-footer__apply) và 'Chat ngay' không bị khoá (disabled=null). Tin vẫn nằm trong GET /jobs công khai (152 tin), API chi tiết không có trường hết hạn (application_deadline=null). Tin đã đóng id 194 không có trong danh sách công khai (id lớn nhất là 193) nên không biết slug thật. Thử /viec-lam/tuyen-dung-abc-194 thì không còn trang trắng, có thẻ 'Không tìm thấy tin tuyển dụng ... không tồn tại hoặc hiện không còn hiển thị công khai' và 2 nút Tìm Việc Khác / Về Trang Chủ. Tuy vậy trang không nói tin 'đã đóng' và không gợi ý việc làm tương tự. Phần tin đang duyệt (NTD xem trước, nhãn 'Đang chờ duyệt') cần đăng nhập nên chưa kiểm.",
+   "nhan_xet": "Tin hết hạn id 7 (Admin ghi hết hạn 31/07/2026) vẫn hiện như tin đang tuyển ở cả 3 khổ: ghi '106 ngày trước', không có nhãn hay thông báo 'hết hạn'. Nút 'Ứng tuyển ngay' (jd-cta-apply, jd-footer__apply) và 'Chat ngay' không bị khoá (disabled=null). Tin vẫn nằm trong GET /jobs công khai (152 tin), API chi tiết không có trường hết hạn (application_deadline=null). Tin đã đóng id 194 không có trong danh sách công khai (id lớn nhất là 193) nên không biết slug thật. Thử /viec-lam/tuyen-dung-abc-194 thì không còn trang trắng, có thẻ 'Không tìm thấy tin tuyển dụng ... không tồn tại hoặc hiện không còn hiển thị công khai' và 2 nút Tìm Việc Khác / Về Trang Chủ. Tuy vậy trang không nói tin 'đã đóng' và không gợi ý việc làm tương tự. Phần tin đang duyệt (NTD xem trước, nhãn 'Đang chờ duyệt') cần đăng nhập nên chưa kiểm. Kiểm thêm sau đăng nhập (16/10): 4 tin của Woosung (103–106) hết hạn 20/09/2026 (expires_at) nhưng vẫn status=published, nằm ở nhóm 'Đăng tuyển' của NTD (nhóm 'Đã đóng' ghi 'Không có tin nào đã đóng hoặc hết hạn'), vẫn hiện khi Khách tìm kiếm, và Ứng viên Đỗ Minh An nộp hồ sơ vào tin 105 thành công (POST /candidate/applications → 201, hồ sơ id 49). Ngược lại tin bị Đóng thì API chặn đúng (422 'Tin tuyển dụng hiện không nhận hồ sơ').",
    "anh": [
     "anh_kiem_lai/Retest_BUG_047_390.jpg",
-    "anh_kiem_lai/Retest_BUG_047_id194_1440.jpg"
+    "anh_kiem_lai/NTD-QT-12_uv_tin_mo_gui_390.jpg"
    ],
    "url": "https://timviec123.vn/viec-lam/tuyen-dung-truong-phong-marketing-mang-branding-thuc-day-ban-hang-7 ; https://timviec123.vn/viec-lam/tuyen-dung-abc-194 ; GET /api/v1/jobs?per_page=100"
   },
@@ -408,6 +441,480 @@
    "anh": [
     "anh_kiem_lai/Retest_BUG_025_analytics_top.jpg",
     "anh_kiem_lai/BUG_UI_MOB_020_thiet_ke_trong_anh_loi.jpg"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_037",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 360, 375, 390 (Woosung)",
+   "nhan_xet": "Thanh nhóm trạng thái vẫn rộng 607 px nhưng nay cuộn ngang được (overflow-x auto) và có lớp mờ ở mép phải báo còn nhóm phía sau; ở 375/390 chữ 'Đang duyệt 0' hiện trọn, ở 360 bị lớp mờ che phần cuối. Đạt theo phương án 'thêm dấu hiệu cuộn ngang (bóng mờ)'. Lớp mờ khá nhạt.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_037_360.jpg",
+    "anh_kiem_lai/Retest_BUG_037_390.jpg"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_039",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile ngang 844×390 và 800×360 (Woosung)",
+   "nhan_xet": "Xoay ngang 5 trang (Tài khoản, Quản lý tin, Đăng tin, Tin nhắn, Ứng viên gần đây): không tràn ngang; thanh điều hướng dưới đổi sang bố cục ngang 1 hàng cao 56 px (trước 76 px), đầu trang 57–105 px → vùng nội dung còn ~59–83% chiều cao (ví dụ Quản lý tin 277/390 px).",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_039_844x390.jpg"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_040",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390, cỡ chữ ×1,3 (Woosung)",
+   "nhan_xet": "Phóng cỡ chữ mọi phần tử ×1,3 (giả lập cỡ chữ hệ thống 130%): nhãn thanh điều hướng dưới tự xuống 2 dòng ('Ứng viên / gần đây', 'Quản lý / tin', 'Cộng / đồng'), khoảng cách giữa các nhãn 4–17 px, không dính nhau; trang không tràn ngang.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_040_bnav_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_045",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Woosung, form Đăng tin bước 3)",
+   "nhan_xet": "Ô 'Cần có những chứng chỉ nào? [Chọn tối đa 3]' nay là bộ chọn 'Chọn chứng chỉ' nhưng danh sách TRỐNG ('Chưa có mục nào để chọn.') với cả vị trí Công nhân sản xuất và Kỹ sư sản xuất; gõ 'Chứng chỉ vận hành xe nâng TEST' cũng không có lựa chọn thêm mới → vẫn không thêm được chứng chỉ. (Trang Sửa tin dùng cùng thành phần; tin hết hạn của Thành Tín không cho sửa.)",
+   "anh": [
+    "anh_kiem_lai/BUG_FUNC_045_go.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_018",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (form Đăng tin)",
+   "nhan_xet": "Ô chứng chỉ ở bước Yêu cầu ứng viên vẫn không dùng được: bộ chọn mở ra rỗng 'Chưa có mục nào để chọn.', không gõ thêm được (ảnh lỗi gốc là cùng ô này ở luồng đăng tin đầu tiên khi đăng ký NTD).",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_077_chungchi_mo.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_077",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (form Đăng tin bước 3)",
+   "nhan_xet": "Đã có chữ gợi ý '[Chọn 1]' / '[Chọn tối đa 3]' dưới tiêu đề. Nhưng ô chứng chỉ khác hẳn thiết kế trong ảnh lỗi (ô nhập + thẻ có nút x + 'Gợi ý nhanh' dạng ô tích): nay là bộ chọn rỗng, không nhập được, nên chưa kiểm được icon xoá thẻ.",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_077_chungchi_mo.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_050",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Woosung, tin 202)",
+   "nhan_xet": "Sửa số lượng 2 → 3 rồi bấm 'Lưu chỉnh sửa': PATCH /recruiter/jobs/202 trả 200, hộp 'Đã lưu thay đổi — Cập nhật tin tuyển dụng thành công.' Không còn lỗi 500.",
+   "anh": [
+    "anh_kiem_lai/BUG_FUNC_050_luu_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_080",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Woosung, Sửa tin 202)",
+   "nhan_xet": "Đã sửa định dạng giờ: khung thời gian hiện 24 giờ '08:00 – 17:00', '17:00 – 21:00' (trước là '08:00 AM – 06:00 PM'). Chưa sửa vị trí chữ: nhãn '[Chọn tối đa 1]' / '[Chọn tối đa 3]' vẫn căn phải trên một dòng riêng, thiết kế trong ảnh lỗi đặt sát dưới tiêu đề, căn trái.",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_080_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_LO_016",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390 (Woosung, Sửa tin 202)",
+   "nhan_xet": "Cuối trang Sửa tin vẫn là khối 'Thông tin nhà tuyển dụng' (avatar lớn + nút Chỉnh sửa) và 'Thông tin doanh nghiệp tuyển dụng' (nút Chỉnh sửa), khác thiết kế trong ảnh lỗi (hàng 'Người đăng tin' gọn có mũi tên, thẻ doanh nghiệp có logo + Lĩnh vực/Quy mô/Địa điểm + bản đồ). Khung bản đồ hiện trống. Không mở được Figma.",
+   "anh": [
+    "anh_kiem_lai/edit202_overview.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_078",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Woosung)",
+   "nhan_xet": "Hộp 'Bạn muốn xoá tin tuyển dụng?' dùng icon chấm than tròn đỏ trên nền ô vuông bo góc nhạt — khớp thiết kế trong ảnh lỗi (trước là icon khiên lục giác). Nội dung cảnh báo, nút 'Xoá & Thoát' / 'Thoát' đúng.",
+   "anh": [
+    "anh_kiem_lai/BUG_UI_078_hopxoa_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_059",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Menu trái trang Thông tin tài khoản: mũi tên '>' vẫn màu xám nhạt (Figma: xanh đậm cùng màu chữ), mục 'Dịch vụ từ Timviec123' bị làm mờ kèm nhãn 'Sắp có', chữ Timviec123 không có màu thương hiệu (Figma: 'Timviec' xanh đậm + '123' cam).",
+   "anh": [
+    "anh_kiem_lai/059_nay_crop.jpg",
+    "anh_kiem_lai/059_figma_crop.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_060",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Hai thẻ 'Trung tâm xác thực' và 'Thông tin công ty' vẫn dùng nền cũ (hình bàn tay, hình ngón cái) giống ảnh lỗi gốc; Figma dùng hình khiên-ngôi sao và hình toà nhà/tài liệu.",
+   "anh": [
+    "anh_kiem_lai/acc_top.jpg",
+    "anh_kiem_lai/060_figma_crop.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_017",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Tablet 768×1024",
+   "nhan_xet": "Lỗi gốc ('The profile_sections.milestones.2.year field must not be greater than 10 characters.') không còn: ô Năm của Cột mốc giới hạn 4 ký tự (maxlength=4). Thử nhập sai và bấm Lưu chỉnh sửa: email 'khong-hop-le' → 'Email không đúng định dạng.' (390); website 'http://' → 'Đường dẫn website không hợp lệ (chỉ nhận http:// hoặc https://).' (768); quy mô Từ 5000 > Đến 1100 → 'Số nhân viên \"Đến\" phải lớn hơn hoặc bằng \"Từ\".' (768). Thông báo tiếng Việt, rõ ràng, không lộ mã trường; dữ liệu công ty không bị đổi.",
+   "anh": [
+    "anh_kiem_lai/BUG_FUNC_017_email_390.jpg",
+    "anh_kiem_lai/BUG_FUNC_017_web_768.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_081",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Đã có trang 'Trang chủ công ty' trên mobile (Quản lý → /nha-tuyen-dung/<slug>): thanh đầu có nút quay lại và chia sẻ, ảnh bìa, logo, tên + dấu xác thực, quy mô, địa điểm, nhãn phúc lợi, 3 tab Giới thiệu / Đang tuyển / Bài đăng, bảng thông tin và nút 'Chỉnh sửa bổ sung'. Bố cục giống khung mobile Figma trong ảnh lỗi BUG_UI_083 (không mở được Figma để so chi tiết).",
+   "anh": [
+    "anh_kiem_lai/about390_top.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_082",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Đã có trang Chỉnh sửa trang chủ công ty cho Desktop (/employer/about/edit ở 1440): ảnh bìa có nút sửa, Logo và tên hiển thị, Giới thiệu (soạn thảo định dạng), lưới 3 cột Tên đầy đủ / Giám đốc / MST / Website / Email / SĐT / Loại hình / Ngày thành lập, Lĩnh vực, nút Xem trang công khai + Lưu chỉnh sửa. Không mở được Figma để so chi tiết.",
+   "anh": [
+    "anh_kiem_lai/edit1440_top.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_083",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Đã sửa phần lớn: có đủ Tên đầy đủ, Website, Email, Số điện thoại (placeholder giống Figma), nút 'Cá nhân/Hộ KD | Công ty', chip lĩnh vực có X tròn, ảnh bìa có nút bút chì. Còn lệch Figma: ô logo không có biểu tượng bút chì sửa; tiêu đề thanh trên ghi 'Trang chủ công ty' (Figma: 'Chỉnh sửa trang chủ công ty').",
+   "anh": [
+    "anh_kiem_lai/edit390_0.jpg",
+    "anh_kiem_lai/BUG_UI_083.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_084",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Phần Hình ảnh đã có nút sửa/xoá/đổi thứ tự từng ảnh, nhưng chưa có ô nhập link YouTube như Figma. 'Những con số biết nói': nhãn và giá trị vẫn xếp dọc 2 ô, nút X ô vuông nền xám, 'Thêm số liệu' là nút viền đứt (Figma: nhãn–giá trị cùng hàng, nút tròn, 'Thêm số liệu' nền xanh đặc).",
+   "anh": [
+    "anh_kiem_lai/edit390_ghep_0.jpg",
+    "anh_kiem_lai/BUG_UI_084.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_085",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Phúc lợi toàn diện: nút X ô vuông nền xám, 'Thêm mục' viền đứt, tên nhóm là ô nhập ('1. Thu nhập') — Figma: X viền tròn, 'Thêm mục' nền xanh đặc, tên nhóm chữ xanh đậm. Cột mốc phát triển chưa có nhãn Năm / Tiêu đề / Mô tả và ô Năm nằm riêng 1 dòng (Figma: Năm + Tiêu đề cùng hàng).",
+   "anh": [
+    "anh_kiem_lai/edit390_ghep_2.jpg",
+    "anh_kiem_lai/BUG_UI_085.jpg"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_033",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900, Tablet 768×1024, Mobile 390×844",
+   "nhan_xet": "Sửa một phần. Woosung > Chỉnh sửa trang chủ công ty > Hình ảnh thực tế công ty (7/12): chọn file văn bản đổi đuôi .png → POST /recruiter/company/media 422, giao diện báo 'File phải là ảnh.' (đạt). Chọn file .txt → không có thông báo, không gọi API, ảnh không thêm (giống lỗi gốc) ở cả 390/768/1440. Ô chọn file có accept=image/jpeg,image/png,image/webp nên đa số trình chọn file ẩn .txt, nhưng trên máy tính người dùng vẫn chọn được 'Tất cả tệp'.",
+   "anh": [
+    "anh_kiem_lai/Retest_BUG_033_png_390.jpg",
+    "anh_kiem_lai/Retest_BUG_033_txt_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_035",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Đã có nhãn trạng thái xác thực dưới 'Chức vụ' như Figma: tài khoản chưa xác thực (Test company) hiện 'Chưa gửi xác thực', sau khi gửi giấy tờ đổi thành 'Đang chờ xét duyệt'. Với tài khoản đã xác thực (Woosung) nhãn dưới tên không hiện, trạng thái 'Đã xác thực' chỉ ở thẻ Trung tâm xác thực.",
+   "anh": [
+    "anh_kiem_lai/chi_cccd_ghep.jpg",
+    "anh_kiem_lai/035_figma_crop.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_051",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Trang Cài đặt (Ứng viên) hiện là danh sách 4 mục có mũi tên (Trung tâm bảo mật và tài khoản, Cài đặt thông báo, Việc làm tương tự đã đăng ký, Chia sẻ vị trí) + Đăng xuất màu đỏ, cùng kiểu với trang Cài đặt NTD. Không mở được Figma; ảnh bằng chứng gốc không tải được dạng tệp nên chưa đối chiếu được.",
+   "anh": [
+    "anh_kiem_lai/DS15_390.jpg",
+    "anh_kiem_lai/DS15_1440.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_010",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Trang Tài khoản và Bảo mật (Ứng viên, mobile): thanh đầu nền trắng có nút quay lại, 3 mục Đổi số điện thoại / Đổi mật khẩu / Xoá tài khoản có mũi tên. Không mở được Figma; ảnh bằng chứng gốc không tải được dạng tệp nên chưa đối chiếu được.",
+   "anh": [
+    "anh_kiem_lai/DS16_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_034",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Trang Cài đặt thông báo đã thiết kế lại: nhóm 'Cài đặt chung' (Bật tất cả thông báo, Nhận thông báo qua Email, Thông báo đẩy + hướng dẫn cho phép trình duyệt) và 'Loại thông báo' (Việc làm mới phù hợp, Công ty đã xem hồ sơ, Tin tuyển dụng sắp hết hạn, Đơn được xem, Tin nhắn mới, Đăng nhập mới, Khuyến mãi mới, Nhắc cập nhật CV) đều có công tắc. Chưa kiểm hiệu lực từng công tắc.",
+   "anh": [
+    "anh_kiem_lai/DS20_390.jpg",
+    "anh_kiem_lai/DS20_1440.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_020",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Onboarding Ứng viên bước 1: ô 'Bạn muốn tìm công việc gì' không còn là danh sách thả xuống có ô tick như ảnh lỗi; nay mở hộp chọn theo nhóm ngành (cột trái: Công nhân KCN, Việc theo ngày…; bên phải: nút công việc theo nhóm), ô tìm kiếm, khu 'Công việc muốn tìm — Chọn tối đa 10' và nút Xác nhận; dưới ô có 'Gợi ý nhanh'. Kiểm bằng tài khoản mới chưa onboard (chỉ mở, không gửi).",
+   "anh": [
+    "anh_kiem_lai/DS23_popup_ghep.jpg"
+   ]
+  },
+  {
+   "ma": "Retest_BUG_046",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Ở 1440, hộp chọn công việc rộng 908 px, mép trái/phải trùng ô 'Tìm công việc' (x 266–1174), mở ngay trên ô; tên nhóm và tên công việc không bị cắt. Ở 390 hộp chiếm hết bề ngang dạng bảng trượt từ dưới.",
+   "anh": [
+    "anh_kiem_lai/DS23_popup_ghep.jpg"
+   ]
+  },
+  {
+   "ma": "REQ_UI_003",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Onboarding Ứng viên bước 1 đã đổi đúng nội dung yêu cầu: tiêu đề 'Thêm vài thông tin để tìm việc phù hợp', mô tả 'Thông tin của bạn được bảo mật và chỉ dùng để kết nối việc làm phù hợp.', thanh bước 'Bước 1/2 · Thông tin cá nhân', nhãn 'Họ và tên', 'Ngày sinh', 'Email'; không còn dòng 'Email đăng nhập, không thể thay đổi tại đây' (tài khoản đăng ký bằng email).",
+   "anh": [
+    "anh_kiem_lai/DS23_onboarding_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_45",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Trang Chỉnh sửa hồ sơ cá nhân đã thay đổi nhiều so với ảnh lỗi (thêm thẻ Độ hấp dẫn, nút giới tính dạng nhóm Nam/Nữ/Khác, khối 'Xác thực CCCD' có nút Xác thực ngay); ảnh lỗi chỉ khoanh vùng, không có Figma nên chưa kết luận. Phát hiện: chip công việc mong muốn hiện mã '#2' thay vì tên công việc (xem phát hiện mới).",
+   "anh": [
+    "anh_kiem_lai/cmp_DS27.jpg",
+    "anh_kiem_lai/BUG_UI_045.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_006",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Khối Xác thực ở Chỉnh sửa hồ sơ (mobile) nay là 'Xác thực CCCD — Chưa gửi xác thực' với 2 ô Mặt trước/Mặt sau CCCD có nút 'Tải lên hình ảnh'. Không mở được Figma; ảnh bằng chứng gốc không tải được dạng tệp nên chưa đối chiếu được.",
+   "anh": [
+    "anh_kiem_lai/cmp_DS27.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_009",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Hồ sơ trực tuyến (mobile) đã đổi so với ảnh lỗi: thanh đầu nền trắng, tên đậm, thẻ Độ hấp dẫn, các mục Điểm mạnh / Ưu tiên công việc / Kinh nghiệm… có 'Thêm ›' và mô tả rỗng; ảnh lỗi chỉ khoanh 'sai font-size', không có Figma nên chưa kết luận.",
+   "anh": [
+    "anh_kiem_lai/cmp_DS28.jpg",
+    "anh_kiem_lai/BUG_UI_MOB_009.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UX_MOB_001",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Trang Xem trước hồ sơ (/candidate/account/online-profile/preview) trên mobile đã có thanh điều hướng dưới (Trang chủ, DN địa phương, Cộng đồng, Tin nhắn, Tài khoản).",
+   "anh": [
+    "anh_kiem_lai/cmp_DS28.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_066",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Xem trước hồ sơ nay dạng thẻ theo từng mục (Công việc mong muốn, Điểm mạnh, Kinh nghiệm, Giới thiệu, Kỹ năng, Chứng nhận, Hình ảnh) như Figma trong ảnh lỗi, nhưng hồ sơ các tài khoản demo hầu như trống ('Bạn chưa cập nhật…') nên không so được cách hiển thị nội dung (danh sách, căn giữa kỹ năng, ảnh).",
+   "anh": [
+    "anh_kiem_lai/c_066.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_088",
+   "ket_qua": "Fail",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Trang Điểm mạnh: chữ 'Thêm' trong ô 'Thêm điểm mạnh của bạn' vẫn màu xám (Figma: cam), không có các chip gợi ý viền cam (Chuyên môn cao, Công nghệ, Nhiệt tình…); công việc đã chọn hiện '#2' thay vì tên công việc ở cả chip và nhãn dòng điểm mạnh.",
+   "anh": [
+    "anh_kiem_lai/c_088.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_090",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Trang Kinh nghiệm làm việc: tiêu đề 'Quá trình làm việc' đã lớn/đậm hơn và cách khối 'Giới thiệu về kinh nghiệm' rõ ràng như Figma trong ảnh lỗi.",
+   "anh": [
+    "anh_kiem_lai/c_090.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_LO_018",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Desktop: Giới thiệu bản thân là trang riêng có 2 phần — 'Nhập mô tả' và 'Kết quả AI hỗ trợ' (bấm 'AI hỗ trợ chỉnh sửa' → POST …/about/generate 200, hiện gợi ý kèm 'Dùng gợi ý', 'Tạo lại', 'Còn 19 lượt hôm nay'). Mobile: mở bảng trượt từ dưới cùng kiểu với các mục khác. Không bấm Lưu.",
+   "anh": [
+    "anh_kiem_lai/BUG_LO_018_ai_1440.jpg",
+    "anh_kiem_lai/c_LO018.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_091",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Kỹ năng nghề nghiệp (desktop): nút Lưu dạng viên xanh ở góc phải như Figma; Gợi ý nhanh là các ô có ô tick theo 2 cột, cùng kiểu với các trang khác.",
+   "anh": [
+    "anh_kiem_lai/c_091.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_017",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Trên mobile, bấm 'Thêm' ở Kỹ năng nghề nghiệp mở bảng trượt (popup) 'Kỹ năng nghề nghiệp' có ô nhập, Gợi ý nhanh và nút Xác nhận — đúng Figma.",
+   "anh": [
+    "anh_kiem_lai/c_091.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_018",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Chứng nhận/Giải thưởng (mobile) theo Figma: thanh đầu trắng, ô Tên chứng nhận có nút X tròn, Tổ chức cấp, Ngày cấp (MM/YYYY), link bằng cấp, mô tả, nút 'Thêm Chứng nhận / Giải thưởng', chân trang X tròn + Lưu.",
+   "anh": [
+    "anh_kiem_lai/c_38.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_092",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Chứng nhận/Giải thưởng (desktop): nút Lưu dạng viên ở góc phải, các ô xếp 2 cột, nút 'Thêm Chứng nhận / Giải thưởng' kéo hết chiều ngang — đồng nhất với các trang hồ sơ khác.",
+   "anh": [
+    "anh_kiem_lai/c_38.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_093",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Hình ảnh liên quan nay là trang riêng (không còn popup) ở cả mobile và desktop; mỗi dự án 1 hàng: Tên dự án + ô Tải ảnh + ảnh; chọn ảnh thử thì mỗi ảnh có nút xoá (thùng rác tròn góc trên phải, aria 'Xoá ảnh n'); có nút 'Xoá dự án'. Chỉ chọn thử, không lưu.",
+   "anh": [
+    "anh_kiem_lai/c_093b.jpg",
+    "anh_kiem_lai/c_39.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_058",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Quyền riêng tư hồ sơ (desktop): công tắc dạng viên xanh, cùng kiểu với công tắc ở các trang khác (Cài đặt thông báo, Sửa trang công ty).",
+   "anh": [
+    "anh_kiem_lai/c_40.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_016",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Banner 'Bảo vệ Quyền riêng tư khi Tìm việc!' đã đổi bố cục như Figma (chữ trái, hình thư mục phải), thanh đầu trong suốt; nhưng banner vẫn nền gradient xanh nhạt tràn viền. Chưa có Figma bản lớn để chốt việc 'bỏ background header'.",
+   "anh": [
+    "anh_kiem_lai/c_40b.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_032",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Mobile: bấm 'Cài đặt ›' ở 'Chặn các công ty không quan tâm' mở bảng trượt (popup) có mô tả, ô 'Tìm công ty', danh sách đã chặn và nút X tròn + Xác nhận — đúng Figma.",
+   "anh": [
+    "anh_kiem_lai/c_40b.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_008",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Module Lịch sử tìm việc đã có: 3 tab Đã ứng tuyển / Đã trao đổi / Ai đã xem tôi, danh sách có logo công ty, tên tin, thời gian, nhãn trạng thái ('[Đã ứng tuyển] Chưa có trao đổi').",
+   "anh": [
+    "anh_kiem_lai/c_41.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_049",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Giao diện Lịch sử tìm việc đã đổi so với ảnh lỗi (gạch chân tab xanh dưới tab đang chọn, thẻ có logo công ty); ảnh lỗi chỉ khoanh vùng, không có Figma nên chưa kết luận.",
+   "anh": [
+    "anh_kiem_lai/c_41.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_070",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Popup Góp ý phản hồi (desktop): nút thoát hình tròn nằm ngoài góc trên phải như Figma, khung có bóng đổ (box-shadow 0 4px 18px rgba(47,43,61,.16)).",
+   "anh": [
+    "anh_kiem_lai/c_pop.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_071",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Popup Góp ý phản hồi: mobile là bảng trượt với 6 lựa chọn 2 cột, ô nhập, chân có nút X tròn + 'Gửi phản hồi' (mờ khi chưa chọn) — giống Figma mobile trong ảnh lỗi; desktop cùng bố cục.",
+   "anh": [
+    "anh_kiem_lai/c_pop.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_FUNC_036",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Gửi thử 1 góp ý ('Vấn đề khác', nội dung [TEST GĐ2 16/10]) → POST /feedback 201 (id 2), toast 'Cảm ơn bạn đã góp ý! Chúng tôi sẽ xem xét và phản hồi sớm.' — phản hồi đã được lưu ở hệ thống; phần quản lý phản hồi cần Admin nên chưa kiểm.",
+   "anh": [
+    "anh_kiem_lai/BUG_FUNC_036_gui_390.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_072",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900, Mobile 390×844",
+   "nhan_xet": "Popup Liên hệ hỗ trợ: đã bỏ chữ mẫu Lorem ipsum, còn 'Hotline: 0779.000.123', 'Email: support@timviec123.com'; nút thoát tròn ngoài góc như popup Góp ý. Ghi chú: email ở popup khác email ở chân trang (Timviec123.vn@gmail.com).",
+   "anh": [
+    "anh_kiem_lai/c_pop2.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_073",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844, Desktop 1440×900",
+   "nhan_xet": "Popup Liên hệ hỗ trợ đồng bộ với các popup khác: mobile là bảng trượt có nút 'Thoát' (như Figma mobile), desktop là hộp giữa màn hình có nút thoát tròn.",
+   "anh": [
+    "anh_kiem_lai/c_pop2.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_094",
+   "ket_qua": "Pass",
+   "thiet_bi": "Desktop 1440×900",
+   "nhan_xet": "Đã lưu thử 2 tin rồi bỏ lưu: trang 'Việc làm đã lưu' hiện thẻ có tiêu đề đậm, lương màu cam, tên công ty, nút X tròn để bỏ lưu — giống Figma; khác chữ tiêu đề ('Việc làm đã lưu' / Figma 'Danh sách đã lưu').",
+   "anh": [
+    "anh_kiem_lai/c_44b.jpg"
+   ]
+  },
+  {
+   "ma": "BUG_UI_MOB_019",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390×844",
+   "nhan_xet": "Mobile 'Việc làm đã lưu': thanh đầu trắng có nút quay lại, thẻ tin (tiêu đề 2 dòng, lương cam, công ty, X tròn) — đúng bố cục Figma; trạng thái rỗng có hình minh hoạ và nút 'Tìm Việc Làm'.",
+   "anh": [
+    "anh_kiem_lai/c_44b.jpg"
    ]
   }
  ],
@@ -669,6 +1176,444 @@
    "ket_qua": "Pass",
    "thiet_bi": "Mobile 390",
    "nhan_xet": "Đặt lịch Offline (id 16) cho hồ sơ 32: ô Địa điểm tự điền địa chỉ công ty; Ứng viên thấy 'Phỏng vấn trực tiếp' 09:00 · 17/10/2026 kèm địa chỉ Lô CN-58, KCN VSIP Quảng Ngãi. Đã huỷ sau khi kiểm."
+  },
+  {
+   "ma": "NTD-QT-18",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 360/375/390",
+   "nhan_xet": "Thanh nhóm cuộn ngang được, có bóng mờ mép phải; vuốt tới được Bị từ chối / Đã đóng (Retest_BUG_037)."
+  },
+  {
+   "ma": "NTD-XS-02",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile ngang",
+   "nhan_xet": "Xoay ngang: bố cục hợp lý, thanh dưới 56 px không che nội dung chính (Retest_BUG_039)."
+  },
+  {
+   "ma": "NTD-XS-03",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Cỡ chữ lớn: chữ xuống dòng, nhãn thanh dưới không chồng nhau (Retest_BUG_040)."
+  },
+  {
+   "ma": "NTD-XS-07",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390, 4G giả lập",
+   "nhan_xet": "Tài khoản, Quản lý tin, Hồ sơ đã nộp, Dữ liệu hiệu quả: nội dung chính hiện sau 16,7–19,2 s (mong đợi ~3 s), không có trạng thái đang tải (Retest_BUG_028)."
+  },
+  {
+   "ma": "NTD-XS-08",
+   "ket_qua": "Fail",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Back của trình duyệt ở bước 3 đăng tin thoát hẳn khỏi form, không hỏi xác nhận, mất dữ liệu (Retest_BUG_027). Chưa kiểm Back ở trang Sửa tin."
+  },
+  {
+   "ma": "NTD-QT-08",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Lưu chỉnh sửa tin 202: 200, không có lỗi 500 (BUG_FUNC_050)."
+  },
+  {
+   "ma": "NTD-QT-07",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Trang Sửa tin 202 giữ đúng giá trị đã nhập (tiêu đề, số lượng, địa chỉ, mô tả, Dưới 1 năm, THPT, Toàn thời gian, Theo tháng, 8–10 triệu); khối doanh nghiệp hiện Lĩnh vực, Quy mô 800–1100 nhân viên, Địa điểm. Khung bản đồ trống."
+  },
+  {
+   "ma": "NTD-QT-06",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Tài khoản đã xác thực đăng tin vào thẳng 'Đang duyệt' (tin 202), không có tin nháp để thử luồng 'lưu nháp → chuyển chờ duyệt'. Lưu chỉnh sửa tin đang duyệt: 'Đã lưu thay đổi — Cập nhật tin tuyển dụng thành công'."
+  },
+  {
+   "ma": "NTD-QT-13",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390",
+   "nhan_xet": "Menu … > Xoá tin: hộp cảnh báo 'xoá vĩnh viễn', 'Xoá & Thoát' → DELETE /recruiter/jobs/202 200, tin biến khỏi danh sách (Đang duyệt 0); API /jobs/<slug-202> trả 'Tin tuyển dụng không tồn tại.'"
+  },
+  {
+   "ma": "NTD-QT-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "Mobile 390 (Thành Tín)",
+   "nhan_xet": "Nhóm Đăng tuyển rỗng: 'Không có tin nào đang đăng tuyển' + nút Đăng tin; các nhóm có số đếm (Đã đóng 3 vì 3 tin hết hạn)."
+  },
+  {
+   "ma": "NTD-QT-09",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Menu … của tin đã duyệt (Woosung, tin 105) có đủ Chỉnh sửa, Tạm dừng, Đóng tin, Nhân bản, Dời quyền tác giả, Xoá tin. Không kiểm được phần 'Đăng tuyển tăng 1, thẻ ghi Đăng hôm nay' vì cần Admin duyệt tin mới (tin 202 tạo hôm nay nằm ở Đang duyệt)."
+  },
+  {
+   "ma": "NTD-QT-10",
+   "ket_qua": "Pass",
+   "thiet_bi": "M D",
+   "nhan_xet": "Khách (chưa đăng nhập) gõ 'kiểm soát chất lượng' ở ô tìm kiếm trang chủ → /search/top thấy tin 105 của Woosung; mở chi tiết đúng tiêu đề, lương 11–16 triệu, Số lượng tuyển 04, công ty Woosung, địa điểm KCN Quảng Phú (390 và 1440). Lưu ý: tin đã quá hạn 20/09 nhưng vẫn công khai và có nút Ứng tuyển ngay (xem Retest_BUG_047); ở 1440 nút X đè lên chữ tiêu đề."
+  },
+  {
+   "ma": "NTD-QT-11",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Tin 105: menu … > Tạm dừng → POST /recruiter/jobs/105/pause 200, toast 'Đã tạm dừng tin tuyển dụng', tin sang nhóm Tạm dừng; khách tìm 'kiểm soát chất lượng' không còn thấy tin (API công khai 3 kết quả, slug trả 'Tin tuyển dụng không tồn tại'). Bật lại → POST /resume 200, nhóm về Đăng tuyển 4 / Tạm dừng 0, khách thấy lại tin. Tạm dừng không hỏi xác nhận (bấm là dừng ngay)."
+  },
+  {
+   "ma": "NTD-QT-12",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Woosung đóng tin 104 (có 1 hồ sơ): hộp xác nhận 'Đóng tin tuyển dụng? Tin sẽ được gỡ khỏi trang tìm việc và không nhận thêm hồ sơ. Hồ sơ đã nhận vẫn giữ nguyên…' → POST /recruiter/jobs/104/close 200, tin sang Đã đóng 1. Ứng viên Đỗ Minh An mở link tin: 'Không tìm thấy tin tuyển dụng… không còn hiển thị công khai', không có nút Ứng tuyển; gọi thẳng POST /candidate/applications {job_id:104} → 422 'Tin tuyển dụng hiện không nhận hồ sơ.' Hồ sơ cũ id 14 vẫn còn. Menu tin đã đóng: Mở lại, Nhân bản, Dời quyền tác giả, ghi 'Không xoá được: tin đã có hồ sơ ứng tuyển'. Mở lại → toast 'Đã mở lại tin — tin đang hiển thị ở tab Đăng tuyển'."
+  },
+  {
+   "ma": "NTD-QT-16",
+   "ket_qua": "Pass",
+   "thiet_bi": "M T D",
+   "nhan_xet": "Thẻ tin ở 390/768/1440 có tiêu đề, ngành, lương, 'Đăng 56 ngày trước', địa điểm, 'Ứng tuyển: n', nút …; không tràn ngang. Giống lần 1: thẻ chưa hiện số lượng cần tuyển và yêu cầu chính (lần 1 đã chấp nhận Đạt)."
+  },
+  {
+   "ma": "NTD-QT-17",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M T D",
+   "nhan_xet": "Không có tài khoản demo nào có từ 20 tin (nhiều nhất 4 tin/NTD); không tạo hàng loạt 20 tin vì cần Admin duyệt. Với 4 tin của Woosung: số thẻ khớp số ở nhóm (Đăng tuyển 4 = 4 thẻ), đổi nhóm số cập nhật đúng sau tạm dừng/đóng/mở lại."
+  },
+  {
+   "ma": "NTD-XS-09",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Gọi API không token: /recruiter/jobs, /recruiter/applications, /recruiter/interviews, /recruiter/company, /candidate/applications, /notifications/unread-count đều 401 UNAUTHENTICATED 'Vui lòng đăng nhập để tiếp tục.'. Token Ứng viên gọi API NTD → 403 FORBIDDEN 'Tài khoản không có quyền truy cập công ty nào.'; token NTD gọi POST /candidate/applications → 403 INVALID_USER_TYPE. Lỗi nghiệp vụ trả 422 kèm message (ví dụ ứng tuyển tin đã đóng). Định dạng chung {success, message, code, error_code}. Ghi chú nhỏ: vài phản hồi có thêm khoá 'error', vài phản hồi không."
+  },
+  {
+   "ma": "NTD-XS-10",
+   "ket_qua": "Fail",
+   "thiet_bi": "M",
+   "nhan_xet": "Kiểm lại 16/10: Ứng viên nộp hồ sơ id 49 vào tin 105 của Woosung → NTD: GET /notifications/unread-count = 0, /notifications và Trợ lý (kenh=bot) rỗng. Đổi/huỷ lịch phỏng vấn cũng không tạo thông báo cho Ứng viên (xem phát hiện mới). Chưa có kênh thông báo cho sự kiện hồ sơ mới — REQ_FUNC_004 chưa làm."
+  },
+  {
+   "ma": "NTD-XS-06",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Đo ở 390×844: nút … thẻ tin 36×36 px, Yêu thích (tim) 40×40, Chat ngay 40–42 px, Đổi/Xoá ảnh 38×44; elementFromPoint tại tâm đều trúng đúng nút, các nút cách nhau đủ xa. Gần mức 44 px như lần 1. Ghi chú: nút X bỏ lĩnh vực kinh doanh (Sửa giới thiệu công ty) chỉ 16×16 px."
+  },
+  {
+   "ma": "NTD-XS-04",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Ở 390×844 và 375×667 (UA iPhone): nút đáy Hồ sơ ứng viên (Trả kết quả / Hẹn phỏng vấn y 761–832), Sửa tin (Lưu chỉnh sửa y 772–820), Đăng tin (Tiếp theo y 788–832) đều cố định đáy, nằm trọn trong màn hình, elementFromPoint tại tâm trúng đúng nút. Trang khai báo viewport-fit=cover; CSS thanh đáy (.vhs-actionbar, .ej-footer, .cj-footer, BottomNav, ô chat, các hộp chọn) đều cộng env(safe-area-inset-bottom). Chưa thử trên iPhone thật (Chromium không giả lập được thanh Home)."
+  },
+  {
+   "ma": "NTD-XS-05",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Chromium không có bàn phím ảo nên không kiểm được đúng. Giả lập bằng cách chọn ô cuối rồi thu khung nhìn 390×844 → 390×508 và cuộn ô vào tầm nhìn: Đăng ký — ô 'Nhập lại mật khẩu' nhìn thấy, không bị đè; Đăng tin bước 1 — ô 'Nhập số lượng' bị thanh nút cố định 'Tiếp theo' (.cj-footer) đè lên. Trên iOS Safari / Chrome Android mặc định bàn phím không thu khung bố cục nên thanh này thường nằm sau bàn phím; cần kiểm trên máy thật."
+  },
+  {
+   "ma": "NTD-DK-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "390: nhập alias mới + mật khẩu 12 ký tự → POST /auth/register/email 201 'Đăng ký thành công! Vui lòng xác thực email.', sau ~5 s chuyển sang /auth/verify-email 'Kích hoạt tài khoản'. Chưa xác nhận được thư trong hộp thư vì môi trường chặn IMAP; API gửi lại báo 'Đã gửi link kích hoạt đến email của bạn' (expires_in 3600)."
+  },
+  {
+   "ma": "NTD-DK-02",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer. API cho biết liên kết hiệu lực 3600 giây (60 phút)."
+  },
+  {
+   "ma": "NTD-DK-03",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Trang Kích hoạt tài khoản nêu đúng email, có câu 'Email có thể nằm trong mục Spam hoặc Quảng cáo…', nút Gửi Lại Email Xác Thực (thành công: 'Đã gửi lại email xác thực!'), 'Đăng ký bằng tài khoản khác' về /register. Có giới hạn tần suất (API 429 'Vui lòng chờ 9 giây trước khi gửi lại.') nhưng giao diện chỉ hiện 'Có lỗi xảy ra. Vui lòng thử lại sau.' (xem phát hiện mới)."
+  },
+  {
+   "ma": "NTD-DK-04",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Mật khẩu 7 ký tự + nhập lại khác: 'Mật khẩu phải có ít nhất 8 ký tự', 'Mật khẩu nhập lại không khớp' dưới từng ô, không gọi API đăng ký."
+  },
+  {
+   "ma": "NTD-DK-05",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Để trống: 'Vui lòng nhập email hoặc số điện thoại'; nhập 'abc': 'Email không hợp lệ' (kèm nhắc nhập mật khẩu); không gửi đăng ký."
+  },
+  {
+   "ma": "NTD-DK-06",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Email đã có (IDOR_NTD2): kiểm tra trước báo 'Email này đã được đăng ký.' ngay dưới ô (API check-availability available=false), POST đăng ký trả 422 cùng thông báo; trang có sẵn 'Quay lại Đăng nhập'."
+  },
+  {
+   "ma": "NTD-DK-07",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer."
+  },
+  {
+   "ma": "NTD-DK-09",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer."
+  },
+  {
+   "ma": "NTD-DK-10",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer."
+  },
+  {
+   "ma": "NTD-DK-11",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer."
+  },
+  {
+   "ma": "NTD-DK-12",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer."
+  },
+  {
+   "ma": "NTD-DK-15",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer."
+  },
+  {
+   "ma": "NTD-DK-16",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer."
+  },
+  {
+   "ma": "NTD-DK-08",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer. (liên quan Retest_BUG_032)"
+  },
+  {
+   "ma": "NTD-DK-14",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không kiểm được: môi trường kiểm thử chặn kết nối IMAP (cổng 993) nên không đọc được email kích hoạt của tài khoản NTD mới (timviec123test+gd2ntd…, user id 128); tài khoản chưa kích hoạt bị chuyển về /auth/verify-email khi vào /auth/onboarding/employer. Phần tải file sai định dạng vào ảnh công ty kiểm riêng ở Retest_BUG_033 bằng tài khoản Woosung."
+  },
+  {
+   "ma": "NTD-DK-17",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Không có tài khoản Google dùng cho kiểm thử tự động."
+  },
+  {
+   "ma": "NTD-DK-13",
+   "ket_qua": "Pass",
+   "thiet_bi": "M D",
+   "nhan_xet": "Tài khoản Woosung (đã đăng ký và xác thực): trang Chỉnh sửa trang chủ công ty có ô Tên hiển thị và Mã số thuế khoá (biểu tượng ổ khoá, không sửa được) kèm dòng 'Đã xác thực theo giấy phép kinh doanh — liên hệ hỗ trợ nếu cần thay đổi.' ở 390 và 1440. Chưa kiểm trên tài khoản vừa đăng ký mới (chưa kích hoạt được)."
+  },
+  {
+   "ma": "NTD-DT-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Chọn gợi ý 'Công nhân sản xuất', số lượng 3 → Tiếp theo sang ?step=2 'Bước 2/5 · Địa điểm làm việc'; bấm Quay lại về bước 1 vẫn giữ vị trí và số lượng 3. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-02",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Bấm Tiếp theo khi trống: 'Vui lòng chọn vị trí cần tuyển', 'Vui lòng nhập số lượng cần tuyển' dưới đúng ô; chọn vị trí, để trống số lượng: chỉ còn lỗi số lượng; không sang bước 2. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-03",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "0 → 'Số lượng phải ≥ 1'; -1 và 1.5 → 'Số lượng phải là số nguyên, ví dụ 3'; 100000 → 'Số lượng tối đa 9999'; gõ chữ 'abc' không vào được ô (báo 'Vui lòng nhập số lượng cần tuyển'). (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-04",
+   "ket_qua": "Fail",
+   "thiet_bi": "M",
+   "nhan_xet": "Kinh nghiệm và học vấn chỉ chọn 1 (bấm mục thứ 2 thì mục đầu bỏ chọn); tuổi Từ 40 Đến 25 → 'Độ tuổi tối đa phải ≥ độ tuổi tối thiểu', không sang bước 4. Nhưng ô chứng chỉ vẫn rỗng 'Chưa có mục nào để chọn' nên không kiểm được giới hạn 3 chứng chỉ — BUG_FUNC_018, BUG_FUNC_045 chưa sửa. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-05",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Chọn Theo tháng; nhập 8000000 hiển thị '8.000.000' (tự thêm dấu chấm); Từ 8.000.000 > Đến 6.000.000 → 'Lương tối đa phải ≥ lương tối thiểu'; để trống → 'Vui lòng nhập mức lương tối thiểu/tối đa'; không sang bước 5. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-06",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Tính chất công việc chọn tối đa 3; Phúc lợi mở hộp chọn (tối đa 30), chọn BHXH, BHYT, Xe đưa đón, Du lịch công ty → 'Đã chọn 4/30', Xác nhận thì hiện đủ 4 mục. Đầu mỗi bước chỉ có một dòng 'Miễn phí · Nhận CV sau 12 giờ · Kho ứng viên 10 triệu người', không lặp. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-07",
+   "ket_qua": "Fail",
+   "thiet_bi": "M",
+   "nhan_xet": "Tiêu đề tự tạo đầy đủ, không bị cắt ('Kỹ sư sản xuất 12.000.000 VND/tháng trở lên'), nhưng: (1) bấm 'Tạo lại' không đổi tiêu đề và không gọi API — chỉ điền lại khi ô đang trống, tiêu đề đã sửa tay giữ nguyên; (2) tiêu đề ghi 'trở lên' dù lương là khoảng 12–18 triệu. 'Gợi ý mô tả' điền được khung mô tả từ dữ liệu đã nhập; mô tả lưu được (tin 202). (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-08",
+   "ket_qua": "Fail",
+   "thiet_bi": "M",
+   "nhan_xet": "Mô tả có SĐT, email, Zalo vẫn đăng được (tin 202, POST /recruiter/jobs 201), không cảnh báo/chặn — xem REQ_FUNC_005. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-09",
+   "ket_qua": "Fail",
+   "thiet_bi": "M",
+   "nhan_xet": "Quay lại giữ dữ liệu (đạt). Nhưng nút X 'Đóng' ở bước 1 sau khi đã nhập vị trí và số lượng thoát thẳng về /employer/postings, không hỏi xác nhận, dữ liệu mất; nút Back của trình duyệt cũng vậy (Retest_BUG_027). Thanh tiến trình không bấm được để nhảy về Bước 1. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-DT-10",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Tiêu đề đúng từng bước: 'Bước 1/5 · Vị trí cần tuyển — Bạn muốn tuyển vị trí gì?', 'Bước 2/5 · Địa điểm làm việc', 'Bước 3/5 · Yêu cầu ứng viên', 'Bước 4/5 · Công việc và mức lương', 'Bước 5/5 · Tiêu đề và mô tả'; câu 'Bạn muốn tuyển vị trí gì?' không còn ở bước 2, 3. (Kiểm bằng form Đăng tin của tài khoản Woosung đã xác thực — các bước 1–4 giống luồng đăng tin đầu tiên.)"
+  },
+  {
+   "ma": "NTD-XS-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "M T D",
+   "nhan_xet": "Đo tự động 14 trang NTD (Quản lý tin, Đăng tin, Sửa tin 104, Ứng viên của tin 106, Hồ sơ đã nộp, Hồ sơ ứng viên 17, Lịch phỏng vấn, Ứng viên gần đây, Hiệu quả tuyển dụng, Hiệu quả tin, Tài khoản, Hồ sơ cá nhân, Trang công ty, Tin nhắn) ở 360, 375, 384, 390, 412, 430, 768, 1024, 1280, 1440 (140 lượt, tài khoản Woosung): scrollWidth = chiều rộng màn hình ở mọi lượt, không có phần tử nào vượt mép phải mà không nằm trong vùng cuộn riêng."
+  },
+  {
+   "ma": "NTD-DK-18",
+   "ket_qua": "Pass",
+   "thiet_bi": "M T D",
+   "nhan_xet": "Trang Đăng ký và Đăng nhập ở 360, 375, 390, 430, 768, 1280: không tràn ngang. Phần onboarding NTD chưa kiểm được (tài khoản mới chưa kích hoạt được email). Bàn phím: xem NTD-XS-05."
+  },
+  {
+   "ma": "NTD-QT-02",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Tài khoản IDOR_UV1 (thực tế là NTD 'Test company', chưa xác thực): bấm Đăng tin ở Quản lý tin → trang tạo tin hiện hộp 'Cần xác thực tài khoản — Bạn cần xác thực CCCD và Giấy phép đăng ký kinh doanh trước khi đăng tin tuyển dụng.'; Để sau → về /employer/postings; Xác thực ngay → /employer/account/profile#xac-thuc-cccd (ô Mặt trước/Mặt sau CCCD, GP ĐKKD)."
+  },
+  {
+   "ma": "NTD-QT-03",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Luồng hiện tại chặn tài khoản chưa xác thực ngay khi mở form Đăng tin nên không phát sinh tin nháp; tài khoản đã xác thực bấm Đăng tin thì tin vào thẳng 'Đang duyệt'. Quản lý tin không có nhóm 'Tin nháp' (5 nhóm: Đăng tuyển, Tạm dừng, Đang duyệt, Bị từ chối, Đã đóng)."
+  },
+  {
+   "ma": "NTD-QT-04",
+   "ket_qua": "Pass",
+   "thiet_bi": "M D",
+   "nhan_xet": "Tài khoản IDOR_UV1 (thực tế là NTD 'Test company', chưa xác thực): chưa gửi giấy tờ → 'Cần xác thực tài khoản…'; đã gửi CCCD, chưa gửi ĐKKD → 'Bạn cần xác thực Giấy phép đăng ký kinh doanh…'; đã gửi đủ, đang chờ → 'Hồ sơ xác thực đang chờ duyệt — CCCD và Giấy phép đăng ký kinh doanh của bạn đang chờ quản trị viên duyệt. Bạn có thể đăng tin ngay sau khi được duyệt.' (Xem trạng thái / Để sau). Đã phân biệt chưa gửi và đang chờ (390, 1440). Không còn nút Gửi duyệt trên tin nháp vì luồng chặn trước khi tạo tin."
+  },
+  {
+   "ma": "NTD-DT-11",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Tài khoản IDOR_UV1 (thực tế là NTD 'Test company', chưa xác thực), trang Chỉnh sửa hồ sơ > Xác thực CCCD: file .txt → 'Vui lòng chọn file hình ảnh'; ảnh 26 MB → 'Ảnh không được vượt quá 10MB'; ảnh hợp lệ hiện 'Đã tải' ở từng ô, chọn 1 mặt thì nhắc 'Đã chọn mặt trước — chọn thêm ảnh mặt sau để gửi'. Ghi chú: file văn bản đổi đuôi .png vẫn được nhận là 'mặt trước' (trình duyệt không kiểm nội dung)."
+  },
+  {
+   "ma": "NTD-DT-12",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Bấm Xác thực ngay → POST /recruiter/profile/identity-verification 201, toast 'Đã gửi xác thực CCCD — chờ admin duyệt', khối ghi 'Đang chờ xét duyệt — Đang chờ admin xét duyệt — Đã gửi lúc 16/10/2026 16:12' (giờ Việt Nam) và nút 'Xoá để gửi lại'."
+  },
+  {
+   "ma": "NTD-DT-13",
+   "ket_qua": "Pass",
+   "thiet_bi": "M D",
+   "nhan_xet": "Luồng đã đổi: tài khoản đã gửi đủ giấy tờ nhưng chưa được duyệt bấm Đăng tin thì bị chặn ngay ở đầu form bằng hộp 'Hồ sơ xác thực đang chờ duyệt' nêu rõ lý do, nút 'Xem trạng thái' (≈ Kiểm tra xác thực) và 'Để sau' (về Quản lý tin). Không còn hộp 'Đã lưu bản nháp' vì chưa cho nhập tin."
+  },
+  {
+   "ma": "NTD-DT-14",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Chưa gửi giấy tờ, bấm Đăng tin → 'Cần xác thực tài khoản — Bạn cần xác thực CCCD và Giấy phép đăng ký kinh doanh trước khi đăng tin', có Xác thực ngay dẫn tới trang giấy tờ."
+  },
+  {
+   "ma": "NTD-DT-15",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Bấm 'Xoá để gửi lại' → hộp 'Xoá xác thực CCCD? Sau khi xoá, bạn sẽ cần upload lại 2 mặt CCCD… không thể hoàn tác' → DELETE 200, khối về 'Chưa xác thực'; tải lại 2 mặt, Xác thực ngay → 201, 'Đang chờ xét duyệt — Đã gửi lúc 16:16'. Phần 'Admin thấy bản mới' không kiểm (cần Admin)."
+  },
+  {
+   "ma": "NTD-DT-16",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Chỉ gửi CCCD (chưa ĐKKD): Đăng tin vẫn bị chặn với câu 'Bạn cần xác thực Giấy phép đăng ký kinh doanh trước khi đăng tin tuyển dụng.' — nhất quán với câu ban đầu 'CCCD và Giấy phép ĐKKD'; ĐKKD là bắt buộc."
+  },
+  {
+   "ma": "NTD-TK-09",
+   "ket_qua": "Fail",
+   "thiet_bi": "M",
+   "nhan_xet": "Tài khoản NTD Phú An (IDOR_NTD3) ở 390: trang Tài khoản bấm nút 'Tìm việc' (góc trên) → mở /auth/onboarding?role=candidate, trang gọi PUT /auth/profile đổi user_type thành 'candidate' (roles rỗng, onboarding_completed=false). Sau đó mọi trang NTD (/employer/account, /employer/postings) đều bị chuyển về form 'Thêm vài thông tin để tìm việc phù hợp' — NTD không quay lại khu tuyển dụng được; mở /auth/onboarding?role=employer cũng bị đẩy về form ứng viên. Cách duy nhất tìm được: bấm 'Quay lại' ở form ứng viên → màn 'Tạo tài khoản thành công' → 'Đăng tin tuyển dụng' (PUT /auth/profile user_type=employer). Đã khôi phục, dữ liệu 4 tin còn nguyên. Lần 1 đạt → lỗi mới."
+  },
+  {
+   "ma": "NTD-TK-01",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Phú An ở 390, từ trang Tài khoản bấm từng mục thanh dưới: Ứng viên gần đây → /employer/candidates (trang con có nút quay lại, không có thanh dưới); Tin nhắn → /messages/t; Quản lý tin → /employer/postings; Cộng đồng → /cong-dong; Tài khoản → /employer/account. Ở các trang có thanh dưới, mục hiện tại được tô; cuộn tới cuối nội dung không bị thanh che."
+  },
+  {
+   "ma": "NTD-TK-02",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Tài khoản > biểu tượng bút → /employer/account/profile; đổi Chức vụ → Lưu thông tin → PATCH /recruiter/profile 200, hộp 'Thành công — Đã cập nhật thông tin'; trang Tài khoản hiện 'Chức vụ: [TEST GĐ2 16/10] Trưởng phòng nhân sự'. Đã trả lại giá trị cũ. Không đổi SĐT (theo quy định không sửa SĐT tài khoản; ô SĐT có nút 'Đổi số điện thoại' riêng)."
+  },
+  {
+   "ma": "NTD-TK-03",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Chỉnh sửa trang chủ công ty (Phú An): nhập Website https://timviec123.vn → Lưu chỉnh sửa → PATCH /recruiter/company 200, 'Đã lưu thay đổi. Xem Trang Công Khai'; trang công khai /nha-tuyen-dung/cong-ty-tnhh-san-xuat-banh-keo-phu-an hiện 'Website: https://timviec123.vn'. Xoá lại → trang công khai về 'Website: —'. Các ô MST, quy mô, ảnh, tầm nhìn có trên form (xem BUG_UI_083–085)."
+  },
+  {
+   "ma": "NTD-TK-07",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Khách mở /employer/account, /employer/postings, /employer/applications, /employer/candidates, /employer/interviews → đều chuyển /login?to=<trang gốc>."
+  },
+  {
+   "ma": "NTD-TK-08",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Ứng viên (IDOR_UV2 — Đỗ Minh An) mở /employer/postings và /employer/applications/17 → chuyển về /candidate/account, không thấy nội dung NTD. API NTD với token ứng viên trả 403 'Tài khoản không có quyền truy cập công ty nào.'"
+  },
+  {
+   "ma": "NTD-TK-04",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Vạn Tường (IDOR_NTD4): Cài đặt > Trung tâm bảo mật và tài khoản > Đổi mật khẩu (ô mật khẩu hiện tại, mới, nhập lại; yêu cầu 8 ký tự, HOA, thường, số, ký tự đặc biệt) → PUT /auth/password/change 200 'Đổi mật khẩu thành công. Đã đăng xuất khỏi 14 thiết bị khác.' Đăng xuất (có hộp xác nhận) → về Trang chủ (không phải trang Đăng nhập; mở khu NTD thì chuyển /login); đăng nhập bằng mật khẩu cũ bị từ chối 'Email hoặc mật khẩu không đúng. Còn 4 lần thử.', mật khẩu mới vào được. Đã đổi lại mật khẩu ban đầu. Ghi chú: sau khi đổi, màn hình quay về 'Tài khoản và Bảo mật', ~3 giây sau không còn thấy thông báo thành công."
+  },
+  {
+   "ma": "NTD-TK-10",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Sau đăng xuất và đăng nhập lại (Vạn Tường): Quản lý tin 'Đăng tuyển 4…', Hồ sơ đã nộp 'Tất cả 1 — Phạm Diễm Yến' đúng như trước, đúng tài khoản."
+  },
+  {
+   "ma": "NTD-TK-11",
+   "ket_qua": "Pass",
+   "thiet_bi": "M",
+   "nhan_xet": "Đăng nhập Vạn Tường trên 2 phiên A, B (token khác nhau); A đăng xuất (POST /auth/logout 200) → token A bị từ chối 401, mở /employer/postings chuyển /login; phiên B vẫn dùng bình thường (API 200, mở được Quản lý tin). Khi đổi mật khẩu thì các phiên khác bị đăng xuất ('Đã đăng xuất khỏi 14 thiết bị khác')."
+  },
+  {
+   "ma": "NTD-TK-05",
+   "ket_qua": "Pass",
+   "thiet_bi": "M D",
+   "nhan_xet": "Phú An: /cong-dong có ô 'Bạn muốn chia sẻ điều gì?' (mở hộp Tạo bài viết: Thêm ảnh/video, Đính kèm tin tuyển dụng); ở 1440 menu trái mở 'Số lượng bài đăng' (/cong-dong/c/<công ty>) và 'Tương tác bài đăng mới' (/cong-dong/tuong-tac), cả hai ghi 0 khi chưa có bài. Trên mobile trang Tài khoản không có 2 mục thống kê này. Bài viết hiện sau ~15–17 s khi tải lần đầu (giống mọi trang khác trong môi trường kiểm, xem Retest_BUG_028)."
+  },
+  {
+   "ma": "NTD-TK-06",
+   "ket_qua": "Pass",
+   "thiet_bi": "M D",
+   "nhan_xet": "Phú An soạn bài '[TEST GĐ2 16/10] …' đính kèm tin 101 → POST /community/posts 201 (bài id 29, post_kind=job); Ứng viên Đinh Diễm Ngọc (IDOR_UV3) thấy bài ở /cong-dong; 'Số lượng bài đăng' của Phú An tăng 0 → 1. Ứng viên và NTD khác gọi DELETE/PATCH bài 29 → 404; Phú An xoá bài → 200 'Đã xóa bài viết.'"
+  },
+  {
+   "ma": "NTD-QT-14",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Woosung: menu … > Dời quyền tác giả mở hộp 'Người được chọn sẽ thành tác giả tin. Mọi cuộc trò chuyện của tin cũng chuyển sang họ…' và báo 'Công ty chưa có thành viên nào khác' — không có HR thứ hai để chọn nên không kiểm được việc chuyển tin. Các tài khoản demo đều là công ty 1 thành viên."
+  },
+  {
+   "ma": "NTD-QT-05",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Cần Admin duyệt hồ sơ xác thực. Tài khoản Test company (IDOR_UV1) đã gửi CCCD + ĐKKD (ảnh giả TEST) và đang 'Đang chờ xét duyệt'; Trợ lý Timviec123 của các tài khoản demo đã duyệt trước đây vẫn rỗng (xem REQ_FUNC_003)."
+  },
+  {
+   "ma": "NTD-QT-15",
+   "ket_qua": "Không xác định",
+   "thiet_bi": "M",
+   "nhan_xet": "Cần Admin từ chối tin; nhóm 'Bị từ chối' của các tài khoản demo đang trống (0)."
   }
  ],
  "phat_hien_moi": [
@@ -721,12 +1666,6 @@
    []
   ],
   [
-   "Giờ trong thông báo 'Mời phỏng vấn' gửi Ứng viên lệch +7 tiếng: lịch đặt 09:00 ngày 17/10/2026 nhưng thông báo ghi 'vào 16:00 ngày 17/10/2026' (API lưu scheduledAt 09:00+00:00, thông báo đổi thêm múi giờ). Lời mời ngày 29/09 vẫn ghi đúng 09:00 → lỗi mới phát sinh sau lần 1.",
-   "Cao",
-   "DS_58, DS_64 (thông báo Ứng viên)",
-   []
-  ],
-  [
    "Đổi lịch / Huỷ lịch phỏng vấn không tạo thông báo cho Ứng viên trong ứng dụng (chỉ có thông báo Mời phỏng vấn), trong khi hộp huỷ ghi 'Ứng viên sẽ nhận được thông báo kèm lý do này'.",
    "TB",
    "DS_58",
@@ -747,12 +1686,81 @@
    [
     "anh_kiem_lai/BUG_UI_101_390.jpg"
    ]
+  ],
+  [
+   "Khung chi tiết tin ở trang tìm kiếm (desktop 1440): nút X đóng khung đè lên chữ cuối dòng 1 của tiêu đề (chữ '(QA/QC' bị che).",
+   "Thấp",
+   "Tìm kiếm /search/top (Khách)",
+   [
+    "anh_kiem_lai/NTD-QT-10_chitiet_1440.jpg"
+   ]
+  ],
+  [
+   "Tạm dừng, Mở lại, Bật lại tin thực hiện ngay khi bấm, không có hộp xác nhận (chỉ Đóng tin và Xoá có hỏi). Bấm nhầm Tạm dừng là tin gỡ khỏi tìm kiếm ngay.",
+   "Thấp",
+   "Quản lý tin DS_50",
+   [
+    "anh_kiem_lai/NTD-QT-11_pause_hop.jpg"
+   ]
+  ],
+  [
+   "Sửa giới thiệu công ty (mobile 390): nút X bỏ từng lĩnh vực kinh doanh chỉ 16×16 px, nút 'xóa' trong form cũng 16×16 px — nhỏ hơn nhiều so với mức chạm khuyến nghị ~44 px.",
+   "Thấp",
+   "Sửa giới thiệu công ty (employer/about/edit)",
+   [
+    "anh_kiem_lai/NTD-XS-06_chip_bo_nganh_390.jpg"
+   ]
+  ],
+  [
+   "Trang Kích hoạt tài khoản: bấm 'Gửi Lại Email Xác Thực' khi đang bị giới hạn tần suất, API trả 429 'Vui lòng chờ 9 giây trước khi gửi lại.' nhưng giao diện chỉ hiện 'Có lỗi xảy ra. Vui lòng thử lại sau.'; bấm lần nữa không hiện gì. Nên hiện đúng thông báo chờ (đếm ngược).",
+   "Thấp",
+   "Kích hoạt tài khoản /auth/verify-email",
+   [
+    "anh_kiem_lai/NTD-DK-03_guilai1_390.jpg"
+   ]
+  ],
+  [
+   "Form Đăng tin bước 5: tiêu đề tự tạo dạng '<vị trí> <lương tối thiểu> VND/tháng trở lên' kể cả khi chọn khoảng lương (ví dụ 12–18 triệu), dễ gây hiểu sai mức lương.",
+   "Thấp",
+   "Đăng tin tuyển dụng DS_50",
+   [
+    "anh_kiem_lai/NTD-DT-07_taolai_390.jpg"
+   ]
+  ],
+  [
+   "NTD bấm 'Tìm việc' ở trang Tài khoản (mobile) bị đổi hẳn loại tài khoản sang Ứng viên (PUT /auth/profile user_type=candidate) và bị khoá ngoài khu NTD: mọi trang /employer/* chuyển về form onboarding Ứng viên. Muốn quay lại phải bấm Quay lại → 'Đăng tin tuyển dụng' (không có hướng dẫn). Lần 1 nút này chỉ mở trang tìm việc.",
+   "Cao",
+   "Thông tin tài khoản NTD DS_46 / chuyển vai trò",
+   [
+    "anh_kiem_lai/TK-09_molai_employer_postings_390.jpg"
+   ]
+  ],
+  [
+   "Ứng viên: công việc mong muốn hiện mã thô '#2' thay vì tên công việc ở Chỉnh sửa hồ sơ cá nhân và trang Điểm mạnh (chip '#2', nhãn dòng điểm mạnh '#2'), trong khi Hồ sơ trực tuyến ghi 'Công việc: Chưa cập nhật' và trang Tài khoản ghi 'Tìm việc: May mặc – Dệt may' (tài khoản Đinh Diễm Ngọc).",
+   "TB",
+   "Ứng viên — Chỉnh sửa hồ sơ DS_27 / Điểm mạnh DS_32",
+   [
+    "anh_kiem_lai/c_088.jpg"
+   ]
   ]
  ],
  "du_lieu_tao": [
+  "Bài cộng đồng id 29 của Phú An '[TEST GĐ2 16/10] Bài kiểm thử…' (đính kèm tin 101) — đã xoá sau khi kiểm",
+  "Chức vụ của Phú An (Võ Anh Nam) đổi tạm '[TEST GĐ2 16/10] Trưởng phòng nhân sự' rồi trả lại 'Nhân viên Nhân sự (HR Officer)'; Website công ty Phú An đặt tạm https://timviec123.vn rồi xoá lại",
+  "Hồ sơ ứng tuyển id 48 (Sanwa): đổi trạng thái Đang xem xét → Không phù hợp khi kiểm Trả kết quả (theo thông báo gửi Ứng viên 16/10)",
   "Hồ sơ ứng tuyển id 48: Đỗ Minh An → tin 110 Sanwa (thư ứng tuyển ghi [TEST GĐ2 16/10])",
-  "Lịch phỏng vấn id 15 (Lịch A): tạo 17/10 09:00 → đổi 18/10 10:00 → đã huỷ (lý do ghi [TEST GĐ2 16/10])",
+  "Hồ sơ ứng tuyển id 49: Đỗ Minh An → tin 105 Woosung (tin đã hết hạn 20/09 nhưng vẫn nhận, dùng làm bằng chứng Retest_BUG_047)",
+  "Lịch phỏng vấn id 15 (Lịch A, Sanwa → Đỗ Minh An): tạo 17/10 09:00 → đổi 18/10 10:00 (giờ hiển thị trên trình duyệt kiểm thử múi UTC, tức 16:00 / 17:00 giờ VN) → đã huỷ (lý do ghi [TEST GĐ2 16/10])",
+  "Lịch phỏng vấn id 16 (Offline, Sanwa → hồ sơ 32): tạo để kiểm NTD-PV-03 rồi đã huỷ",
+  "Mật khẩu Vạn Tường (IDOR_NTD4) đổi sang mật khẩu tạm rồi đổi lại mật khẩu ban đầu trong .env; việc đổi mật khẩu đã đăng xuất 14 phiên khác của tài khoản này",
   "Thả tim rồi bỏ tim hồ sơ 32 (trả lại như cũ)",
-  "Tin nhắn hội thoại 65: id 255 (UV), id 257 (NTD gửi lại sau mất mạng); tin 'x' id 256 gửi nhầm đã thu hồi"
+  "Tin 104 Woosung: đóng tin → mở lại (trạng thái cuối: published như ban đầu)",
+  "Tin 105 Woosung: tạm dừng → bật lại 2 lần (trạng thái cuối: published như ban đầu)",
+  "Tin nhắn hội thoại 65: id 255 (UV), id 257 (NTD gửi lại sau mất mạng); tin 'x' id 256 gửi nhầm đã thu hồi",
+  "Tin tuyển dụng id 202 của Woosung (IDOR_NTD2): \"[TEST GĐ2 16/10] Công nhân sản xuất (tin kiểm thử)\" — tạo để kiểm REQ_FUNC_005 / Sửa tin → đã xoá sau khi kiểm (DELETE 200)",
+  "Tài khoản IDOR_UV1 (NTD 'Test company', id 81): đã gửi giấy tờ xác thực bằng ẢNH GIẢ có chữ 'TEST GĐ2 16/10' (CCCD 2 mặt gửi 2 lần do kiểm 'Xoá để gửi lại', ĐKKD 1 lần) — đang chờ Admin, đề nghị Admin TỪ CHỐI",
+  "Tài khoản NTD mới timviec123test+gd2ntd4890@gmail.com (user id 128, khoá GD2_NTD_EMAIL/GD2_NTD_PASSWORD trong .env) — đã đăng ký, CHƯA kích hoạt (không đọc được email do IMAP bị chặn); đã bấm Gửi lại email xác thực 2 lần",
+  "Tài khoản Phú An (IDOR_NTD3, id 74): khi kiểm NTD-TK-09 bị hệ thống đổi sang loại Ứng viên ~5 phút; đã khôi phục về Nhà tuyển dụng (user_type=employer, onboarding_completed=true), 4 tin 99–102 còn nguyên",
+  "Ứng viên Đinh Diễm Ngọc (IDOR_UV3): gửi 1 góp ý '[TEST GĐ2 16/10] Phản hồi kiểm thử…' (feedback id 2); lưu thử rồi bỏ lưu tin 101, 105"
  ]
 }
